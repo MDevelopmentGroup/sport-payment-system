@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru" ng-app="Dance" ng-cloak="">
+<head>
+
+    <meta charset="utf-8">
+    <!--todo: брать title из json-->
+    <title>Управление порталом</title>
+
+    <script language = "javascript" src="lib/jQuery/jquery.min.js"></script>
+    <link href="css/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/mycss/sb-admin.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" type="text/css" href="lib/angular-ui-ng-grid/ng-grid.min.css" />
+    <link rel="stylesheet" type="text/css" href="lib/redactor-js-master/redactor/redactor.css" />
+    <script language = "javascript" src="css/bootstrap/js/bootstrap.min.js"></script>
+
+
+
+</head>
+<body>
+    <div id="wrapper">
+        <div >
+            <div  ng-include="'partials/admin/navbar_tabmenu.html'"></div>
+        </div>
+        <div id="page-wrapper">
+            <div ng-view></div>
+        </div>
+    </div>
+</body>
+<!--Библиотеки-->
+<script language = "javascript" src="lib/angular-ui-ng-grid/lib/jquery-ui-1.9.1.custom.min.js"></script>
+<script language = "javascript" src="lib/angular/angular.min.js"></script>
+<script language = "javascript" src="lib/angular/angular-route.min.js"></script>
+<script language = "javascript" src="lib/angular/angular-cookies.min.js"></script>
+<script language = "javascript" src="lib/angular/angular-resource.min.js"></script>
+<script language = "javascript" src="lib/angular/angular-sanitize.min.js"></script>
+<script language = "javascript" src="lib/angular/angular-animate.min.js"></script>
+<script language = "javascript" src="lib/angular-strap/angular-strap.min.js"></script>
+<script language = "javascript" src="lib/angular-strap/angular-strap.tpl.min.js"></script>
+<script language = "javascript" src="lib/angular-ui-ng-grid/ng-grid-2.0.7.min.js"></script>
+<script language = "javascript" src="lib/angular-ui-ng-grid/plugins/ng-grid-flexible-height.js"></script>
+<script language = "javascript" src="lib/redactor-js-master/redactor/redactor.min.js"></script>
+
+
+<script language = "javascript" src="lib/ngCity/src/ngAutocomplete.js"></script>
+
+
+
+<!--Библиотеки-->
+
+<!--Админские штучки-->
+<script language = "javascript" src="js/admin/app.js"></script>
+<script language = "javascript" src="js/admin/filters.js"></script>
+<script language = "javascript" src="js/admin/services.js"></script>
+<script language = "javascript" src="js/admin/controllers.js"></script>
+<script language = "javascript" src="js/admin/directive.js"></script>
+<script language = "javascript" src="js/admin/config.js"></script>
+<!---->
+</html>

@@ -1,0 +1,135 @@
+{
+    "name": "language_ru",
+    "version": "0.0.1",
+    "Menu":{
+        "LogoTitle":"InterSystems",
+        "BrandTitle":"Dance",
+        "VacancyTitle":"Вакансии",
+        "CompanyTitle":"Компании",
+        "CatalogTitle":"Каталог",
+        "EventTitle":"Новости",
+        "AboutTitle":"О проекте",
+        "SingInTitle":"Войти",
+        "placeholderEmailTitle":"Email",
+        "placeholderPasswordTitle":"пароль",
+        "ButtonSuccessTitle":"Войти",
+        "ButtonRegistrationTitle":"Регистрация",
+        "ButtonPasswordRecoveryTitle":"Восстановить пароль",
+        "Profile":"Профиль",
+        "AdminPage":"Админка",
+        "Settings":"Настройки",
+        "LogOut":"Выйти"
+    },
+    "AdminMenu":{
+        "ProjectTitleAdmin":"Управление порталом"
+    },
+    "Vacancy":{
+        "Title":"Вакансии | InterSystems RUS",
+        "Label":"Вакансии партнёров",
+        "GetMe":"Откликнуться!",
+        "Salary":"Зарплата ",
+        "OnResults":"по результатам собеседования",
+        "From":" от ",
+        "To":" до ",
+        "Address":"Адрес",
+        "EduLevelLabel":"Требуемое образование - ",
+        "EduLevelType":{
+            "All":"не имеет значения",
+            "Student":"Студент",
+            "Bachelor":"Бакалавр",
+            "Specialist":"Специалист",
+            "Master":"Магистр",
+            "Aspirant":"Аспирант",
+            "PhD":"Кандидат или Доктор наук"
+        },
+        "CurrencyType":{
+            "RUB":"Руб",
+            "USD":"$",
+            "EUR":"Евро"
+        },
+        "Type":{
+            "Label":"Тип занятости",
+            "Full":"полная занятость",
+            "Underemployment":"частичная занятость",
+            "Contract":"контракт",
+            "Freelance":"фриланс"
+        }
+    },
+    "Company":{
+        "Title":"Партнёры | InterSystems RUS",
+        "Label":"Партнёры InterSystems Россия",
+        "CompanyAddress":"Адрес компании",
+        "CompanyCity":"Город ",
+        "CompanyPhone":"Телефон",
+        "CompanyMail":"Почта"
+    },
+    "Catalog":{
+        "Preview":"Добро пожаловать в каталог решений партнеров InterSystems в России и странах СНГ. Выберите в меню одну из интересующих Вас технологий или направлений,  или просто введите интересующую Вас фразу в строку поиска",
+        "Title":"Решения | InterSystems RUS",
+        "Label":"Решения партнёров",
+        "Technologies":"Технологии",
+        "Sector":"Сектор",
+        "World":"Каталог решений партнеров InterSystems в мире"
+
+    },
+    "Solution":{
+        "Title":"Решение | InterSystems RUS",
+        "Label":"История одного решения",
+        "Sector":"Сектор",
+        "Type":{
+            "Finance":"Финансовый",
+            "Government":"Государственный",
+            "Healthcare":"Здравоохранение",
+            "Other":"Другой"
+        }
+    },
+    "Event":{
+        "Title":"События | InterSystems RUS",
+        "Label":"События партнёров",
+        "ISRus":"Новости InterSystems Россия и СНГ",
+        "Global":"Новости штаб-квартиры InterSystems"
+    },
+    "About":{
+        "Title":"О проекте | InterSystems RUS",
+        "Label":"О портале",
+        "Text":"Портал <b>Вакансии по технологиям InterSystems<\/b>",
+        "File":"lang/about_ru.html"
+    },
+    "Common":{
+        "City":"Город",
+        "SearchText":"строка поиска",
+        "Language":"Язык",
+        "Name":"Имя",
+        "Surname":"Фамилия",
+        "Phone":"Телефон: ",
+        "Close":"Закрыть",
+        "Country":"Страна",
+        "Solutions":"Решений",
+        "Contacts":"Контакты",
+        "WebSite":"Сайт :",
+        "Vacancies":"Вакансий",
+        "Events":"Событий",
+        "Address":"Адрес",
+        "Data":"Дата"
+
+    },
+    "Modal":{
+        "Delete":"Подтвердите удаление",
+        "Login":"Войти",
+        "Password":"Пароль",
+        "Email":"Email",
+        "Success":"Ошибка: такого пользователя не существует"
+    },
+    "Button":{
+        "Create":"Создать",
+        "Update":"Обновить",
+        "Delete":"Удалить",
+        "Close":"Закрыть",
+        "Login":"Войти"
+    },
+    "Map":{
+        "Hint":"Используйте двойной клик левой/правой клавиши мыши для изменения масштаба карты"
+    }
+
+
+}

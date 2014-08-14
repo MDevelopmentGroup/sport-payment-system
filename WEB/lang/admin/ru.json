@@ -1,0 +1,36 @@
+{
+    "name": "language_ru",
+    "version": "0.0.1",
+    "AdminMenu":{
+        "ProjectTitleAdmin":"Управление порталом"
+    },
+    "Menu":{
+        "Users":"Пользователи",
+        "Schools":"Школы"
+    },
+    "Button":{
+        "OK":"Создать"
+    },
+    "User":{
+        "CreateUser":"Добавление пользователя",
+        "UpdateUser":"Обновление пользователя",
+        "Name":"Имя",
+        "Surname":"Фамилия",
+        "DOB":"Дата рождения",
+        "Image":"Аватар",
+        "Password":"Пароль",
+        "Sex":"Пол",
+        "Company":"Компания",
+        "Apartament":"Квартира",
+        "City":"Город",
+        "Country":"Страна",
+        "Email":"Почта",
+        "State":"Край/Область",
+        "Street":"Улица",
+        "Telephone":"Телефон",
+        "URL":"URL",
+        "Building":"Дом",
+        "Male":"мужской",
+        "Female":"женский"
+    }
+}

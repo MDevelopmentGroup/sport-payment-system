@@ -1,0 +1,62 @@
+
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation"  style="padding-right:20px;">
+
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse" data-hover="dropdown" data-delay="100" data-close-others="true">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+
+        <a class="navbar-brand"><img src="img/Intersystems.jpg" width="80" height="20"></a>
+
+    </div>
+
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav side-nav">
+
+            <li class="{{MenuActive.UsersView}}" >
+                <a  href="#/users"><span class="glyphicon glyphicon-user"></span>       {{Page.Menu.Users}}       </a>
+            </li>
+
+            <li class="{{MenuActive.SchoolsView}}" >
+                <a  href="#/schools"><span class="glyphicon glyphicon-user"></span>   {{Page.Menu.Schools}} </a>
+            </li>
+
+
+
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right navbar-user" >
+
+
+            <li class="dropdown">
+                <a  class="dropdown-toggle" data-toggle="dropdown">{{Page.Menu.Language}} <img height="25" ng-src="img/{{lang}}.jpg"><b class="caret"></b></a>
+                <ul class="dropdown-menu">
+
+                    <li ><a class="btn btn-default" data-ng-click='SetLanguage("ru")'>RU <img height="50" src="img/ru.jpg" ></a></li>
+                    <li ><a class="btn btn-default" data-ng-click='SetLanguage("en")'>EN <img height="50" src="img/en.jpg"></a></li>
+                </ul>
+            </li>
+
+
+
+            <li class="dropdown user-dropdown" ng-if='!User.success'>
+            <a  class="dropdown-toggle" data-ng-click="Login()" ng-show="{{!Items.Menu}}" ><span class="glyphicon glyphicon-log-in"></span> {{Page.Menu.LogIn}} </a>
+            </li>
+            <li class="dropdown user-dropdown" ng-if='User.success'>
+                <a style="color: green" class="dropdown-toggle" data-toggle="dropdown"><img class="img-rounded" width="23" height="23" ng-src="img/{{User.UserImage}}"> <strong>{{User.Login}}</strong> <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#/updateuser/{{User.ID}}"><span class="glyphicon glyphicon-user"></span> {{Page.Menu.Profile}} </a></li>
+                    <li><a href=""><span class="glyphicon glyphicon-envelope"></span> {{Page.Menu.Message}}  </a></li>
+                    <li><a href=""><span class="glyphicon glyphicon-cog"></span> {{Page.Menu.Settings}} </a></li>
+                    <li class="divider"></li>
+                    <li ><a class="btn btn-danger" ng-click="Logout()" ><i class="glyphicon glyphicon-off"></i> {{Page.Menu.LogOut}}</a></li>
+                </ul>
+            </li>
+
+
+        </ul>
+    </div>
+</nav>

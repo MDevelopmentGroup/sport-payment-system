@@ -1,0 +1,102 @@
+<div class="well">
+    <div class="row">
+
+        <form class="form-horizontal" ng-model="user" ng-submit='CreateSystemUser(user)'>
+            <span style="text-align: center"><h2>Регистрация </h2></span>
+            <hr>
+            <br>
+            <div class="form-group">
+                <label for="FirstName" class="col-lg-3 control-label">FirstName{{Page.SystemUser.TitleFirstName}}:</label>
+                <div class="col-lg-5">
+                    <input type="text"  id="FirstName" class="form-control" ng-model="user.FirstName" placeholder="{{Page.SystemUser.TitleFirstName}}" required="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="LastName" class="col-lg-3 control-label">LastName{{Page.SystemUser.TitleLastName}}:</label>
+                <div class="col-lg-5">
+                    <input type="text" id="LastName" class="form-control" ng-model="user.LastName" placeholder="{{Page.SystemUser.TitleLastName}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Patronymic" class="col-lg-3 control-label">Patronymic{{Page.SystemUser.TitlePatronymic}}:</label>
+                <div class="col-lg-5">
+                    <input type="text" id="Patronymic" class="form-control" ng-model="user.Patronymic" placeholder="{{Page.SystemUser.TitlePatronymic}}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Patronymic" class="col-lg-3 control-label">Фото:</label>
+                <div class="col-lg-5">
+                    <input type="file" name="foto" style="padding: 1px" id="myFile" class=" btn btn-default form-control" multiple ng-change="FileLoad()" ng-model="user.foto">
+                    <progress style="height: 10px; padding: 0px" id="progressBar" class="form-control" max="100"  value="0">
+                    </progress>
+                    <input  type="text" class="form-control" id="adjrgsaderg" ng-model="user.resp">
+                 <!--   <img id="Logo" width="100" height="100" src="">-->
+                </div>
+            </div>
+
+            <div class="form-group {{EmailStatus}}">
+                <label for="Email" class="col-lg-3 control-label">Email{{Page.SystemUser.TitleEmail}}:</label>
+                <div class="col-lg-5">
+                    <input type="email" id="Email" class="form-control" ng-model="user.Email" placeholder="{{Page.SystemUser.TitleEmail}}" ng-change="CheckEmail()" required>
+                </div>
+            </div>
+
+
+            <div class="form-group {{PasswordStatus}}">
+                <label for="Password" class="col-lg-3 control-label">Password{{Page.SystemUser.TitlePassword}}:</label>
+                <div class="col-lg-5">
+                    <input type="password" min="6"  maxlength="12" id="Password" class="form-control"  ng-model="user.Password" ng-change="CheckPassword()" placeholder="{{Page.SystemUser.TitlePassword}}" required>
+                </div>
+            </div>
+            <div class="form-group {{PasswordStatus}}">
+                <label for="Password2" class="col-lg-3 control-label">повторно Password{{Page.SystemUser.TitlePassword2}}:</label>
+                <div class="col-lg-5">
+                    <input type="password" id="Password2" class="form-control" ng-model="user.Password2" ng-change="CheckPassword()" placeholder="{{Page.SystemUser.TitlePassword2}}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Password2" class="col-lg-3 control-label">Согласен с:</label>
+                <div class="col-lg-5">
+                    <div class="checkbox">
+                        <input type="checkbox" id="Password2" class="" ng-model="user.check">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                Соглашение пользователя
+                            </div>
+                            <div class="panel-body" ng-hide="user.check">
+                                Настоящее Лицензионное соглашение для конечного пользователя (СОГЛАШЕНИЕ) является юридическим соглашением
+                                между Вами (физическим или юридическим лицом) (ПОЛЬЗОВАТЕЛЕМ) и открытым акционерным обществом
+                                «Научно-производственное объединение Русские базовые информационные технологии» (ПРАВООБЛАДАТЕЛЕМ),
+                                которое является разработчиком Операционной системы специального назначения «Astra Linux Special Edition»
+                                (ПРОГРАММНЫЙ ПРОДУКТ). Устанавливая, копируя или иным образом используя ПРОГРАММНЫЙ ПРОДУКТ, ПОЛЬЗОВАТЕЛЬ
+                                тем самым соглашается с положениями настоящего СОГЛАШЕНИЯ. Если ПОЛЬЗОВАТЕЛЬ не согласен с положениями
+                                настоящего СОГЛАШЕНИЯ, ПРАВООБЛАДАТЕЛЬ отказывает ему в праве на любое использование ПРОГРАММНОГО ПРОДУКТА.
+                                В этом случае ПОЛЬЗОВАТЕЛЬ не имеет права устанавливать, копировать или иным образом использовать
+                                ПРОГРАММНЫЙ ПРОДУКТ, а также вправе вернуть ПРОГРАММНЫЙ ПРОДУКТ организации, у которой его приобрел,
+                                при условии целостности (отсутствия признаков вскрытия) товарной упаковки.
+
+
+                                1. ОБЩИЕ ПОЛОЖЕНИЯ
+
+                                1.1. ПРОГРАММНЫЙ ПРОДУКТ охраняется авторским правом, международными соглашениями о защите
+                                интеллектуальной собственности и действующим законодательством Российской Федерации.
+                                Соответствие ПРОГРАММНОГО ПРОДУКТА требованиям безопасности информации подтверждается сертификатом,
+                                оформленным согласно действующему законодательству Российской Федерации.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label  class="col-lg-3 control-label"></label>
+                <div class="col-lg-5">
+                    <button type="submit"  class="btn btn-success {{ButtonDisabled}}">Reg{{Page.SystemUser.TitleFirstName}}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form ng-model="user" class="form-horizontal" ng-submit="data.ok(user)">
+            <div class="modal-header" style="background: rgba(128, 255, 130, 0.43)">
+                    <h3 class="modal-title">{{Page.Modal.Login}}:</h3>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+                        <div class="form-group">
+                            <label for="Email" class="col-sm-2 control-label hidden-sm hidden-xs">{{Page.Modal.Email}}:</label>
+                            <div class="col-lg-7">
+                                <input type="email" class="form-control" id="Email" ng-model='user.Login' placeholder="{{Page.Modal.Email}}" required="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Password" class="col-sm-2 control-label hidden-sm hidden-xs">{{Page.Modal.Password}}:</label>
+                            <div class="col-lg-7">
+                                <input type="password" class="form-control" id="Password" ng-model='user.Password' placeholder="{{Page.Modal.Password}}" required="">
+                            </div>
+                        </div>
+                </div>
+                 <div ng-bind-html="data.status"></div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">{{Page.Button.Login}}</button>
+                    <button type="button" class="btn btn-primary" ng-click="$hide()">{{Page.Button.Close}}</button>
+                </div>
+
+            </div>
+
+            </form>
+            </div>
+    </div>
+</div>

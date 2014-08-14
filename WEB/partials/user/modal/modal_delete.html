@@ -1,0 +1,24 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background: rgba(255, 0, 0, 0.43)">
+                    <h3 class="modal-title">{{Page.Modal.Delete}}:</h3>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <img class="img-rounded" style="max-width:100px; max-height:100px;" ng-src="img/{{data.Image}}">
+                    </div>
+                    <div class="col-lg-4">
+                        <h4><p>{{data.Name}}</p></h4>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" ng-click="data.ok();$hide()">{{Page.Button.Delete}}</button>
+                <button type="button" class="btn btn-primary" ng-click="$hide()">{{Page.Button.Close}}</button>
+            </div>
+        </div>
+    </div>
+</div>

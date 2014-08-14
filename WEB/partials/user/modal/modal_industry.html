@@ -1,0 +1,30 @@
+<!--Создать новую индустрию-->
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" >
+                    <h3 class="modal-title">{{Page.Industry.UpdateIndustry}}:</h3>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+<!--                    <div class="col-lg-2">
+                        <img class="img-rounded" width="80" height="80" ng-src="img/{{data.Image}}">
+                    </div>-->
+                    <div class="col-lg-4">
+                        <!--<h4><p>{{data.Name}}</p></h4>-->
+                        <input type="text" class="form-control" id="Name" ng-model='data.Name' placeholder="">
+                        <select class="form-control" id="Lang" ng-model='data.Lang'>
+                            <option value="0">{{Page.Common.RU}}</option>
+                            <option value="1">{{Page.Common.EN}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" ng-click="data.ok();$hide()">{{Page.Button.Update}}</button>
+                <button type="button" class="btn btn-primary" ng-click="$hide()">{{Page.Button.Close}}</button>
+            </div>
+        </div>
+    </div>
+</div>

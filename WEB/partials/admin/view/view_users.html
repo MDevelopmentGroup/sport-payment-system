@@ -1,0 +1,98 @@
+<div class="well">
+
+        <div ng-repeat="user in users" >
+            <div class="row">
+                <div class="col-lg-1">
+                    <img src="">
+                </div>
+                <div class="col-lg-2">
+                    {{user.FirstName}}
+                    {{user.LastName}}
+
+                </div>
+                <div class="col-lg-2">
+                    <button class="btn btn-default" ng-click="Delete(user.ID,user)"><span class="glyphicon glyphicon-trash"></span></button>
+                    <a class="btn btn-default" href="#/updateuser/{{user.ID}}"><span class="glyphicon glyphicon-refresh"></span></a>
+                </div>
+            </div>
+
+
+
+            <hr>
+        </div>
+    <div class="row">
+        <div class="col-lg-2">
+            <a class="btn btn-default" href="#/createuser">
+                Добавить
+                <label class="label label-info">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </label>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+<form ng-model="d" tes-Dir>
+
+
+    <div drag-Drop on-image-drop="imageDropped()" options="{'TypeList':['png','jpg','exe']}" class="form-control dragDrop" ng-model="d.fer">
+
+        <input type="file"   class="form-control" ng-model="d.fer" options="{'TypeList':['png','jpg','exe']}" file-Upload multiple title="Переместите">
+        <div file-List="d.fer" items="d.fer">Лист</div>
+    </div>
+
+    <style type="text/css">
+        .dragDrop{
+            height: 300px;
+            border: 2px dashed #ccc;
+        }
+        .dragDrop:hover{
+            border: 3px dashed #707070;
+        }
+
+
+        .st2  img{width:50px;position:absolute;z-index:150;}
+        .st2:hover {width:50px;overflow:visible;}
+        .st2:hover img{visibility:visible;position:absolute;z-index:150;}
+    </style>
+
+
+    </form>  -->
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,131 @@
+{
+    "name": "language_en",
+    "version": "0.0.1",
+    "Menu":{
+        "LogoTitle":"InterSystems",
+        "BrandTitle":"Jobs portal",
+        "VacancyTitle":"Vacancy",
+        "CompanyTitle":"Company",
+        "CatalogTitle":"Catalog",
+        "EventTitle":"News",
+        "AboutTitle":"About",
+        "SingInTitle":"Sing In",
+        "placeholderEmailTitle":"Email",
+        "placeholderPasswordTitle":"Password",
+        "ButtonSuccessTitle":"Sing in",
+        "ButtonRegistrationTitle":"Registration",
+        "ButtonPasswordRecoveryTitle":"Password Recovery",
+        "Profile":"Profile",
+        "AdminPage":"Admin Page",
+        "Settings":"Settings",
+        "LogOut":"Login out"
+    },
+    "AdminMenu":{
+        "ProjectTitleAdmin":"Service portal"
+    },
+    "Vacancy":{
+        "Title":"Vacancies | InterSystems RUS",
+        "Label":"Partners vacancies",
+        "GetMe":"Apply!",
+        "Salary":"Salary ",
+        "OnResults":"after dialog",
+        "From":" from ",
+        "To":" to ",
+        "Address":"Address",
+        "EduLevelLabel":"Required education - ",
+        "EduLevelType":{
+            "All":"All",
+            "Student":"Student",
+            "Bachelor":"Bachelor",
+            "Specialist":"Specialist",
+            "Master":"Master",
+            "Aspirant":"Aspirant",
+            "PhD":"PhD"
+        },
+        "CurrencyType":{
+            "RUB":"RUB",
+            "USD":"USD",
+            "EUR":"EUR"
+        },
+        "Type":{
+            "Label":"Employment type",
+            "Full":"full employment",
+            "Underemployment":"underemployment",
+            "Contract":"contract",
+            "Freelance":"freelance"
+        }
+    },
+    "Company":{
+        "Title":"Partners | InterSystems RUS",
+        "Label":"InterSystems Russia and CIS partners"
+
+    },
+    "Catalog":{
+        "Preview":"The InterSystems Russia Library drop-down menus below allow you to see our resources for success stories, white papers, videos, and analyst reports, selected by product and\/or industry. Resources sorted by industries.",
+        "Title":"Library | InterSystems RUS",
+        "Label":"Solutions library",
+        "Technologies":"Technologies",
+        "Sector":"Sector",
+        "World":"InterSystems success stories library"
+    },
+    "Solution":{
+        "Title":"Solution | InterSystems RUS",
+        "Label":"Success story",
+        "Sector":"Sector",
+        "Type":{
+            "Finance":"Finance",
+            "Government":"Government",
+            "Healthcare":"Healthcare",
+            "Other":"Other"
+        }
+    },
+    "Event":{
+        "Title":"Events | InterSystems RUS",
+        "Label":"Partners events list",
+        "ISRus":"InterSystems Rus. Events list",
+        "Global":"InterSystems Global. Events list"
+
+    },
+    "About":{
+        "Title":"About | InterSystems RUS",
+        "Label":"About project",
+        "Text":"<b>Vacancies by InterSystems technologies<\/b> portal",
+        "File":"lang/about_en.html"
+    },
+    "Common":{
+        "City":"City",
+        "SearchText":"SearchText",
+        "Language":"Language",
+        "Name":"Name",
+        "Surname":"Surname",
+        "Phone":"Phone :",
+        "Close":"Close",
+        "Country":"Country",
+        "Solutions":"Solutions",
+        "Contacts":"Contacts",
+        "WebSite":"Web Site :",
+        "Vacancies":"Vacancies",
+        "Events":"Solutions",
+        "Address":"Address",
+        "Data":"Date"
+
+
+    },
+    "Button":{
+        "Create":"Create",
+        "Update":"Update",
+        "Delete":"Delete",
+        "Close":"Close",
+        "Login":"Login"
+    },
+    "Modal":{
+        "Delete":"Confirm the deletion",
+        "Login":"Login",
+        "Password":"Password",
+        "Email":"Email",
+        "Success":"Error: this user does not exist"
+    },
+    "Map":{
+        "Hint":"Use double click of left or right mouse button to change map scale"
+    }
+}

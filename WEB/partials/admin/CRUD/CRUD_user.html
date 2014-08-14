@@ -1,0 +1,25 @@
+<div class="well">
+    <div class="row">
+        <form class="form-horizontal" ng-model="user" ng-submit="OK(user)">
+            <div class="form-group">
+                <label for="FirstName" class="col-lg-2 control-label ">{{Page.User.FirstName}}:</label>
+                <div class="col-lg-5">
+                    <input type="text" class="form-control" id="FirstName" ng-model='user.FirstName' placeholder="{{Page.User.FirstName}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="LastName" class="col-lg-2 control-label ">{{Page.User.LastName}}:</label>
+                <div class="col-lg-5">
+                    <input type="text" class="form-control" id="LastName" ng-model='user.LastName' placeholder="{{Page.User.LastName}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="LastName" class="col-lg-2 control-label "></label>
+                <div class="col-lg-5">
+
+                    <button type="submit" class="btn btn-default" >{{Page.Button.OK}}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
