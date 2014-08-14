@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Auth.Session">
+<Abstract>1</Abstract>
+<ClassType>serial</ClassType>
+<TimeCreated>63292,43957.241629</TimeCreated>
+
+<Method name="AddData">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>Data:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	
+	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="CheckSession">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>UserId,HASH</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	#dim bl As %Boolean=0
+	&sql(select key into:key from SPD.SPDUser where id=:UserId)
+	set str=$SYSTEM.Encryption.AESCBCDecrypt(HASH,key)
+	set hIP=%request.GetCgiEnv("REMOTE_ADDR")
+	set hUserAgent=%request.GetCgiEnv("HTTP_USER_AGENT")
+	set hUserId=$P(str,":",1)
+	set hRoleUser=$P(str,":",2)
+	&sql(select Id,UserID,IP,Agent,RoleUser,DateTime 
+		into:Id,:sUserId,:sIP,:sAgent,:sRoleUser,:sDateTime 
+		from Auth.SessionData 
+		where (UserID=:hUserId) & (RoleUser=:hRoleUser) & (IP=:hIP) & (Agent=:hUserAgent))
+	if ((sUserId=UserId) && (IP=sIP) && (UserAgent=sAfent) && (RoleUser=sRoleUser))
+	{
+		if (..DateDiff("second",$zdt($h,3),DateTime)>0){
+			//открыть и обновить время сессии
+			set session1=##class(Auth.SessionData).%OpenId(Id)
+			set session1.DateTime=$zdt($h,3)
+			do session1.%Save()
+			set bl=1
+		}
+		else
+		{
+			set bl=0
+		}
+		
+		
+	}
+	ret bl
+]]></Implementation>
+</Method>
+
+<Method name="DateDiff">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>x,date1,date2</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	&sql(select distinct datediff(:x,:date1,:date2)
+			into :diff
+			from Auth.SessionData)
+	ret diff
+]]></Implementation>
+</Method>
+
+<Method name="Encode">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>hash</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set hex="" f i=1:1:$L(hash) set hex=hex_$J($ZHEX($A(hash,i)),2)
+	set hex=$TR(hex," ","0")
+	set hash=$ZCVT(hex,"l")
+	ret hash
+]]></Implementation>
+</Method>
+
+<Method name="Decode">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>hash</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	#dim str As %String=""
+	for i=1:2:$l(hash) {
+    	s hex = $e(hash, i, i + 1)
+    	s str = str _ $c($zhex(hex))
+  	}
+  	ret str
+]]></Implementation>
+</Method>
+
+<Method name="CreateSession">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
+		set pass=obj.Password	set Login=obj.Login
+		&sql(declare ses1 cursor for select id , SurName, LastName, FirstName, RoleUser,Key into:UserID , :SurName, :LastName, :FirstName, :RoleUser, :Key from SPD.SPDUser where (Password=:pass & Login=:Login))
+		&sql(open ses1)
+		&sql(fetch ses1)
+		&sql(close ses1)
+		if (%ROWCOUNT'=0)
+		{
+			//если есть подобная сессия стереть
+			&sql(select id, count(id) into:id,:count from Auth.SessionData where UserID=:UserID)
+			if (count>0)
+			{
+				do ##class(Auth.SessionData).%DeleteId(id)
+			}
+			set session1=##class(Auth.SessionData).%New()
+			set session1.IP=%request.GetCgiEnv("REMOTE_ADDR")
+			set session1.Agent=%request.GetCgiEnv("HTTP_USER_AGENT")
+			set session1.RoleUser=RoleUser
+			set session1.UserID=UserID
+			//do session1.%Save()
+			set hash=$SYSTEM.Encryption.AESCBCEncrypt(UserID_":"_RoleUser,Key)
+			set hash=##class(Auth.Session).Encode(hash)
+			set t=+$H+1
+			set t=$ZD(t,11) _", " _$ZD(t,2) _ " 00:00:00 GMT"
+			do %response.SetCookie("success",1,t,"/")
+			do %response.SetCookie("uh",hash,t,"/")
+			do %response.SetCookie("userId",UserID,t,"/")
+			do %response.SetCookie("Login",Login,t,"/")
+			w "{""children"":{"_
+			"""success"":"""_1_
+			""",""hash"":"""_hash_
+			""",""userId"":"""_UserID_
+			""",""Login"":"""_Login_
+			"""}}"
+			
+		}
+	}
+	catch ex
+	{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="ClearSession">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
+		set userid=2
+		set hash=obj.uh
+		#dim id as integer=0
+		&sql(select id into :id from Auth.SessionData where UserID=:userid)
+		if (id){
+			set st=##class(Auth.SessionData).%DeleteId(id)
+			do %response.SetCookie("success",0)
+			do %response.SetCookie("uh",0)
+			do %response.SetCookie("userId",0)
+			do %response.SetCookie("Login",0)
+		}
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="CreateSSN">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	#dim str As %String="1"
+	set list1=$lb("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z")
+	set list2=$lb("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z")
+	for i=1:1:15
+	{
+		if ($r(2)){set str=str_$LIST(list2,$r($LL(list2))+1)_$r(99)}
+		else{ set str=str_$LIST(list2,$r($LL(list2))+1)_$r(99)}	
+	}
+	ret str
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheSerialState</Type>
+<StreamLocation>^Auth.SessionS</StreamLocation>
+</Storage>
+</Class>
+</Export>

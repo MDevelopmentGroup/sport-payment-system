@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Subscription">
+<Super>%Persistent</Super>
+<TimeCreated>63393,57783.780633</TimeCreated>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.SubscriptionD</DataLocation>
+<DefaultData>SubscriptionDefaultData</DefaultData>
+<IdLocation>^SPD.SubscriptionD</IdLocation>
+<IndexLocation>^SPD.SubscriptionI</IndexLocation>
+<StreamLocation>^SPD.SubscriptionS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="SubscriptionDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

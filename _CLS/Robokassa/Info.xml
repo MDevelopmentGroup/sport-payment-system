@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Robokassa.Info">
+<Description>
+Создано из: C:\1.xsd</Description>
+<ProcedureBlock>1</ProcedureBlock>
+<Super>%Persistent,%XML.Adaptor</Super>
+<TimeCreated>63391,56937.399152</TimeCreated>
+
+<Parameter name="XMLNAME">
+<Default>Info</Default>
+</Parameter>
+
+<Parameter name="XMLSEQUENCE">
+<Default>1</Default>
+</Parameter>
+
+<Property name="IncCurrLabel">
+<Type>%String</Type>
+<Required>1</Required>
+<Parameter name="MAXLEN"/>
+<Parameter name="XMLNAME" value="IncCurrLabel"/>
+</Property>
+
+<Property name="IncSum">
+<Type>%String</Type>
+<Required>1</Required>
+<Parameter name="MAXLEN"/>
+<Parameter name="XMLNAME" value="IncSum"/>
+</Property>
+
+<Property name="IncAccount">
+<Type>%String</Type>
+<Required>1</Required>
+<Parameter name="MAXLEN"/>
+<Parameter name="XMLNAME" value="IncAccount"/>
+</Property>
+
+<Property name="PaymentMethod">
+<Type>Robokassa.PaymentMethod</Type>
+<Required>1</Required>
+<Parameter name="XMLNAME" value="PaymentMethod"/>
+</Property>
+
+<Property name="OutCurrLabel">
+<Type>%String</Type>
+<Required>1</Required>
+<Parameter name="MAXLEN"/>
+<Parameter name="XMLNAME" value="OutCurrLabel"/>
+</Property>
+
+<Property name="OutSum">
+<Type>%String</Type>
+<Required>1</Required>
+<Parameter name="MAXLEN"/>
+<Parameter name="XMLNAME" value="OutSum"/>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Robokassa.InfoD</DataLocation>
+<DefaultData>InfoDefaultData</DefaultData>
+<IdLocation>^Robokassa.InfoD</IdLocation>
+<IndexLocation>^Robokassa.InfoI</IndexLocation>
+<StreamLocation>^Robokassa.InfoS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="InfoDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>IncCurrLabel</Value>
+</Value>
+<Value name="3">
+<Value>IncSum</Value>
+</Value>
+<Value name="4">
+<Value>IncAccount</Value>
+</Value>
+<Value name="5">
+<Value>PaymentMethod</Value>
+</Value>
+<Value name="6">
+<Value>OutCurrLabel</Value>
+</Value>
+<Value name="7">
+<Value>OutSum</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

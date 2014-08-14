@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.TempBalanceTable">
+<Super>%Persistent</Super>
+<TimeCreated>63393,57783.988645</TimeCreated>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.TempBalanceTableD</DataLocation>
+<DefaultData>TempBalanceTableDefaultData</DefaultData>
+<IdLocation>^SPD.TempBalanceTableD</IdLocation>
+<IndexLocation>^SPD.TempBalanceTableI</IndexLocation>
+<StreamLocation>^SPD.TempBalanceTableS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="TempBalanceTableDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

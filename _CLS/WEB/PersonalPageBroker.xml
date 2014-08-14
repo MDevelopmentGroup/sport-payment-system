@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="WEB.PersonalPageBroker">
+<Super>%CSP.REST</Super>
+<TimeCreated>63393,56715.109291</TimeCreated>
+
+<XData name="UrlMap">
+<Data><![CDATA[
+<Routes>
+	   <Route Url="/test" 							Method="POST" Call="WEB.UserBroker:Test"/>
+	   <Route Url="/news/Get/:ID"		   			Method="GET" Call="WEB.UserBroker:NewMethod2"/>
+	   
+</Routes>
+]]></Data>
+</XData>
+</Class>
+</Export>

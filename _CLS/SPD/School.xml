@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.School">
+<Description>
+Танцевальная школа
+Предполагается что у школы генерится минисайт</Description>
+<Super>%Persistent,LIB.MetaDescription,%Populate</Super>
+<TimeCreated>63288,3826.2282</TimeCreated>
+
+<Property name="FirstPage">
+<Description>
+Приветственая страница (помним что существует Body)</Description>
+<Type>%Text</Type>
+<Parameter name="MAXLEN" value="100000"/>
+</Property>
+
+<Property name="Owner">
+<Description>
+Владелец школы</Description>
+<Type>SPD.Instructor</Type>
+<Cardinality>one</Cardinality>
+<Inverse>OwnerSchool</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="Image">
+<Type>LIB.FileBase</Type>
+<Cardinality>one</Cardinality>
+<Inverse>SchoolImage</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Index name="ImageIndex">
+<Properties>Image</Properties>
+</Index>
+
+<Method name="Create">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	Try
+	{
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		set school=..%New()
+		set school.Name=$ZCONVERT(obj.Name,"I","UTF8")
+		
+		set st=school.%Save()
+	}
+	Catch exception
+	{
+		set st=exception
+	}
+	q st
+]]></Implementation>
+</Method>
+
+<Method name="Update">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	Try
+	{
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		set school=..%OpenId(obj.ID)
+		set school.Name=$ZCONVERT(obj.Name,"I","UTF8")
+	
+		set st=school.%Save()
+	}
+	Catch exception
+	{
+		set st=exception
+	}
+	q st
+]]></Implementation>
+</Method>
+
+<Method name="Delete">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ID</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	q ..%DeleteId(ID)
+]]></Implementation>
+</Method>
+
+<Method name="GetAll">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set SchoolQuery = "SELECT * "_
+				   	  "FROM SPD.School "
+				   				   				   
+	do ..GetJSONData(SchoolQuery)
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="Get">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ID:%Integer</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+
+	set SchoolQuery = "SELECT * "_
+				   	  "FROM SPD.School "_
+				   	  "WHERE ID="_ID
+				   				   				   
+	do ..GetJSONData(SchoolQuery)
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Index name="OwnerIndex">
+<Properties>Owner</Properties>
+</Index>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.SchoolD</DataLocation>
+<DefaultData>SchoolDefaultData</DefaultData>
+<IdLocation>^SPD.SchoolD</IdLocation>
+<IndexLocation>^SPD.SchoolI</IndexLocation>
+<StreamLocation>^SPD.SchoolS</StreamLocation>
+<ExtentSize>50</ExtentSize>
+<Data name="SchoolDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>FirstPage</Value>
+</Value>
+<Value name="3">
+<Value>Body</Value>
+</Value>
+<Value name="4">
+<Value>Country</Value>
+</Value>
+<Value name="5">
+<Value>City</Value>
+</Value>
+<Value name="6">
+<Value>Street</Value>
+</Value>
+<Value name="7">
+<Value>Email</Value>
+</Value>
+<Value name="8">
+<Value>URL</Value>
+</Value>
+<Value name="9">
+<Value>Telephone</Value>
+</Value>
+<Value name="10">
+<Value>AddInfo</Value>
+</Value>
+<Value name="11">
+<Value>Links</Value>
+</Value>
+<Value name="12">
+<Value>RegDate</Value>
+</Value>
+<Value name="13">
+<Value>DescTimeStamp</Value>
+</Value>
+<Value name="14">
+<Value>isBlocked</Value>
+</Value>
+<Value name="15">
+<Value>isActive</Value>
+</Value>
+<Value name="16">
+<Value>Lang</Value>
+</Value>
+<Value name="17">
+<Value>Name</Value>
+</Value>
+<Value name="18">
+<Value>Owner</Value>
+</Value>
+<Value name="19">
+<Value>Image</Value>
+</Value>
+</Data>
+<Property name="%%CLASSNAME">
+<Selectivity>100.0000%</Selectivity>
+</Property>
+<Property name="AddInfo">
+<Selectivity>100.0000%</Selectivity>
+</Property>
+<Property name="Body">
+<Selectivity>100.0000%</Selectivity>
+</Property>
+<Property name="City">
+<Selectivity>4.5455%</Selectivity>
+</Property>
+<Property name="Country">
+<Selectivity>2.0000%</Selectivity>
+</Property>
+<Property name="DescTimeStamp">
+<Selectivity>2.0000%</Selectivity>
+</Property>
+<Property name="Email">
+<Selectivity>2.0000%</Selectivity>
+</Property>
+<Property name="FirstPage">
+<Selectivity>100.0000%</Selectivity>
+</Property>
+<Property name="Image">
+<Selectivity>100.0000%</Selectivity>
+</Property>
+<Property name="Lang">
+<Selectivity>100.0000%</Selectivity>
+</Property>
+<Property name="Links">
+<Selectivity>100.0000%</Selectivity>
+</Property>
+<Property name="Name">
+<Selectivity>2.0000%</Selectivity>
+</Property>
+<Property name="Owner">
+<Selectivity>3.3333%</Selectivity>
+</Property>
+<Property name="RegDate">
+<Selectivity>2.0000%</Selectivity>
+</Property>
+<Property name="Street">
+<Selectivity>2.0000%</Selectivity>
+</Property>
+<Property name="Telephone">
+<Selectivity>2.0000%</Selectivity>
+</Property>
+<Property name="URL">
+<Selectivity>2.0000%</Selectivity>
+</Property>
+<Property name="isActive">
+<Selectivity>100.0000%</Selectivity>
+</Property>
+<Property name="isBlocked">
+<Selectivity>100.0000%</Selectivity>
+</Property>
+<SQLMap name="IDKEY">
+<BlockCount>-4</BlockCount>
+</SQLMap>
+<SQLMap name="ImageIndex">
+<BlockCount>-4</BlockCount>
+</SQLMap>
+</Storage>
+</Class>
+</Export>

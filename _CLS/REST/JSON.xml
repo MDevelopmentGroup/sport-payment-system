@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="REST.JSON">
+<TimeCreated>63313,43933.858721</TimeCreated>
+
+<Method name="GetAllCompanies">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    
+   set st=$$$OK
+   try {    
+   do ##class(%ZEN.Auxiliary.jsonSQLProvider).%WriteJSONFromSQL(,"select * from Data.Company")
+   } catch ex {
+       set st=ex.AsStatus()
+   }
+   quit st
+]]></Implementation>
+</Method>
+
+<Method name="testjson">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    s st=$$$OK
+    try {
+    // Берём JSON из запроса и конвертируем в объект класса Data.Company
+    $$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,"",.obj,1))
+    write "Hello!"
+    $$$THROWONERROR(st,$$$OK)
+    }
+    catch ex {
+        s st=ex.AsStatus()
+    }
+    quit st
+]]></Implementation>
+</Method>
+
+<Method name="DeleteCompany">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>compid:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    set st=$$$OK
+    try {
+        $$$THROWONERROR(st,##class(Data.Company).%DeleteId(compid))
+    } catch ex {
+        s st=ex.AsStatus()
+    }
+    quit st
+]]></Implementation>
+</Method>
+
+<Method name="UpdateCompany">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>compid:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+ set st=$$$OK
+ try {
+   
+   $$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
+   
+   // Открываем объект, который хотим отредактировать
+   set comp=##class(Data.Company).%OpenId(compid)
+   throw:comp=$$$NULLOREF ##class(%Exception.StatusException).CreateFromStatus($$$ERROR(5001,"Company does not exist"))
+    // Редактируем и сохраняем
+   set comp.Name=obj.Name
+   $$$THROWONERROR(st,comp.%Save())
+ } 
+ catch ex {
+   set st=ex.AsStatus()
+ }
+ quit st
+]]></Implementation>
+</Method>
+
+<Method name="SuccessURL">
+<Description>
+метод для получения данных при успешном проведении платежа(чек)</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+ 	try {
+		$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
+		set transact=##class(SPD.Transactions).%New()
+		set transact.OutSum=obj.OutSum
+		set transact.InVid=obj.InVid
+		set transact.sSignatureValue=obj.sSignatureValue
+		set transact.UserId=##class(SPD.SPDUser).%OpenId(obj.UserId)
+		set transact.Valuta=obj.Valuta
+		do transact.%Save()
+ 	}
+ 	catch ex {
+  	set st=ex.AsStatus()
+ 	}
+ 	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetPayments">
+<Description>
+получить все транзакции(пользователь или админ сможет просмотреть историю платежей)
+как послать пользователя выкравшего куку другого пользователя? допилить</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>HASH</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set sql="select ID, DateTransaction, InVid, OutSum, UserId, Valuta, sSignatureValue"_
+	" from SPD.Transactions where UserId="_UserID
+	do ##class(%ZEN.Auxiliary.jsonSQLProvider).%WriteJSONFromSQL(,sql)
+	ret $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="InitPayment">
+<Description>
+инициализация оплаты</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+ 	try {
+	$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
+		
+	set MrchLogin="23g561sqw67uthg45"
+	set outSum="400.00"
+	set sIncCurrLabel="W1R"
+	set sCulture="ru"
+	set InvId="1"
+	set desc="Dances"
+	set mrjpass="adsfer920rne45"
+	///test parameters
+	set shpUserId=obj.UserId
+	set transaction=##class(SPD.Transactions).%New()
+	set transaction.InVid=InvId
+	set transaction.OutSum=outSum
+	set transaction.UserId=##class(SPD.SPDUser).%OpenId(obj.UserId)
+	do transaction.%Save()
+	set trnstnId=transaction.%Id()
+	set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_MrchLogin_":"_outSum_":"_InvId_":"_mrjpass_":shpId="_trnstnId_":shpUserId="_shpUserId)
+	
+	set hex="" f i=1:1:$L(SignatureValue) set hex=hex_$J($ZHEX($A(SignatureValue,i)),2)
+	set hex=$TR(hex," ","0")
+	set hex=$ZCVT(hex,"l")
+	
+	set transaction.sSignatureValue=hex
+	do transaction.%Save()
+	
+	set url="http://test.robokassa.ru/Index.aspx?MrchLogin="_MrchLogin_
+    "&OutSum="_outSum_
+    "&InvId="_InvId_
+    "&Desc="_desc_
+    "&SignatureValue="_hex_
+    "&sIncCurrLabel="_sIncCurrLabel_
+    "&sCulture="_sCulture_
+    "&shpId="_trnstnId_
+    "&shpUserId="_shpUserId
+    w "{""urlPay"":"""_url_"""}"
+ 	}
+    catch ex {
+  	set st=ex.AsStatus()
+ 	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="SuccessPayment">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	// есть юзер id и SignatureValue
+]]></Implementation>
+</Method>
+
+<Method name="XMLParse">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	#dim resp As %String=""
+	set objhr=##class(%Net.HttpRequest).%New()
+	set objhr.Server="test.robokassa.ru"
+	set objhr.Location="91.247.68.36:8090"
+	set objhr.Https=1
+	set objhr.Port=443
+	set objhr.Timeout=1
+	set objhr.SSLConfiguration="robokassa"	
+	//do objhr.Get("/Webservice/Service.asmx/GetCurrencies?MerchantLogin=testRobokassaTest&Language=ru")
+	do objhr.Get("/ru/Doc/Ru/Interface.aspx")
+	set resp=objhr.HttpResponse.Data.Read()
+	zw resp
+	/*
+	s sc = ##class(%XML.TextReader).ParseString($ZCONVERT(resp,"O","UTF8"),.reader)
+	while(reader.Read()){
+		w !,"Nodetype="_reader.NodeType_"---- Name="_reader.Name_"----- Value=",!
+		w "Attributs={"
+		for i=1:1:reader.AttributeCountGet(){
+			do reader.MoveToAttributeIndex(i)
+			set a=reader.Value //,"I","UTF8")
+		zw a
+		}
+		w "}",!
+	}	*/
+	q $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="RobokassaSuccess">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try {    
+		set OutSum=$Get(%request.Data("OutSum",1))
+		set InvId=$Get(%request.Data("InvId",1))
+		set Culture=$Get(%request.Data("Culture",1))		
+		set SignValue=$Get(%request.Data("SignatureValue",1))
+		set transactionId=$Get(%request.Data("shpId",1))
+		set UserId=$Get(%request.Data("shpUserId",1))
+		&sql(select id,count(id) into :id,:count from SPD.Transactions where (sSignatureValue=:SignValue & UserId=:UserId))
+		if (count=1){
+			set transaction=##class(SPD.Transactions).%OpenId(id)
+			set transaction.CompleteDate=$H
+			set transaction.success=1	
+		}		
+	} catch ex {
+		set st=ex.AsStatus()
+	}
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="RobokassaResult">
+<Description>
+Обработка результата</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set mrjpass2="95093wqn4b23h6"
+	//try {
+	set OutSum=$Get(%request.Data("OutSum",1))
+	set InvId=$Get(%request.Data("InvId",1))
+	set SignValue=$Get(%request.Data("SignatureValue",1))
+	set UserId=$Get(%request.Data("shpUserId",1))
+	//set SignValue=##class(Auth.Session).Decode(SignValue)
+	set transactionId=$Get(%request.Data("shpId",1))
+	set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_OutSum_":"_InvId_":"_mrjpass2_":shpId="_transactionId_":shpUserId="_UserId)
+	set SignatureValue=##class(Auth.Session).Encode(SignatureValue)
+	w transactionId
+	if (SignatureValue=$ZCVT(SignValue,"l"))
+	{
+		set transaction=##class(SPD.Transactions).%OpenId(transactionId)
+		set transaction.success=1
+		set transaction.CompleteDate=$ZDT($H,3)
+		do transaction.%Save()
+	}
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="RobokassaFailUrl">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK	
+	try {    
+		set OutSum=$Get(%request.Data("OutSum",1))
+		set InvId=$Get(%request.Data("InvId",1))
+		set Culture=$Get(%request.Data("Culture",1))		
+		set SignValue=$Get(%request.Data("SignatureValue",1))
+		set UserId=$Get(%request.Data("shpUserId",1))
+		&sql(select id,count(id) into :id,:count from SPD.Transactions where (sSignatureValue=:SignValue & UserId=:UserId))
+		if (count=1){
+			set transaction=##class(SPD.Transactions).%OpenId(id)
+			set transaction.success=0
+		}		
+	} catch ex {
+		set st=ex.AsStatus()
+	}
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="XMLResultUrl">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set MrchLogin="23g561sqw67uthg45"
+	set mrjpass2="95093wqn4b23h6"
+	set InvId="1"
+		
+	set st=$$$OK
+	set objhr=##class(%Net.HttpRequest).%New()
+	set Signature=##class(%SYSTEM.Encryption).MD5Hash(MrchLogin_":"_InvId_":"_mrjpass2)
+	set Signature=##class(Auth.Session).Encode(Signature)
+	set objhr.Server="test.robokassa.ru"
+	set objhr.Location="91.247.68.36:8090"	
+	set str="/Webservice/Service.asmx/OpState?MerchantLogin="_MrchLogin_"&InvoiceID="_InvId_"&Signature="_Signature_"&StateCode="_100
+	do objhr.Get(str)
+	set resp=objhr.HttpResponse.Data.Read()
+	set objhr.Timeout=1
+	//w resp
+	//&sql(select sSignatureValue into :Signature from SPD.Transactions where UserId=:userId)
+	//w !,hex
+	
+	//$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
+	
+
+		
+		
+	//}
+	 //catch ex {
+		//set st=ex.AsStatus()
+	//}
+	ret st
+]]></Implementation>
+</Method>
+</Class>
+</Export>

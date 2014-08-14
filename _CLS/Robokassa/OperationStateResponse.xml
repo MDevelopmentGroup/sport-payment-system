@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Robokassa.OperationStateResponse">
+<Description>
+</Description>
+<ProcedureBlock>1</ProcedureBlock>
+<Super>%Persistent,%XML.Adaptor</Super>
+<TimeCreated>63391,56937.403541</TimeCreated>
+
+<Parameter name="XMLNAME">
+<Default>OperationStateResponse</Default>
+</Parameter>
+
+<Parameter name="XMLSEQUENCE">
+<Default>1</Default>
+</Parameter>
+
+<Property name="Result">
+<Type>Robokassa.Result</Type>
+<Required>1</Required>
+<Parameter name="XMLNAME" value="Result"/>
+</Property>
+
+<Property name="State">
+<Type>Robokassa.State</Type>
+<Required>1</Required>
+<Parameter name="XMLNAME" value="State"/>
+</Property>
+
+<Property name="Info">
+<Type>Robokassa.Info</Type>
+<Required>1</Required>
+<Parameter name="XMLNAME" value="Info"/>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Robokassa.OperationSt4259D</DataLocation>
+<DefaultData>OperationStateResponseDefaultData</DefaultData>
+<IdLocation>^Robokassa.OperationSt4259D</IdLocation>
+<IndexLocation>^Robokassa.OperationSt4259I</IndexLocation>
+<StreamLocation>^Robokassa.OperationSt4259S</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="OperationStateResponseDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Result</Value>
+</Value>
+<Value name="3">
+<Value>State</Value>
+</Value>
+<Value name="4">
+<Value>Info</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

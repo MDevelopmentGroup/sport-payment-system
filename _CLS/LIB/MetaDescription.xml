@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="LIB.MetaDescription">
+<Description>
+Продолжение идеалогии класса vacncy.description
++ используются поля из address
+</Description>
+<Super>%Persistent</Super>
+<TimeCreated>63288,3422.890028</TimeCreated>
+
+<Property name="Name">
+<Description>
+Наименование</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="200"/>
+</Property>
+
+<Property name="Body">
+<Description>
+Основное описание</Description>
+<Type>%Text</Type>
+<Parameter name="MAXLEN" value="100000"/>
+</Property>
+
+<UDLText name="T">
+<Content><![CDATA[
+/*
+поля адреса
+начало
+*/
+]]></Content>
+</UDLText>
+
+<Property name="Country">
+<Description>
+Страна</Description>
+<Type>%String</Type>
+</Property>
+
+<Property name="City">
+<Description>
+Город</Description>
+<Type>%String</Type>
+</Property>
+
+<Property name="Street">
+<Description>
+Улица</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="300"/>
+</Property>
+
+<Property name="Email">
+<Description>
+Адрес электронной почты</Description>
+<Type>%String</Type>
+</Property>
+
+<Property name="URL">
+<Description>
+Сайт/ссылка на ресурс </Description>
+<Type>%String</Type>
+</Property>
+
+<Property name="Telephone">
+<Description>
+Телефон</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="40"/>
+</Property>
+
+<UDLText name="T">
+<Content><![CDATA[
+/*
+поля адреса 
+конец
+*/
+]]></Content>
+</UDLText>
+
+<Property name="AddInfo">
+<Description>
+Дополнительное описание для соц сетей</Description>
+<Type>%Text</Type>
+<Parameter name="MAXLEN" value="10000"/>
+</Property>
+
+<Property name="Links">
+<Description>
+Ссылки на размещённые ресурсы</Description>
+<Type>%Text</Type>
+<Parameter name="MAXLEN" value="1000"/>
+</Property>
+
+<Property name="RegDate">
+<Description>
+Дата выставления</Description>
+<Type>%TimeStamp</Type>
+</Property>
+
+<Property name="DescTimeStamp">
+<Description>
+Дата для сортирровки</Description>
+<Type>%TimeStamp</Type>
+</Property>
+
+<Property name="isBlocked">
+<Description>
+Заблокирована ли запись администрацией</Description>
+<Type>%Boolean</Type>
+<InitialExpression>0</InitialExpression>
+</Property>
+
+<Property name="isActive">
+<Description>
+Активная запись или нет</Description>
+<Type>%Boolean</Type>
+<InitialExpression>0</InitialExpression>
+</Property>
+
+<Property name="Lang">
+<Description>
+Язык объекта</Description>
+<Type>%Integer</Type>
+<InitialExpression>0</InitialExpression>
+</Property>
+
+<UDLText name="T">
+<Content><![CDATA[
+/* Автор записи
+Property Author As %String(MAXLEN = 200);
+/// Дополнительное описание для соц сетей ???
+Property AddInfo As %Text(MAXLEN = 500);
+Попробовать описать методы ниже
+*/
+]]></Content>
+</UDLText>
+
+<Method name="SetActive">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ID:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[
+/*
+ClassMethod RaiseUp(VacancyID As %String) As %Status
+{
+	set vacancy=##class(Vacancy).%OpenId(VacancyID)
+	set vacancy.DescTimeStamp=$ZDATETIME($NOW(),3,1,1)
+	do vacancy.%Save()
+	Quit $$$OK
+}
+
+ClassMethod Clone(VacancyID As %String) As %Status
+{
+	set vacancy=##class(Vacancy).%OpenId(VacancyID)
+	set clone=##class(Vacancy).%New(vacancy)
+	set clone.Name="Копия_"_vacancy.Name
+	set clone.Image=##class(LIB.FileBase).%OpenId(vacancy.Image.%Id())
+	do clone.%Save()
+	Quit $$$OK
+}
+ClassMethod Delete(ID) As %Status
+{
+    quit ##class(Description).%DeleteId(ID)
+}
+
+*/
+]]></Content>
+</UDLText>
+
+<Method name="Count">
+<Description>
+Подсчёт количества записей</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>pRequest:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set str=""
+	// назвал oCount т.к. по умолчанию присваивает Agregate_x
+	set Query = "SELECT Count(*) AS oCount "_
+				"FROM "_$THIS
+ // почему то не ловит
+ try {
+	 if (pRequest '="")
+	 {s Query=Query_" WHERE "_pRequest}
+	 // в конце пишет ERROR: UNDEFINED, разобраться и убрать
+ }
+ //точнее ловит но вылетает %)
+ Catch(ex) {
+ 	 //w !,"мимо"
+ /*	 do ##class(WEB.JSON).GetJSONData(Query)
+	 set st=ex.AsStatus
+	 //w !,st*/
+ }
+	do ##class(WEB.JSON).GetJSONData(Query)
+   w !,"__",Query,"__",!
+    //quit ##class(Description).%DeleteId(ID)
+    //w !,$CLASSNAME($THIS)_"--"_$THIS
+    quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="Delete">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ID</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    //quit ##class(Description).%DeleteId(ID)
+    w !,$CLASSNAME($THIS)_"--"_$THIS
+    quit $CLASSMETHOD($CLASSNAME($THIS), "%DeleteId", ID)
+]]></Implementation>
+</Method>
+
+<Method name="GetJSONData">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>SQLRequest:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  set st=$$$OK
+   try{do ##class(%ZEN.Auxiliary.jsonSQLProvider).%WriteJSONFromSQL(,SQLRequest)}
+   catch ex{set st=ex.AsStatus()}
+  quit st
+]]></Implementation>
+</Method>
+
+<Method name="isIMG">
+<Description>
+проверяем есть ли ещё связанные с изображением картинки</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>imgId</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  set st=0
+  quit st
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^LIB.MetaDescriptionD</DataLocation>
+<DefaultData>MetaDescriptionDefaultData</DefaultData>
+<IdLocation>^LIB.MetaDescriptionD</IdLocation>
+<IndexLocation>^LIB.MetaDescriptionI</IndexLocation>
+<StreamLocation>^LIB.MetaDescriptionS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="MetaDescriptionDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Name</Value>
+</Value>
+<Value name="3">
+<Value>Body</Value>
+</Value>
+<Value name="4">
+<Value>Country</Value>
+</Value>
+<Value name="5">
+<Value>City</Value>
+</Value>
+<Value name="6">
+<Value>Street</Value>
+</Value>
+<Value name="7">
+<Value>Email</Value>
+</Value>
+<Value name="8">
+<Value>URL</Value>
+</Value>
+<Value name="9">
+<Value>Telephone</Value>
+</Value>
+<Value name="10">
+<Value>AddInfo</Value>
+</Value>
+<Value name="11">
+<Value>Links</Value>
+</Value>
+<Value name="12">
+<Value>RegDate</Value>
+</Value>
+<Value name="13">
+<Value>DescTimeStamp</Value>
+</Value>
+<Value name="14">
+<Value>isBlocked</Value>
+</Value>
+<Value name="15">
+<Value>isActive</Value>
+</Value>
+<Value name="16">
+<Value>Lang</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

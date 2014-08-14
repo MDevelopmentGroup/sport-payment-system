@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Robokassa.State">
+<Description>
+Создано из: C:\1.xsd</Description>
+<ProcedureBlock>1</ProcedureBlock>
+<Super>%Persistent,%XML.Adaptor</Super>
+<TimeCreated>63391,56937.412996</TimeCreated>
+
+<Parameter name="XMLNAME">
+<Default>State</Default>
+</Parameter>
+
+<Parameter name="XMLSEQUENCE">
+<Default>1</Default>
+</Parameter>
+
+<Property name="Code">
+<Type>%String</Type>
+<Required>1</Required>
+<Parameter name="MAXLEN"/>
+<Parameter name="XMLNAME" value="Code"/>
+</Property>
+
+<Property name="RequestDate">
+<Type>%String</Type>
+<Required>1</Required>
+<Parameter name="MAXLEN"/>
+<Parameter name="XMLNAME" value="RequestDate"/>
+</Property>
+
+<Property name="StateDate">
+<Type>%String</Type>
+<Required>1</Required>
+<Parameter name="MAXLEN"/>
+<Parameter name="XMLNAME" value="StateDate"/>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Robokassa.StateD</DataLocation>
+<DefaultData>StateDefaultData</DefaultData>
+<IdLocation>^Robokassa.StateD</IdLocation>
+<IndexLocation>^Robokassa.StateI</IndexLocation>
+<StreamLocation>^Robokassa.StateS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="StateDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Code</Value>
+</Value>
+<Value name="3">
+<Value>RequestDate</Value>
+</Value>
+<Value name="4">
+<Value>StateDate</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

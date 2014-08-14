@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="WEB.csp">
+<Super>%CSP.Page</Super>
+<TimeCreated>63383,53885.950912</TimeCreated>
+
+<Method name="OnPage">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	zw %request
+	zw %response
+	&html<<html>
+<head>
+</head>
+<body>>
+	; To do...
+	&html<</body>
+</html>>
+	Quit $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

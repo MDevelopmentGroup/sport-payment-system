@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="LIB.Person">
+<Super>%Persistent</Super>
+<TimeCreated>63393,42484.444496</TimeCreated>
+
+<Property name="FirstName">
+<Description><![CDATA[
+расширение для таблиц Dancer && instructor]]></Description>
+<Type>%String</Type>
+</Property>
+
+<Property name="LastName">
+<Type>%String</Type>
+</Property>
+
+<Property name="SurName">
+<Type>%String</Type>
+</Property>
+
+<Property name="login">
+<Type>%String</Type>
+</Property>
+
+<Property name="Password">
+<Type>%String</Type>
+</Property>
+
+<Property name="Image">
+<Type>LIB.FileBase</Type>
+</Property>
+
+<Property name="Gender">
+<Description>
+тру пол или не тру XD</Description>
+<Type>%Boolean</Type>
+</Property>
+
+<Property name="Mail">
+<Description>
+добавить проверку корректности мыла</Description>
+<Type>%String</Type>
+</Property>
+
+<Property name="Access">
+<Type>SPD.UserRule</Type>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheSerialState</Type>
+<DataLocation>^LIB.PersonD</DataLocation>
+<DefaultData>PersonDefaultData</DefaultData>
+<IdLocation>^LIB.PersonD</IdLocation>
+<IndexLocation>^LIB.PersonI</IndexLocation>
+<State>PersonState</State>
+<StreamLocation>^LIB.PersonS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="PersonDefaultData">
+<Subscript>"1"</Subscript>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Access</Value>
+</Value>
+</Data>
+<Data name="PersonState">
+<Value name="1">
+<Value>FirstName</Value>
+</Value>
+<Value name="2">
+<Value>LastName</Value>
+</Value>
+<Value name="3">
+<Value>login</Value>
+</Value>
+<Value name="4">
+<Value>Password</Value>
+</Value>
+<Value name="5">
+<Value>Image</Value>
+</Value>
+<Value name="6">
+<Value>Gender</Value>
+</Value>
+<Value name="7">
+<Value>Mail</Value>
+</Value>
+<Value name="8">
+<Value>SurName</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Transactions">
+<Super>%Persistent</Super>
+<TimeCreated>63379,55756.819581</TimeCreated>
+
+<Property name="OutSum">
+<Description>
+Сумма</Description>
+<Type>%Float</Type>
+</Property>
+
+<Property name="InVid">
+<Description>
+Номер счёта в магазине</Description>
+<Type>%Integer</Type>
+</Property>
+
+<Property name="sSignatureValue">
+<Description>
+MD5 сигнатура(для получения статистики)</Description>
+<Type>%String</Type>
+</Property>
+
+<Property name="DateTransactionInit">
+<Description>
+Дата проведения платежа</Description>
+<Type>%TimeStamp</Type>
+<InitialExpression>$ZDT($H,3)</InitialExpression>
+</Property>
+
+<Property name="Valuta">
+<Description>
+Валюта</Description>
+<Type>%Integer</Type>
+</Property>
+
+<Property name="success">
+<Type>%Boolean</Type>
+</Property>
+
+<Property name="CompleteDate">
+<Type>%TimeStamp</Type>
+</Property>
+
+<Property name="Transaction">
+<Type>SPD.Dancer</Type>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.TransactionsD</DataLocation>
+<DefaultData>TransactionsDefaultData</DefaultData>
+<IdLocation>^SPD.TransactionsD</IdLocation>
+<IndexLocation>^SPD.TransactionsI</IndexLocation>
+<StreamLocation>^SPD.TransactionsS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="TransactionsDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>OnSum</Value>
+</Value>
+<Value name="3">
+<Value>InVid</Value>
+</Value>
+<Value name="4">
+<Value>sSignatureValue</Value>
+</Value>
+<Value name="5">
+<Value>DateTransaction</Value>
+</Value>
+<Value name="6">
+<Value>Valuta</Value>
+</Value>
+<Value name="7">
+<Value>UserId</Value>
+</Value>
+<Value name="8">
+<Value>OutSum</Value>
+</Value>
+<Value name="9">
+<Value>success</Value>
+</Value>
+<Value name="10">
+<Value>CompleteDate</Value>
+</Value>
+<Value name="11">
+<Value>DateTransactionInit</Value>
+</Value>
+<Value name="12">
+<Value>Transaction</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.JournalLesson">
+<Super>%Persistent</Super>
+<TimeCreated>63393,60231.452993</TimeCreated>
+
+<Property name="Group">
+<Type>SPD.Group</Type>
+</Property>
+
+<Property name="TypeLesson">
+<Type>SPD.TypeLesson</Type>
+</Property>
+
+<Property name="DuringDateLesson">
+<Type>%TimeStamp</Type>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.JournalLessonD</DataLocation>
+<DefaultData>JournalLessonDefaultData</DefaultData>
+<IdLocation>^SPD.JournalLessonD</IdLocation>
+<IndexLocation>^SPD.JournalLessonI</IndexLocation>
+<StreamLocation>^SPD.JournalLessonS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="JournalLessonDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Group</Value>
+</Value>
+<Value name="3">
+<Value>TypeLesson</Value>
+</Value>
+<Value name="4">
+<Value>DuringDateLesson</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

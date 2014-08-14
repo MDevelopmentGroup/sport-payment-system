@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Price">
+<Super>%Persistent</Super>
+<TimeCreated>63393,57121.285694</TimeCreated>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.PriceD</DataLocation>
+<DefaultData>PriceDefaultData</DefaultData>
+<IdLocation>^SPD.PriceD</IdLocation>
+<IndexLocation>^SPD.PriceI</IndexLocation>
+<StreamLocation>^SPD.PriceS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="PriceDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

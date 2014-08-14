@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Auth.NewClass1">
+<Super>%CSP.Page</Super>
+<TimeCreated>63392,55913.115267</TimeCreated>
+
+<Method name="OnPage">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	
+	
+	
+	Quit $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

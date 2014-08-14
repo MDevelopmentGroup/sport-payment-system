@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="LIB.FileBase">
+<Super>%Persistent</Super>
+<TimeCreated>63337,43506.106124</TimeCreated>
+
+<Property name="Name">
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="5000"/>
+</Property>
+
+<Property name="Image">
+<Type>LIB.Person</Type>
+<Cardinality>one</Cardinality>
+<Inverse>Image</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="SchoolImage">
+<Type>SPD.School</Type>
+<Cardinality>many</Cardinality>
+<Inverse>Image</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^LIB.FileBaseD</DataLocation>
+<DefaultData>FileBaseDefaultData</DefaultData>
+<IdLocation>^LIB.FileBaseD</IdLocation>
+<IndexLocation>^LIB.FileBaseI</IndexLocation>
+<StreamLocation>^LIB.FileBaseS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="FileBaseDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Name</Value>
+</Value>
+<Value name="3">
+<Value>UserImage</Value>
+</Value>
+<Value name="4">
+<Value>Image</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

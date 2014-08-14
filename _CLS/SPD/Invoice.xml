@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Invoice">
+<Super>%Persistent</Super>
+<TimeCreated>63393,57783.580098</TimeCreated>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.InvoiceD</DataLocation>
+<DefaultData>InvoiceDefaultData</DefaultData>
+<IdLocation>^SPD.InvoiceD</IdLocation>
+<IndexLocation>^SPD.InvoiceI</IndexLocation>
+<StreamLocation>^SPD.InvoiceS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="InvoiceDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

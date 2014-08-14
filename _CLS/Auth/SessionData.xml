@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Auth.SessionData">
+<Super>%Persistent</Super>
+<TimeCreated>63292,52863.788413</TimeCreated>
+
+<Property name="Data">
+<Type>%ArrayOfDataTypes</Type>
+</Property>
+
+<Property name="DateTime">
+<Type>%TimeStamp</Type>
+<InitialExpression>$zdt($h,3)</InitialExpression>
+</Property>
+
+<Property name="UserID">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="IP">
+<Type>%String</Type>
+</Property>
+
+<Property name="RoleUser">
+<Type>%String</Type>
+</Property>
+
+<Property name="Agent">
+<Type>%String</Type>
+</Property>
+
+<Method name="%OnOpen">
+<Private>1</Private>
+<ReturnType>%Status</ReturnType>
+<ServerOnly>1</ServerOnly>
+<Implementation><![CDATA[
+  set a =..%DispatchClassMethod()
+  set a=$LB()
+  zw a
+  Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Property name="N">
+<Type>%String</Type>
+</Property>
+
+<Method name="N">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set a=1+1
+	Q $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="CreateSSNKey">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	#dim str As %String="1"
+	set list1=$lb("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z")
+	set list2=$lb("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z")
+	for i=1:1:15
+	{
+		if ($r(2)){set str=str_$LIST(list2,$r($LL(list2))+1)_$r(99)}
+		else{ set str=str_$LIST(list2,$r($LL(list2))+1)_$r(99)}	
+	}
+	ret str
+]]></Implementation>
+</Method>
+
+<Property name="User">
+<Type>%Persistent</Type>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Auth.SessionDataD</DataLocation>
+<DefaultData>SessionDataDefaultData</DefaultData>
+<IdLocation>^Auth.SessionDataD</IdLocation>
+<IndexLocation>^Auth.SessionDataI</IndexLocation>
+<StreamLocation>^Auth.SessionDataS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="SessionDataDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Data</Value>
+</Value>
+<Value name="3">
+<Value>N</Value>
+</Value>
+<Value name="4">
+<Value>UserID</Value>
+</Value>
+<Value name="5">
+<Value>HASH</Value>
+</Value>
+<Value name="6">
+<Value>SessaionStartTime</Value>
+</Value>
+<Value name="7">
+<Value>time</Value>
+</Value>
+<Value name="8">
+<Value>SessionStartTime</Value>
+</Value>
+<Value name="9">
+<Value>IP</Value>
+</Value>
+<Value name="10">
+<Value>Role</Value>
+</Value>
+<Value name="11">
+<Value>User</Value>
+</Value>
+<Value name="12">
+<Value>Key</Value>
+</Value>
+<Value name="13">
+<Value>Agent</Value>
+</Value>
+<Value name="14">
+<Value>RoleUser</Value>
+</Value>
+<Value name="15">
+<Value>DateTime</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

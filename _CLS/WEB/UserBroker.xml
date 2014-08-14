@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="WEB.UserBroker">
+<OdbcType>VARCHAR</OdbcType>
+<Super>Auth.DispatchRequest</Super>
+<TimeCreated>63288,57495.3527</TimeCreated>
+
+<XData name="UrlMap">
+<Data><![CDATA[
+<Routes>
+	   <Route Url="/test" 							Method="POST" Call="WEB.UserBroker:Test"/>	   
+	   <Route Url="/news/Get/:ID"		   			Method="GET" Call="WEB.UserBroker:NewMethod2"/>
+	   
+</Routes>
+]]></Data>
+</XData>
+
+<Method name="Test">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	
+	//w $$$FormatTextJS()
+	
+	//	zw %request
+	//w "---------------------------------------------------------------------------------",!
+	//zw %response
+	/*
+	set %session.Data("Login")="User12345"
+	set %session.Data("Password")="dbdfbzdcxfbdxzfb"
+	//set %session.Username="87gwergserg"
+	set a=##class(%CSP.Session).%New()
+
+	W "<input type=""text"" value="""
+	w %session.Data("Login")
+	W """/>"
+	w %session.Data("Password") */
+	
+	//zw %session
+	//w "<script language='JavaScript'>var req = new XMLHttpRequest();req.open('GET', document.location, false);req.send(null);var headers = req.getAllResponseHeaders().toLowerCase();alert(headers);</script>"
+	/*
+	 set st=$$$OK
+   try{
+	   $$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
+       
+         $$$THROWONERROR(st,$$$OK)
+ 
+   } catch ex{set st=ex.AsStatus()}
+    quit st
+    */
+     
+     // w obj.image
+      set temp =##class(%FileBinaryStream).%New()
+     // set Location="C:\"
+    ////  set temp.Filename=Location_"test.jpg"
+      //set temp.TranslateTable="UTF8"
+     // do temp.Write(##class(%SYSTEM.Encryption).Base64Decode(obj.image))
+    // do temp.CopyFrom(%request.GetMimeData("file",1))
+    //  do temp.%Save()
+  
+    set FileName=""
+    set str=""
+    set FileName= %request.NextMimeData(FileName)
+    while(FileName'=""){
+	    set str=str_"{""ID"":""12""},"
+	    
+	    
+	    
+	    
+	    set FileName= %request.NextMimeData(FileName)
+	    }
+  
+      
+      
+      w "["_$E(str,1,*-1)_"]"
+    
+	
+	
+	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="Http404">
+<Description>
+Issue an '404' error ( user can override)</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    Set %response.Status="404 Not Found"
+
+    //do ##class(%RunJava).getJDK(.st,.jv,)
+    set a= ##class(%CSP.UserAgent).%New()
+    zw a
+  
+ If (%session.NewSession = 1) {
+    w "this is a new session",!
+ }
+    zw %session
+    Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="NewMethod1">
+<ClassMethod>1</ClassMethod>
+<Language>java</Language>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	//system.out.print("ewrf");
+	
+	return "r";
+]]></Implementation>
+</Method>
+
+<Method name="NewMethod2">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ID</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	w "{""degh"":""serghstrg sgsdrfgsaerg saurgisaeurg iu""}"
+	q $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

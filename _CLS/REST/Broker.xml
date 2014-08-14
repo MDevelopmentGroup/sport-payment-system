@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="REST.Broker">
+<Super>%CSP.REST</Super>
+<TimeCreated>63313,43454.439256</TimeCreated>
+
+<XData name="UrlMap">
+<Data><![CDATA[
+<Routes>
+ 	<Route Url="/json/companies" 				Method="GET" 	Call="REST.JSON:GetAllCompanies"/>
+ 	<Route Url="/json/company" 					Method="POST" 	Call="REST.JSON:CreateCompany"/>
+ 	<Route Url="/json/company/:compid" 			Method="DELETE" Call="REST.JSON:DeleteCompany"/>
+ 	<Route Url="/json/company/:compid" 			Method="PUT" 	Call="REST.JSON:UpdateCompany"/>
+  	<Route Url="/json/testjson" 				Method="POST" 	Call="REST.JSON:testjson"/>
+  	
+  	<Route Url="/Login/"						Method="POST"	Call="Auth.Session:CreateSession"/>
+	<Route Url="/Logout/"						Method="POST"	Call="Auth.Session:ClearSession"/>
+	<Route Url="/InitPayment/"					Method="POST"	Call="REST.JSON:InitPayment"/>
+	<Route Url="/success/"						Method="POST"	Call="REST.JSON:RobokassaSuccess"/>
+	<Route Url="/result/"						Method="POST"	Call="REST.JSON:RobokassaResult"/>
+	<Route Url="/fail/url/"						Method="POST"	Call="REST.JSON:RobokassaFailUrl"/>
+
+ </Routes>
+]]></Data>
+</XData>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	<Route Url="/fail/url/"						Method="POST"	Call="REST.JSON:RobokassaFailUrl"/>
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	<Route Url="/fail/url/"						Method="GET"	Call="REST.JSON:RobokassaFailUrl"/>
+
+]]></Content>
+</UDLText>
+
+<Method name="Test">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    &html<Работает!>
+    quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="NewMethod1">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	do %response.SetCookie("345664568687e374567456y45666876","sdv456745674567sdv")
+	Q $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

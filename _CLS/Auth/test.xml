@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Auth.test">
+<Super>%XML.SAX.ContentHandler</Super>
+<TimeCreated>63383,46607.689455</TimeCreated>
+
+<Method name="OnApplicationChange">
+<Description><![CDATA[
+Called when a session that was in CSP application <var>oldapp</var> is now going to run a page in
+CSP application <var>newapp</var>. If this returns an error value then instead of running the
+page in the new application it will redirect to the error page (error page looked up from old application).]]></Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>oldapp:%String,newapp:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	w "13213",!
+	Quit $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

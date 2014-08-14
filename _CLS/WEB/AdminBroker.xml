@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="WEB.AdminBroker">
+<Super>%CSP.REST</Super>
+<TimeCreated>63288,57447.189928</TimeCreated>
+
+<XData name="UrlMap">
+<Data><![CDATA[
+<Routes>
+	<!-- User-->
+		<Route Url="/User/Create" 	  		Method="POST" 		Call="SPD.SPDUser:Create"/>
+		<Route Url="/User/Update" 	  		Method="PUT" 		Call="SPD.SPDUser:Update"/>
+		<Route Url="/User/Delete/:ID" 		Method="DELETE" 	Call="SPD.SPDUser:Delete"/>
+		<Route Url="/User/GetAll" 	  		Method="GET" 		Call="SPD.SPDUser:GetAll"/>
+		<Route Url="/User/Get/:ID" 	  		Method="GET" 		Call="SPD.SPDUser:Get"/>
+	<!-- User-->
+	
+	<!-- School-->
+		<Route Url="/School/Create" 	  	Method="POST" 		Call="SPD.School:Create"/>
+		<Route Url="/School/Update" 	  	Method="PUT" 		Call="SPD.School:Update"/>
+		<Route Url="/School/Delete/:ID"   	Method="DELETE" 	Call="SPD.School:Delete"/>
+		<Route Url="/School/GetAll" 	  	Method="GET" 		Call="SPD.School:GetAll"/>
+		<Route Url="/School/Get/:ID" 	  	Method="GET" 		Call="SPD.School:Get"/>
+	<!-- School-->
+	
+	<!-- session-->
+		<Route Url="/Login/"				Method="POST" 		Call="Auth.Session:Login"/>
+		<Route Url="/InitPayment/"			Method="POST" 		Call="REST.JSON:XMLParse"/>
+		<Route Url="/success/"				Method="POST" 		Call="REST.JSON:SuccessPayment"/>
+	<!-- -->
+
+    </Routes>
+]]></Data>
+</XData>
+
+<Method name="DispatchRequest">
+<Description>
+Dispatch a REST request according to URL and Method</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>pUrl:%String,pMethod:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	//W !,"jhgujyfkfyvh",pUrl,pMethod,!
+	//w %request.GetCgiEnv("HTTP_USER_AGENT")
+	///проверка сессии.
+
+	try{
+	$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
+		set hash=obj.hash
+		set userID=obj.UserID
+		///проверка всех сессий на время жизни
+		&sql(declare s1 cursor for select id,DateTime into:id,:DateTime from Auth.SessionData)
+		&sql(open s1)
+		for {
+			&sql(fetch s1)
+			quit:(SQLCODE '= 0)
+			if (##class(Auth.Session).DateDiff("second",$zdt($h,3),DateTime)<0)
+			{
+				do ##class(Auth.SessionData).%DeleteId(id)
+				
+			}
+		}
+		&sql(close s1)
+		
+		if ('##class(Auth.Session).CheckSession(userID,hash))
+		{
+			///подмена кук. Либо сменился браузер, ip
+			w "{""children"":{"_
+			"""success"":"""_1_
+			""",""hash"":"""_""_
+			""",""userId"":"""_""_
+			""",""SurName"":"""_""_
+			""",""LastName"":"""_""_
+			""",""FirstName"":"""_""_
+			"""}}"
+		}
+		
+		
+	}
+	catch ex{
+		
+	}
+    #dim tSC As %Status = $$$OK
+    #dim e As %Exception.AbstractException
+    
+    #dim tMatcher As %Regex.Matcher
+    
+    #dim tArgs,tClass,tMatchUrl,tMapEntry,tRegEx,tTarget,tAccess As %String
+    #dim tI,tIndex As %Integer
+    #dim tResourceMatched As %Boolean
+    #dim tMethodMatched As %Boolean
+    
+    Try {
+        #; Check that the effective user ( could be unknown user ) can access this resource
+        Set tAccess=$SYSTEM.Security.Check($Piece($zu(90,21,$namespace),"^",4))
+        If tAccess'["READ,WRITE"
+        {
+            #; Don't want the session token
+            Set %response.OutputSessionToken=0
+            
+            #; Set the Http Status
+            Set %response.Status="401 Unauthorized"
+        
+            #; Write out the header
+            Do %response.WriteHTTPHeader()
+            
+            #; Done
+            Quit
+        }
+        
+        Set (tResourceMatched,tMethodMatched)=0
+        
+        #; Walk the dispatch map in collation order of defintion
+        For tIndex=1:1 {
+            
+            #; Get the next map entry
+            Set tMapEntry=..DispatchMap(tIndex) If tMapEntry="" Quit
+             
+            #; Pick out the RegEx
+            Set tRegEx=$List(tMapEntry,1)
+            
+            #; Create a matcher
+            Set tMatcher=##class(%Regex.Matcher).%New(tRegEx)
+        
+            #; Extract the match url from the application name
+            Set tMatchUrl="/"_$Extract(pUrl,$Length(%request.Application)+1,*)
+            
+            #; Test each regular expression in turn, extracting the arguments,
+            #; dispatching to the named method  
+            If tMatcher.Match(tMatchUrl) {
+                
+                #; We have matched the resource
+                Set tResourceMatched=1
+                
+                #; Now check method name
+                If pMethod'=$List(tMapEntry,2) Continue
+                
+                Set tTarget=$List(tMapEntry,3)
+                
+                #; We have matched a method
+                Set tMethodMatched=1
+                
+                #; Got a match, marshall the arguments
+                If tMatcher.GroupCount {
+                    For tI=1:1:tMatcher.GroupCount Set tArgs(tI)=tMatcher.Group(tI)
+                    Set tArgs=tI
+                } else {
+                    Set tArgs=0
+                }
+                
+                #; Check for optional ClassName prefix
+                Set tClass=$classname()
+                If tTarget[":" Set tClass=$Piece(tTarget,":"),tTarget=$Piece(tTarget,":",2)
+                
+                
+                #; Dispatch
+                Set tSC=$zobjclassmethod(tClass,tTarget,tArgs...)
+                If $$$ISERR(tSC) Do ..Http500(##class(%Exception.StatusException).CreateFromStatus(tSC))
+                
+                #; Don't want multiple matches
+                Quit
+            }
+        }
+        
+        #; Didn't have a match for the resource, report not found
+        If tResourceMatched=0 Set tSC=..Http404() Quit
+        
+        #; Had a match for resource but method not matched
+        If tMethodMatched=0 Set tSC=..Http405() Quit
+            
+    } Catch (e) {
+        
+        #; Issue a '500'
+        Do ..Http500(e)
+    }
+    
+    If ..#UseSession=0 Set %session.EndSession=1
+    
+    Quit tSC
+]]></Implementation>
+</Method>
+</Class>
+</Export>

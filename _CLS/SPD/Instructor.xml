@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Instructor">
+<Super>%Persistent</Super>
+<TimeCreated>63393,60295.430355</TimeCreated>
+
+<Property name="OwnerSchool">
+<Type>SPD.School</Type>
+<Cardinality>many</Cardinality>
+<Inverse>Owner</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.InstructorD</DataLocation>
+<DefaultData>InstructorDefaultData</DefaultData>
+<IdLocation>^SPD.InstructorD</IdLocation>
+<IndexLocation>^SPD.InstructorI</IndexLocation>
+<StreamLocation>^SPD.InstructorS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="InstructorDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>
