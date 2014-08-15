@@ -3,9 +3,37 @@ angular.module('VACANCY',['ngCookies','ngResource','ngLocale', 'ngRoute','ngSani
       ])
     .config(['$routeProvider',  function($routeProvider) { $routeProvider.
 
-        when('/lk',                 {templateUrl: 'partials/user/view/lk.html',                  controller: ViewLKCtrl}).
-        //***************************************** Vacancy **********************************************************//
-        when('/vacancies',          {templateUrl: 'partials/user/view/view_vacancies.html', controller: ViewVacanciesCtrl}).
+        when('/main',                     {templateUrl: 'partials/user/view/main.html',                  controller: ViewLKCtrl}).
+        //***************************************** Balance **********************************************************//
+        when('/Balance',                  {templateUrl: 'partials/user/view/view_Balance.html', controller: ViewBalanceCtrl}).
+        //***************************************** Balance **********************************************************//
+
+        //***************************************** TimeTable **********************************************************//
+        when('/TimeTable',                {templateUrl: 'partials/user/view/view_TimeTable.html', controller: ViewTimeTableCtrl}).
+        //***************************************** TimeTable **********************************************************//
+
+        //***************************************** Groups **********************************************************//
+        when('/Groups',                   {templateUrl: 'partials/user/view/view_Groups.html', controller: ViewGroupsCtrl}).
+        when('/Groups/:GroupId',          {templateUrl: 'partials/user/view/view_Group.html', controller: ViewGroupsCtrl}).
+        //***************************************** Groups **********************************************************//
+
+        //***************************************** Trainer **********************************************************//
+        when('/Trainers',                   {templateUrl: 'partials/user/view/view_Trainers.html', controller: ViewTrainerCtrl}).
+        when('/Trainers/:GroupId',          {templateUrl: 'partials/user/view/view_Trainer.html', controller: ViewTrainerCtrl}).
+        //***************************************** Trainer **********************************************************//
+
+        when('/LK',          {templateUrl: 'partials/user/view/view_School.html', controller: ViewLKCtrl}).
+
+        //***************************************** Schools **********************************************************//
+        when('/schools',                   {templateUrl: 'partials/user/view/view_Schools.html', controller: ViewSchoolsCtrl}).
+        when('/schools/:GroupId',          {templateUrl: 'partials/user/view/view_School.html', controller: ViewSchoolsCtrl}).
+        //***************************************** Schools **********************************************************//
+
+        //***************************************** PrivateLessons **********************************************************//
+        when('/PrivateLessons',                   {templateUrl: 'partials/user/view/view_PrivateLessons.html', controller: ViewPrivateLessonsCtrl}).
+        when('/PrivateLessons/:GroupId',          {templateUrl: 'partials/user/view/view_PrivateLesson.html', controller: ViewPrivateLessonsCtrl}).
+        //***************************************** PrivateLessons **********************************************************//
+
         when('/vacancy/:VacancyID', {templateUrl: 'partials/user/view/view_vacancy.html',   controller: ViewVacancyCtrl}).
         //***************************************** Vacancy **********************************************************//
 
@@ -23,9 +51,9 @@ angular.module('VACANCY',['ngCookies','ngResource','ngLocale', 'ngRoute','ngSani
         when('/solution/:SolutionID',            {templateUrl: 'partials/user/view/view_solution.html',   controller: ViewSolutionCtrl}).
 
 
-        when('/about',             {templateUrl: 'partials/user/about.html' ,   controller: ViewAboutCtrl}).
+        when('/main',             {templateUrl: 'partials/user/about.html' ,   controller: ViewAboutCtrl}).
 
-        otherwise({redirectTo: '/lk'});
+        otherwise({redirectTo: '/main'});
     }]).
     run(['LanguageFactory',function(LanguageFactory) {
         LanguageFactory.Init();

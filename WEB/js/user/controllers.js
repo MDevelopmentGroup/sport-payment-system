@@ -9,7 +9,7 @@
 function ViewLKCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFactory,PaymentFactory){
     $scope.init=function(){
         $rootScope.MenuActive={};
-        $rootScope.MenuActive.Page='partials/user/view/lk.html';
+        $rootScope.MenuActive.Page='partials/user/view/main.html';
         $rootScope.MenuActive.Controller='ViewLKCtrl';
         $scope.User=AuthenticationFactory.GetCurrentUser();
         //$rootScope.MenuActive.SettingsView='active';
@@ -23,7 +23,7 @@ function ViewLKCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFacto
             if(data.urlPay) {
                 console.log(data.urlPay);
                 location=data.urlPay;
-            }
+            };
         });
     };
     $scope.init();
@@ -475,3 +475,137 @@ function ViewAboutCtrl($rootScope,$scope,SettingFactory){
 
 }
 //******************************************** About ***************************************************************//
+
+
+
+
+//******************************************** dance ***************************************************************//
+
+function ViewAboutCtrl($rootScope,$scope,SettingFactory)
+{
+    $scope.intit=function()
+    {
+        $rootScope.MenuActive={};
+        $rootScope.MenuActive.Page='partials/user/view/view_about.html';
+        $rootScope.MenuActive.Controller='ViewAboutCtrl';
+        $rootScope.MenuActive.AboutView='active';
+        $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
+        //$scope.lang=LanguageFactory.GetCurrentLanguage();
+        //SettingFactory.GetSettings();
+    }
+    $scope.intit();
+}
+
+function ViewBalanceCtrl($rootScope,$scope,SettingFactory,LanguageFactory)
+{
+    $scope.intit=function()
+    {
+        $rootScope.MenuActive={};
+        $rootScope.MenuActive.Page='partials/user/view/view_about.html';
+        $rootScope.MenuActive.Controller='ViewAboutCtrl';
+        $rootScope.MenuActive.AboutView='active';
+        $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
+        $scope.lang=LanguageFactory.GetCurrentLanguage();
+
+    }
+    $scope.intit();
+}
+
+function ViewTimeTableCtrl($rootScope,$scope,SettingFactory,LanguageFactory)
+{
+    $scope.intit=function()
+    {
+        $rootScope.MenuActive={};
+        $rootScope.MenuActive.Page='partials/user/view/view_about.html';
+        $rootScope.MenuActive.Controller='ViewAboutCtrl';
+        $rootScope.MenuActive.AboutView='active';
+        $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
+        $scope.lang=LanguageFactory.GetCurrentLanguage();
+        SettingFactory.GetSettings();
+    }
+    $scope.intit();
+}
+
+function ViewGroupsCtrl($rootScope,$scope,SettingFactory,LanguageFactory)
+{
+    $scope.intit=function()
+    {
+        $rootScope.MenuActive={};
+        $rootScope.MenuActive.Page='partials/user/view/view_about.html';
+        $rootScope.MenuActive.Controller='ViewAboutCtrl';
+        $rootScope.MenuActive.AboutView='active';
+        $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
+        $scope.lang=LanguageFactory.GetCurrentLanguage();
+        SettingFactory.GetSettings();
+    }
+    $scope.intit();
+}
+
+
+function ViewTrainerCtrl($rootScope,$scope,SettingFactory,LanguageFactory)
+{
+    $scope.intit=function()
+    {
+        $rootScope.MenuActive={};
+        $rootScope.MenuActive.Page='partials/user/view/view_about.html';
+        $rootScope.MenuActive.Controller='ViewAboutCtrl';
+        $rootScope.MenuActive.AboutView='active';
+        $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
+        $scope.lang=LanguageFactory.GetCurrentLanguage();
+        SettingFactory.GetSettings();
+    }
+    $scope.intit();
+}
+
+function ViewPrivateLessonsCtrl($rootScope,$scope,SettingFactory,LanguageFactory) {
+
+    $scope.intit=function()
+    {
+        $rootScope.MenuActive={};
+        $rootScope.MenuActive.Page='partials/user/view/view_about.html';
+        $rootScope.MenuActive.Controller='ViewAboutCtrl';
+        $rootScope.MenuActive.AboutView='active';
+        $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
+        $scope.lang=LanguageFactory.GetCurrentLanguage();
+        SettingFactory.GetSettings();
+    }
+    $scope.intit();
+}
+
+function ViewSchoolsCtrl($rootScope,$scope,SettingFactory,LanguageFactory) {
+
+    $scope.intit=function()
+    {
+        $rootScope.MenuActive={};
+        $rootScope.MenuActive.Page='partials/user/view/view_about.html';
+        $rootScope.MenuActive.Controller='ViewAboutCtrl';
+        $rootScope.MenuActive.AboutView='active';
+        $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
+        $scope.lang=LanguageFactory.GetCurrentLanguage();
+        SettingFactory.GetSettings();
+    }
+    $scope.intit();
+}
+
+function LeftInfoPanelCtrl($rootScope,$scope,SettingFactory,LanguageFactory) {
+
+
+
+}
+
+function ViewTrainersCtrl($rootScope,$scope,SettingFactory,LanguageFactory)
+{
+    $scope.intit=function()
+    {
+        $rootScope.MenuActive={};
+        $rootScope.MenuActive.Page='partials/user/view/view_about.html';
+        $rootScope.MenuActive.Controller='ViewAboutCtrl';
+        $rootScope.MenuActive.AboutView='active';
+        $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
+        $scope.lang=LanguageFactory.GetCurrentLanguage();
+        SettingFactory.GetSettings();
+    }
+    $scope.intit();
+}
+
+//******************************************** dance ***************************************************************//

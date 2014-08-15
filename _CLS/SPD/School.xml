@@ -30,6 +30,10 @@
 <Relationship>1</Relationship>
 </Property>
 
+<Property name="Address">
+<Type>%String</Type>
+</Property>
+
 <Index name="ImageIndex">
 <Properties>Image</Properties>
 </Index>
@@ -180,6 +184,9 @@
 </Value>
 <Value name="19">
 <Value>Image</Value>
+</Value>
+<Value name="20">
+<Value>Address</Value>
 </Value>
 </Data>
 <Property name="%%CLASSNAME">
