@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Logic.Dancer">
+<TimeCreated>63417,52469.610053</TimeCreated>
+
+<Method name="Create">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		
+	}
+	catch{
+		
+	}
+	ret st
+]]></Implementation>
+</Method>
+</Class>
+</Export>

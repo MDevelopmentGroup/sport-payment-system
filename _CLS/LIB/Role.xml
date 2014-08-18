@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="LIB.Role">
+<Super>%Persistent</Super>
+<TimeCreated>63417,41751.031011</TimeCreated>
+
+<Property name="Description">
+<Type>%String</Type>
+</Property>
+
+<Property name="Access">
+<Type>%Integer</Type>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^LIB.RoleD</DataLocation>
+<DefaultData>RoleDefaultData</DefaultData>
+<IdLocation>^LIB.RoleD</IdLocation>
+<IndexLocation>^LIB.RoleI</IndexLocation>
+<StreamLocation>^LIB.RoleS</StreamLocation>
+<Data name="RoleDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Access</Value>
+</Value>
+<Value name="3">
+<Value>Description</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

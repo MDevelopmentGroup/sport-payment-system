@@ -21,7 +21,7 @@
 <ReturnType>%Boolean</ReturnType>
 <Implementation><![CDATA[
 	#dim bl As %Boolean=0
-	&sql(select key into:key from SPD.SPDUser where id=:UserId)
+	&sql(select key into:key from LIB.Person where id=:UserId)
 	set str=$SYSTEM.Encryption.AESCBCDecrypt(HASH,key)
 	set hIP=%request.GetCgiEnv("REMOTE_ADDR")
 	set hUserAgent=%request.GetCgiEnv("HTTP_USER_AGENT")
@@ -89,20 +89,24 @@
 ]]></Implementation>
 </Method>
 
-<Method name="CreateSession">
+<Method name="CreateSessionForm">
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set st=$$$OK
 	try{
 		$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
-		set pass=obj.Password	set Login=obj.Login
-		&sql(declare ses1 cursor for select id , SurName, LastName, FirstName, RoleUser,Key into:UserID , :SurName, :LastName, :FirstName, :RoleUser, :Key from SPD.SPDUser where (Password=:pass & Login=:Login))
+		set pass=obj.Password	set Email=obj.Email
+		&sql(declare ses1 cursor for select ID, Access, Active, Email, FirstName, Gender,
+		 Key, LastName, Password, Patronymic into:UserID , :Access, :Active, :Email, :FirstName, :Gender, :Key, :LastName, :Password, :Patronymic
+		 from LIB.Person where (Password=:pass & Email=:Email))
+		 
 		&sql(open ses1)
 		&sql(fetch ses1)
 		&sql(close ses1)
 		if (%ROWCOUNT'=0)
 		{
+			
 			//если есть подобная сессия стереть
 			&sql(select id, count(id) into:id,:count from Auth.SessionData where UserID=:UserID)
 			if (count>0)
@@ -112,24 +116,23 @@
 			set session1=##class(Auth.SessionData).%New()
 			set session1.IP=%request.GetCgiEnv("REMOTE_ADDR")
 			set session1.Agent=%request.GetCgiEnv("HTTP_USER_AGENT")
-			set session1.RoleUser=RoleUser
+			set session1.RoleUser=##class(LIB.Role).%OpenId(Access)
 			set session1.UserID=UserID
-			//do session1.%Save()
-			set hash=$SYSTEM.Encryption.AESCBCEncrypt(UserID_":"_RoleUser,Key)
+			do session1.%Save()
+			set hash=$SYSTEM.Encryption.AESCBCEncrypt(UserID_":"_session1.RoleUser.Description,Key)
 			set hash=##class(Auth.Session).Encode(hash)
 			set t=+$H+1
 			set t=$ZD(t,11) _", " _$ZD(t,2) _ " 00:00:00 GMT"
 			do %response.SetCookie("success",1,t,"/")
 			do %response.SetCookie("uh",hash,t,"/")
 			do %response.SetCookie("userId",UserID,t,"/")
-			do %response.SetCookie("Login",Login,t,"/")
+			do %response.SetCookie("Email",Email,t,"/")
 			w "{""children"":{"_
 			"""success"":"""_1_
 			""",""hash"":"""_hash_
 			""",""userId"":"""_UserID_
-			""",""Login"":"""_Login_
-			"""}}"
-			
+			""",""Email"":"""_Email_
+			"""}}"			
 		}
 	}
 	catch ex
@@ -147,7 +150,7 @@
 	set st=$$$OK
 	try{
 		$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
-		set userid=2
+		set userid=obj.userId
 		set hash=obj.uh
 		#dim id as integer=0
 		&sql(select id into :id from Auth.SessionData where UserID=:userid)

@@ -22,11 +22,13 @@ angular.module('VACANCY',['ngCookies','ngResource','ngLocale', 'ngRoute','ngSani
         when('/Trainers/:GroupId',          {templateUrl: 'partials/user/view/view_Trainer.html', controller: ViewTrainerCtrl}).
         //***************************************** Trainer **********************************************************//
 
-        when('/LK',          {templateUrl: 'partials/user/view/view_School.html', controller: ViewLKCtrl}).
+        when('/LK',                         {templateUrl: 'partials/user/view/view_School.html', controller: ViewLKCtrl}).
 
         //***************************************** Schools **********************************************************//
-        when('/schools',                   {templateUrl: 'partials/user/view/view_Schools.html', controller: ViewSchoolsCtrl}).
-        when('/schools/:GroupId',          {templateUrl: 'partials/user/view/view_School.html', controller: ViewSchoolsCtrl}).
+
+        when('/schools',                    {templateUrl: 'partials/user/view/view_Schools.html', controller: ViewSchoolsCtrl}).
+        when('/schools/:GroupId',           {templateUrl: 'partials/user/view/view_School.html', controller: ViewSchoolsCtrl}).
+        when('/Createschool/',                    {templateUrl: 'partials/user/Create/Create_Schools.html', controller: CreateSchoolCtrl}).
         //***************************************** Schools **********************************************************//
 
         //***************************************** PrivateLessons **********************************************************//

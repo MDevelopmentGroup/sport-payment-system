@@ -39,6 +39,7 @@ function NavBarCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFacto
         $scope.Visible();
         $rootScope.filterLang=LanguageFactory.GetLanguage();
         $scope.User=AuthenticationFactory.GetCurrentUser();
+        console.log($scope.User.success);
         $scope.Name=AuthenticationFactory.GetCurrentUser().UserName;
         $scope.HASH=AuthenticationFactory.GetCurrentUser().HASH;
         $scope.Items.Menu=0;
@@ -95,8 +96,7 @@ function NavBarCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFacto
     };
     $scope.Logout=function(){
         AuthenticationFactory.Logout().success(function(){
-            //$scope.init();
-            //location.reload();
+            location.reload();
         });
     };
     $scope.init();
@@ -458,27 +458,6 @@ function ViewEventCtrl($rootScope,$scope,EventFactory,$routeParams,SettingFactor
 }
 //******************************************* Event End ************************************************************//
 
-//******************************************** About ***************************************************************//
-function ViewAboutCtrl($rootScope,$scope,SettingFactory){
-    $scope.init=function(){
-        $rootScope.MenuActive={};
-        $rootScope.MenuActive.Page='partials/user/view/view_about.html';
-        $rootScope.MenuActive.Controller='ViewAboutCtrl';
-        $rootScope.MenuActive.AboutView='active';
-        $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
-        SettingFactory.GetSettings();
-
-
-    };
-
-    $scope.init();
-
-}
-//******************************************** About ***************************************************************//
-
-
-
-
 //******************************************** dance ***************************************************************//
 
 function ViewAboutCtrl($rootScope,$scope,SettingFactory)
@@ -521,7 +500,7 @@ function ViewTimeTableCtrl($rootScope,$scope,SettingFactory,LanguageFactory)
         $rootScope.MenuActive.AboutView='active';
         $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
         $scope.lang=LanguageFactory.GetCurrentLanguage();
-        SettingFactory.GetSettings();
+        //SettingFactory.GetSettings();
     }
     $scope.intit();
 }
@@ -536,7 +515,7 @@ function ViewGroupsCtrl($rootScope,$scope,SettingFactory,LanguageFactory)
         $rootScope.MenuActive.AboutView='active';
         $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
         $scope.lang=LanguageFactory.GetCurrentLanguage();
-        SettingFactory.GetSettings();
+        //SettingFactory.GetSettings();
     }
     $scope.intit();
 }
@@ -552,7 +531,7 @@ function ViewTrainerCtrl($rootScope,$scope,SettingFactory,LanguageFactory)
         $rootScope.MenuActive.AboutView='active';
         $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
         $scope.lang=LanguageFactory.GetCurrentLanguage();
-        SettingFactory.GetSettings();
+        //SettingFactory.GetSettings();
     }
     $scope.intit();
 }
@@ -567,7 +546,7 @@ function ViewPrivateLessonsCtrl($rootScope,$scope,SettingFactory,LanguageFactory
         $rootScope.MenuActive.AboutView='active';
         $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
         $scope.lang=LanguageFactory.GetCurrentLanguage();
-        SettingFactory.GetSettings();
+        //SettingFactory.GetSettings();
     }
     $scope.intit();
 }
@@ -580,15 +559,56 @@ function ViewSchoolsCtrl($rootScope,$scope,SettingFactory,LanguageFactory) {
         $rootScope.MenuActive.Page='partials/user/view/view_about.html';
         $rootScope.MenuActive.Controller='ViewAboutCtrl';
         $rootScope.MenuActive.AboutView='active';
-        $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
+        //$rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
         $scope.lang=LanguageFactory.GetCurrentLanguage();
-        SettingFactory.GetSettings();
+        //SettingFactory.GetSettings();
     }
     $scope.intit();
 }
+function CreateSchoolCtrl($rootScope,$scope,SettingFactory,LanguageFactory){
 
-function LeftInfoPanelCtrl($rootScope,$scope,SettingFactory,LanguageFactory) {
+    $scope.intit=function()
+    {
+        $rootScope.MenuActive={};
+        $rootScope.MenuActive.Page='partials/user/view/view_about.html';
+        $rootScope.MenuActive.Controller='ViewAboutCtrl';
+        $rootScope.MenuActive.AboutView='active';
+        //$rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
+        $scope.lang=LanguageFactory.GetCurrentLanguage();
+        //SettingFactory.GetSettings();
+    }
+    $scope.intit();
+    
 
+}
+function LeftInfoPanelCtrl($rootScope,$scope,$modal,SettingFactory,LanguageFactory,AuthenticationFactory) {
+    $scope.intit=function()
+    {
+        $rootScope.MenuActive={};
+        $rootScope.MenuActive.Page='partials/user/view/view_about.html';
+        $rootScope.MenuActive.Controller='ViewAboutCtrl';
+        $rootScope.MenuActive.AboutView='active';
+        $scope.User=AuthenticationFactory.GetCurrentUser();
+
+        $scope.lang=LanguageFactory.GetCurrentLanguage();
+
+    }
+    $scope.reg_Dancer=function(){
+        $scope.FileLoad=function(){
+
+        }
+        $scope.CreateSystemUser=function(user)
+        {
+            console.log(user);
+            AuthenticationFactory.AddNewDancer(user).success(function(){
+                modal.hide();
+            });
+        }
+        $scope.y=1;
+        var modal=$modal({scope: $scope, placement:"center", backdrop:false, template: 'partials/user/modal/register.html', show: true});
+
+    }
+    $scope.intit();
 
 
 }
@@ -601,9 +621,9 @@ function ViewTrainersCtrl($rootScope,$scope,SettingFactory,LanguageFactory)
         $rootScope.MenuActive.Page='partials/user/view/view_about.html';
         $rootScope.MenuActive.Controller='ViewAboutCtrl';
         $rootScope.MenuActive.AboutView='active';
-        $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
+        //$rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
         $scope.lang=LanguageFactory.GetCurrentLanguage();
-        SettingFactory.GetSettings();
+        //SettingFactory.GetSettings();
     }
     $scope.intit();
 }

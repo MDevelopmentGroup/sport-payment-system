@@ -150,9 +150,9 @@ app.service('AuthenticationFactory',['$http','ErrorLogFactory',function($http,Er
 
     };
     AuthenticationFactory.GetCurrentUser=function(){
-        AuthenticationFactory.CurrentUser.ID=AuthenticationFactory.GetCookie('userId');
+        AuthenticationFactory.CurrentUser.userId=AuthenticationFactory.GetCookie('userId');
         AuthenticationFactory.CurrentUser.success=AuthenticationFactory.GetCookie('success');
-        AuthenticationFactory.CurrentUser.Login=AuthenticationFactory.GetCookie('Login');
+        AuthenticationFactory.CurrentUser.Email=AuthenticationFactory.GetCookie('Email');
         AuthenticationFactory.CurrentUser.Hash=AuthenticationFactory.GetCookie('uh');
         return AuthenticationFactory.CurrentUser;
     };
@@ -191,17 +191,25 @@ app.service('AuthenticationFactory',['$http','ErrorLogFactory',function($http,Er
     };
 
     AuthenticationFactory.Logout=function(){
-        AuthenticationFactory.SetCookie('userId',      null,'/',-1);
-        AuthenticationFactory.SetCookie('success',null,'/',-1);
-        AuthenticationFactory.SetCookie('Login',null,'/',-1);
-        AuthenticationFactory.SetCookie('uh',   null,'/',-1);
-        return $http.post(BaseUrl+'/Logout/',AuthenticationFactory.GetCurrentUser())
+        var user=AuthenticationFactory.GetCurrentUser();
+        //AuthenticationFactory.SetCookie('userId',      null,'/',-1);
+        //AuthenticationFactory.SetCookie('success',null,'/',-1);
+        //AuthenticationFactory.SetCookie('Email',null,'/',-1);
+        //AuthenticationFactory.SetCookie('uh',   null,'/',-1);
+        return $http.post(BaseUrl+'/Logout/',user)
             .success(function(data, status, headers, config){
                 AuthenticationFactory.CleanCurrentUser();})
             .error(function(data, status, headers, config){
                 ErrorLogFactory.CreateErrorLog({data:data,status:status,headers:headers,config:config});
             });
     };
+    AuthenticationFactory.AddNewDancer=function(data)
+    {
+        return $http.post(BaseUrl+"/Reg/",data)
+            .success(function(data,status,headers,config){
+            }
+        );
+    }
     return AuthenticationFactory;
 }]);
 //***************************************** AuthenticationFactory ****************************************************//

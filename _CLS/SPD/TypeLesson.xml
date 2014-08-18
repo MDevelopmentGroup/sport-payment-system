@@ -4,6 +4,114 @@
 <Super>%Persistent</Super>
 <TimeCreated>63393,57359.158794</TimeCreated>
 
+<Property name="name">
+<Type>%String</Type>
+</Property>
+
+<Property name="ShortDescription">
+<Type>%String</Type>
+</Property>
+
+<Method name="Create">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	Try
+	{
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		//стандартная проверка на дублирование
+		&sql(select count(id) into :count from SPD.TypeLesson where name=:obj.name or ShortDescription=:obj.ShortDescription)
+		//Вызвать исключение
+		set type=##class(SPD.TypeLesson).%New()
+		set type.name=obj.nme
+		set type.ShortDescription=obj.ShortDescription
+		set exception=12
+	}
+	Catch exception
+	{
+		set st=exception
+	}
+	q st
+]]></Implementation>
+</Method>
+
+<Method name="Update">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>IdType=""</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	Try
+	{
+		if (IdType){
+			set type=##class(SPD.TypeLesson).%OpenId(IdType)
+			set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+			set type.name=obj.name
+			set type.ShortDescription=obj.ShortDescription
+		}
+		else
+		{
+			SET mygenex = ##class(%Exception.General).%New("Exception","999",,
+                             "Cant't find.")
+			THROW mygenex
+		}		
+	}
+	Catch exception
+	{
+		set st=exception
+	}
+	q st
+]]></Implementation>
+</Method>
+
+<Method name="ViewTypeLesson">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>IdType</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	Try
+	{
+		if (IdType){
+			set sql="select name,id,ShortDescription from SPD.TypeLesson where id="_IdType
+			do ##class(%ZEN.Auxiliary.jsonSQLProvider).%WriteJSONFromSQL(sql)
+		}
+		else
+		{
+			SET mygenex = ##class(%Exception.General).%New("Exception","999",,
+                             "Cant't find.")
+			THROW mygenex
+		}
+		
+	}
+	Catch exception
+	{
+		set st=exception
+	}
+	q st
+]]></Implementation>
+</Method>
+
+<Method name="ViewAllTypeLesson">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	Try
+	{
+		set sql="select name,id,ShortDescription from SPD.TypeLesson"
+		do ##class(%ZEN.Auxiliary.jsonSQLProvider).%WriteJSONFromSQL(sql)
+	}
+	Catch exception
+	{
+		set st=exception
+	}
+	
+	q st
+]]></Implementation>
+</Method>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^SPD.TypeLessonD</DataLocation>
@@ -13,10 +121,14 @@
 <StreamLocation>^SPD.TypeLessonS</StreamLocation>
 <ExtentSize>100000</ExtentSize>
 <Data name="TypeLessonDefaultData">
-<Structure>listnode</Structure>
-<Subscript/>
 <Value name="1">
 <Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>name</Value>
+</Value>
+<Value name="3">
+<Value>ShortDescription</Value>
 </Value>
 </Data>
 </Storage>

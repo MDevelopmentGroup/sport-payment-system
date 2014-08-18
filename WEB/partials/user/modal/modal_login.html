@@ -8,10 +8,11 @@
             <div class="modal-body">
                 <div class="row">
 
-                        <div class="form-group">
-                            <label for="Login" class="col-sm-2 control-label hidden-sm hidden-xs">{{Page.Modal.Login}}:</label>
+
+                        <div class="form-group {{EmailStatus}}">
+                            <label for="Email" class="col-sm-2 control-label">Email{{Page.SystemUser.TitleEmail}}:</label>
                             <div class="col-lg-7">
-                                <input type="text" class="form-control" id="Login" ng-model='user.Login' placeholder="{{Page.Modal.Login}}" required="">
+                                <input type="email" id="Email" class="form-control" ng-model="user.Email" placeholder="{{Page.SystemUser.TitleEmail}}" ng-change="CheckEmail()" required>
                             </div>
                         </div>
                         <div class="form-group">
@@ -31,6 +32,6 @@
             </div>
 
             </form>
-            </div>
+        </div>
     </div>
 </div>

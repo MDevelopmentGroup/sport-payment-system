@@ -22,11 +22,12 @@
 </Property>
 
 <Property name="RoleUser">
-<Type>%String</Type>
+<Type>LIB.Role</Type>
 </Property>
 
 <Property name="Agent">
 <Type>%String</Type>
+<Parameter name="MAXLEN" value="200"/>
 </Property>
 
 <Method name="%OnOpen">
@@ -38,19 +39,6 @@
   set a=$LB()
   zw a
   Quit $$$OK
-]]></Implementation>
-</Method>
-
-<Property name="N">
-<Type>%String</Type>
-</Property>
-
-<Method name="N">
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set a=1+1
-	Q $$$OK
 ]]></Implementation>
 </Method>
 
@@ -69,10 +57,6 @@
 	ret str
 ]]></Implementation>
 </Method>
-
-<Property name="User">
-<Type>%Persistent</Type>
-</Property>
 
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>

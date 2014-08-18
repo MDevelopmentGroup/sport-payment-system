@@ -1,0 +1,77 @@
+<div class="WELL">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <form class="form-horizontal" ng-model="school" ng-submit='CreateSchool(school)'>
+                <span style="text-align: center"><h2>Регистрация школы</h2></span>
+                <hr>
+                <br>
+                <div class="form-group">
+                    <label for="AddInfo" class="col-lg-3 control-label">AddInfo{{Page.SystemUser.TitleFirstName}}:</label>
+                    <div class="col-lg-7">
+                        <input type="text"  id="AddInfo" class="form-control" ng-model="school.AddInfo" placeholder="{{Page.SystemUser.TitleFirstName}}" required="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="LastName" class="col-lg-3 control-label">LastName{{Page.SystemUser.TitleLastName}}:</label>
+                    <div class="col-lg-7">
+                        <input type="text" id="LastName" class="form-control" ng-model="user.LastName" placeholder="{{Page.SystemUser.TitleLastName}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="Patronymic" class="col-lg-3 control-label">Patronymic{{Page.SystemUser.TitlePatronymic}}:</label>
+                    <div class="col-lg-7">
+                        <input type="text" id="Patronymic" class="form-control" ng-model="user.Patronymic" placeholder="{{Page.SystemUser.TitlePatronymic}}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Gender" class="col-lg-3 control-label">Gender{{Page.SystemUser.TitlePatronymic}}:</label>
+                    <div class="col-lg-7">
+                        <input type="radio"  ng-model="user.gender" value="0" checked>Мужский
+                        <input type="radio"  ng-model="user.gender" value="1">Женский
+                    </div>
+                </div>
+
+                <!--<div class="form-group">
+                    <label for="Patronymic" class="col-lg-3 control-label">Фото:</label>
+                    <div class="col-lg-7">
+                        <input type="file" name="foto" style="padding: 1px" id="myFile" class=" btn btn-default form-control" multiple ng-change="FileLoad()" ng-model="user.foto">
+                        <progress style="height: 10px; padding: 0px" id="progressBar" class="form-control" max="100"  value="0">
+                        </progress>
+                        <input  type="text" class="form-control" id="adjrgsaderg" ng-model="user.resp">
+                     <!--   <img id="Logo" width="100" height="100" src="">
+                    </div>
+                </div>-->
+
+                <div class="form-group {{EmailStatus}}">
+                    <label for="Email" class="col-lg-3 control-label">Email{{Page.SystemUser.TitleEmail}}:</label>
+                    <div class="col-lg-7">
+                        <input type="email" id="Email" class="form-control" ng-model="user.Email" placeholder="{{Page.SystemUser.TitleEmail}}" ng-change="CheckEmail()" required>
+                    </div>
+                </div>
+
+
+                <div class="form-group {{PasswordStatus}}">
+                    <label for="Password" class="col-lg-3 control-label">Password{{Page.SystemUser.TitlePassword}}:</label>
+                    <div class="col-lg-7">
+                        <input type="password" min="6"  maxlength="12" id="Password" class="form-control"  ng-model="user.Password" ng-change="CheckPassword()" placeholder="{{Page.SystemUser.TitlePassword}}" required>
+                    </div>
+                </div>
+                <div class="form-group {{PasswordStatus}}">
+                    <label for="Password2" class="col-lg-3 control-label">повторно Password{{Page.SystemUser.TitlePassword2}}:</label>
+                    <div class="col-lg-7">
+                        <input type="password" id="Password2" class="form-control" ng-model="user.Password2" ng-change="CheckPassword()" placeholder="{{Page.SystemUser.TitlePassword2}}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label  class="col-lg-3 control-label"></label>
+                    <div class="col-lg-5">
+                        <button type="submit"  class="btn btn-success {{ButtonDisabled}}">Reg{{Page.SystemUser.TitleFirstName}}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

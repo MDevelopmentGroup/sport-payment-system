@@ -1,51 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<Class name="WEB.AdminBroker">
+<Class name="WEB.Broker">
 <Super>%CSP.REST</Super>
-<TimeCreated>63288,57447.189928</TimeCreated>
+<TimeCreated>63417,53011.909769</TimeCreated>
 
 <XData name="UrlMap">
-<Description>
-Брокер</Description>
 <Data><![CDATA[
 <Routes>
-	<!-- User-->
-		<Route Url="/User/Create" 	  		Method="POST" 		Call="SPD.SPDUser:Create"/>
-		<Route Url="/User/Update" 	  		Method="PUT" 		Call="SPD.SPDUser:Update"/>
-		<Route Url="/User/Delete/:ID" 		Method="DELETE" 	Call="SPD.SPDUser:Delete"/>
-		<Route Url="/User/GetAll" 	  		Method="GET" 		Call="SPD.SPDUser:GetAll"/>
-		<Route Url="/User/Get/:ID" 	  		Method="GET" 		Call="SPD.SPDUser:Get"/>
-	<!-- User-->
-	
-	<!-- School-->
-		<Route Url="/School/Create" 	  	Method="POST" 		Call="SPD.School:Create"/>
-		<Route Url="/School/Update" 	  	Method="PUT" 		Call="SPD.School:Update"/>
-		<Route Url="/School/Delete/:ID"   	Method="DELETE" 	Call="SPD.School:Delete"/>
-		<Route Url="/School/GetAll" 	  	Method="GET" 		Call="SPD.School:GetAll"/>
-		<Route Url="/School/Get/:ID" 	  	Method="GET" 		Call="SPD.School:Get"/>
-	<!-- School-->
-	
-	<!-- session-->
-		<Route Url="/Login/"				Method="POST" 		Call="Auth.Session:CreateSessionForm"/>
-		<Route Url="/InitPayment/"			Method="POST" 		Call="REST.JSON:XMLParse"/>
-		<Route Url="/success/"				Method="POST" 		Call="REST.JSON:SuccessPayment"/>
-	<!-- -->
-		<Route Url="/Reg/"					Method="POST" 		Call="WEB.AdminBroker:Test"/>
-    </Routes>
+	   <Route Url="/test/" 							Method="POST" 		Call="WEB.UserBroker:Test"/>	   
+	   <Route Url="/news/Get/:ID"		   			Method="GET" 		Call="WEB.UserBroker:NewMethod2"/>
+	   <Route Url="/Reg/"							Method="POST"		Call="Auth.Logic.Auth:RegNewDancer"/>
+	   <Route Url="/Login/"							Method="POST" 		Call="Auth.Session:CreateSessionForm"/>
+	   <Route Url="/Logout/"						Method="POST" 		Call="Auth.Session:ClearSession"/>
+</Routes>
 ]]></Data>
 </XData>
 
-<Method name="DispatchRequest">
-<Description>
-Dispatch a REST request according to URL and Method</Description>
-<ClassMethod>1</ClassMethod>
-<FormalSpec>pUrl:%String,pMethod:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
+<UDLText name="T">
+<Content><![CDATA[
+/*
+ClassMethod DispatchRequest(pUrl As %String, pMethod As %String) As %Status
+{
 	//W !,"jhgujyfkfyvh",pUrl,pMethod,!
 	//w %request.GetCgiEnv("HTTP_USER_AGENT")
 	///проверка сессии.
-
+	w 1
 	try{
 	$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
 		set hash=obj.hash
@@ -179,6 +158,22 @@ Dispatch a REST request according to URL and Method</Description>
     If ..#UseSession=0 Set %session.EndSession=1
     
     Quit tSC
+}
+
+*/
+]]></Content>
+</UDLText>
+
+<Method name="Http404">
+<Description>
+Dispatch a REST request according to URL and Method
+Issue an '404' error ( user can override)</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	w "Мимо"
+    Set %response.Status="404 Not Found"
+    Quit $$$OK
 ]]></Implementation>
 </Method>
 </Class>

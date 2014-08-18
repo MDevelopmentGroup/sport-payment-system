@@ -30,10 +30,6 @@
 <Relationship>1</Relationship>
 </Property>
 
-<Property name="Address">
-<Type>%String</Type>
-</Property>
-
 <Index name="ImageIndex">
 <Properties>Image</Properties>
 </Index>
@@ -48,6 +44,22 @@
 		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
 		set school=..%New()
 		set school.Name=$ZCONVERT(obj.Name,"I","UTF8")
+		set school.AddInfo=obj.AddInfo
+		set school.City=obj.City
+		set school.Country=obj.Country
+		set school.Email=obj.Email
+		set school.Street=obj.Street
+		set school.Body=obj.Body
+		set school.DescTimeStamp=$zdt($h,3)
+		set school.FirstPage=obj.FirstPage
+		
+		set school.isActive=1
+		set school.isBlocked=0
+		
+		set school.URL=obj.Url
+		set school.Telephone=obj.Telephone
+		set school.RegDate=$zdt($h,3)
+		set school.Owner=##class(Instructor).%OpenId(obj.UserId)		
 		
 		set st=school.%Save()
 	}

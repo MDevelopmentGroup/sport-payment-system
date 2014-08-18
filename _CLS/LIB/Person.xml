@@ -14,21 +14,27 @@
 <Type>%String</Type>
 </Property>
 
-<Property name="SurName">
+<Property name="Patronymic">
 <Type>%String</Type>
 </Property>
 
-<Property name="login">
-<Type>%String</Type>
-</Property>
+<UDLText name="T">
+<Content><![CDATA[
+// Property Login As %String;
+
+]]></Content>
+</UDLText>
 
 <Property name="Password">
 <Type>%String</Type>
 </Property>
 
-<Property name="Image">
-<Type>LIB.FileBase</Type>
-</Property>
+<UDLText name="T">
+<Content><![CDATA[
+// Property Image As LIB.FileBase;
+
+]]></Content>
+</UDLText>
 
 <Property name="Gender">
 <Description>
@@ -36,14 +42,25 @@
 <Type>%Boolean</Type>
 </Property>
 
-<Property name="Mail">
+<Property name="Email">
 <Description>
 добавить проверку корректности мыла</Description>
 <Type>%String</Type>
 </Property>
 
 <Property name="Access">
-<Type>SPD.UserRule</Type>
+<Description>
+Доступ </Description>
+<Type>LIB.Role</Type>
+</Property>
+
+<Property name="Active">
+<Type>%Boolean</Type>
+<InitialExpression>0</InitialExpression>
+</Property>
+
+<Property name="Key">
+<Type>%String</Type>
 </Property>
 
 <Storage name="Default">
@@ -62,6 +79,21 @@
 </Value>
 <Value name="2">
 <Value>Access</Value>
+</Value>
+<Value name="3">
+<Value>Login</Value>
+</Value>
+<Value name="4">
+<Value>Active</Value>
+</Value>
+<Value name="5">
+<Value>Patronymic</Value>
+</Value>
+<Value name="6">
+<Value>Key</Value>
+</Value>
+<Value name="7">
+<Value>Email</Value>
 </Value>
 </Data>
 <Data name="PersonState">

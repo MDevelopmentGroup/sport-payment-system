@@ -4,16 +4,24 @@
 <Super>%Persistent</Super>
 <TimeCreated>63393,60231.452993</TimeCreated>
 
-<Property name="Group">
-<Type>SPD.Group</Type>
-</Property>
-
 <Property name="TypeLesson">
 <Type>SPD.TypeLesson</Type>
 </Property>
 
-<Property name="DuringDateLesson">
-<Type>%TimeStamp</Type>
+<Property name="School">
+<Type>SPD.School</Type>
+</Property>
+
+<Property name="Days">
+<Type>%String</Type>
+</Property>
+
+<Property name="Time">
+<Type>%Time</Type>
+</Property>
+
+<Property name="Instructor">
+<Type>SPD.Instructor</Type>
 </Property>
 
 <Storage name="Default">
@@ -36,6 +44,18 @@
 </Value>
 <Value name="4">
 <Value>DuringDateLesson</Value>
+</Value>
+<Value name="5">
+<Value>School</Value>
+</Value>
+<Value name="6">
+<Value>Days</Value>
+</Value>
+<Value name="7">
+<Value>Time</Value>
+</Value>
+<Value name="8">
+<Value>Instructor</Value>
 </Value>
 </Data>
 </Storage>

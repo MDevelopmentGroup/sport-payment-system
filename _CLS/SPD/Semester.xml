@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Semester">
+<Super>%Persistent</Super>
+<TimeCreated>63417,54557.231313</TimeCreated>
+
+<Property name="BeginSemester">
+<Type>%DateTime</Type>
+</Property>
+
+<Property name="EndSemester">
+<Type>%DateTime</Type>
+</Property>
+
+<Property name="TimeTable">
+<Type>SPD.TimeTableLessons</Type>
+<Cardinality>one</Cardinality>
+<Inverse>Semester</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Index name="TimeTableIndex">
+<Properties>TimeTable</Properties>
+</Index>
+
+<Property name="Price">
+<Type>SPD.Price</Type>
+<Cardinality>one</Cardinality>
+<Inverse>Semester</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Index name="PriceIndex">
+<Properties>Price</Properties>
+</Index>
+
+<Property name="School">
+<Type>SPD.School</Type>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.SemesterD</DataLocation>
+<DefaultData>SemesterDefaultData</DefaultData>
+<IdLocation>^SPD.SemesterD</IdLocation>
+<IndexLocation>^SPD.SemesterI</IndexLocation>
+<StreamLocation>^SPD.SemesterS</StreamLocation>
+<Data name="SemesterDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>BeginSemester</Value>
+</Value>
+<Value name="3">
+<Value>EndSemester</Value>
+</Value>
+<Value name="4">
+<Value>TimeTable</Value>
+</Value>
+<Value name="5">
+<Value>Price</Value>
+</Value>
+<Value name="6">
+<Value>School</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>
