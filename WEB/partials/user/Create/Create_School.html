@@ -1,74 +1,134 @@
 <div class="WELL">
     <div class="row">
         <div class="col-lg-12">
-
-            <form class="form-horizontal" ng-model="school" ng-submit='CreateSchool(school)'>
+                <div class="form-group">
+                    <img id="Img">
+                </div>
+            <!--<form class="form-horizontal" ng-model="school" ng-submit='CreateSchool(school)'>
+-->
+            <form class="form-horizontal" ng-model="school">
                 <span style="text-align: center"><h2>Регистрация школы</h2></span>
                 <hr>
                 <br>
+
                 <div class="form-group">
-                    <label for="AddInfo" class="col-lg-3 control-label">AddInfo{{Page.SystemUser.TitleFirstName}}:</label>
-                    <div class="col-lg-7">
-                        <input type="text"  id="AddInfo" class="form-control" ng-model="school.AddInfo" placeholder="{{Page.SystemUser.TitleFirstName}}" required="">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="LastName" class="col-lg-3 control-label">LastName{{Page.SystemUser.TitleLastName}}:</label>
-                    <div class="col-lg-7">
-                        <input type="text" id="LastName" class="form-control" ng-model="user.LastName" placeholder="{{Page.SystemUser.TitleLastName}}">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="Patronymic" class="col-lg-3 control-label">Patronymic{{Page.SystemUser.TitlePatronymic}}:</label>
-                    <div class="col-lg-7">
-                        <input type="text" id="Patronymic" class="form-control" ng-model="user.Patronymic" placeholder="{{Page.SystemUser.TitlePatronymic}}">
+                    <label for="title" class="col-lg-2 control-label ">{{Page.Common.title}} школы:</label>
+                    <div class="col-lg-9">
+                        <input type="text"  id="title" class="form-control" ng-model="school.Name" placeholder="{{Page.SystemUser.TitleFirstName}}" required="">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="Gender" class="col-lg-3 control-label">Gender{{Page.SystemUser.TitlePatronymic}}:</label>
-                    <div class="col-lg-7">
-                        <input type="radio"  ng-model="user.gender" value="0" checked>Мужский
-                        <input type="radio"  ng-model="user.gender" value="1">Женский
+                    <label for="title" class="col-lg-2 control-label ">{{Page.Modal.Password}} школы:</label>
+                    <div class="col-lg-9">
+                        <input type="Password"  id="Password" class="form-control" ng-model="school.Password" placeholder="{{Page.Modal.Password}}" required="">
                     </div>
                 </div>
 
-                <!--<div class="form-group">
-                    <label for="Patronymic" class="col-lg-3 control-label">Фото:</label>
-                    <div class="col-lg-7">
-                        <input type="file" name="foto" style="padding: 1px" id="myFile" class=" btn btn-default form-control" multiple ng-change="FileLoad()" ng-model="user.foto">
-                        <progress style="height: 10px; padding: 0px" id="progressBar" class="form-control" max="100"  value="0">
-                        </progress>
-                        <input  type="text" class="form-control" id="adjrgsaderg" ng-model="user.resp">
-                     <!--   <img id="Logo" width="100" height="100" src="">
-                    </div>
-                </div>-->
-
-                <div class="form-group {{EmailStatus}}">
-                    <label for="Email" class="col-lg-3 control-label">Email{{Page.SystemUser.TitleEmail}}:</label>
-                    <div class="col-lg-7">
-                        <input type="email" id="Email" class="form-control" ng-model="user.Email" placeholder="{{Page.SystemUser.TitleEmail}}" ng-change="CheckEmail()" required>
+                <div class="form-group">
+                    <label for="Image" class="col-lg-2 control-label ">{{Page.Common.Image}}:</label>
+                    <div class="col-lg-9">
+                        <input type="file" id="InputName" ng-change="FileUpload()" ng-model="Image">
                     </div>
                 </div>
 
-
-                <div class="form-group {{PasswordStatus}}">
-                    <label for="Password" class="col-lg-3 control-label">Password{{Page.SystemUser.TitlePassword}}:</label>
-                    <div class="col-lg-7">
-                        <input type="password" min="6"  maxlength="12" id="Password" class="form-control"  ng-model="user.Password" ng-change="CheckPassword()" placeholder="{{Page.SystemUser.TitlePassword}}" required>
+                <div class="form-group">
+                    <label for="Body" class="col-lg-2 control-label ">{{Page.Common.Body}}:</label>
+                    <div class="col-lg-9">
+                        <textarea class="form-control" rows="14"  id="Body" redactor ng-model='school.Body' placeholder="{{Page.Common.Body}}"></textarea>
                     </div>
                 </div>
-                <div class="form-group {{PasswordStatus}}">
-                    <label for="Password2" class="col-lg-3 control-label">повторно Password{{Page.SystemUser.TitlePassword2}}:</label>
-                    <div class="col-lg-7">
-                        <input type="password" id="Password2" class="form-control" ng-model="user.Password2" ng-change="CheckPassword()" placeholder="{{Page.SystemUser.TitlePassword2}}">
+
+                <div class="form-group">
+                    <label for="AddInfo" class="col-lg-2 control-label">{{Page.Common.AddInfo}}:</label>
+                    <div class="col-lg-9">
+                        <textarea class="form-control" rows="14"  id="AddInfo" redactor ng-model='school.AddInfo' placeholder="{{Page.Common.AddInfo}}"></textarea>
+                    </div>
+                </div>
+<!--
+                <div class="form-group">
+                    <label for="Rooms" class="col-lg-2 control-label ">Помещения:</label>
+                    <div class="col-lg-9">
+                        <div class="row">
+                            <div class="col-lg-8" ng-repeat="room in school.Rooms">
+                                {{room.Name}}
+                                <a class="btn btn-default ng-binding" ng-binding ng-click='Remove(room.Name)'>{{Page.Create.DeleteRoom}}  <label class="label label-danger">
+                                    <span class="glyphicon glyphicon-minus"></span>
+                                </label></a>
+                            </div>
+                            <div class="col-lg-3">
+                                <a class="btn btn-default ng-binding" ng-binding ng-click='CreateRoom()'>{{Page.Create.AddRoom}}  <label class="label label-success">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </label></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+-->
+                <div class="form-group">
+                    <label for="City" class="col-lg-2 control-label ">{{Page.Common.City}}:</label>
+                    <div class="col-lg-9">
+                        <input type="text"  id="City" class="form-control" ng-model="school.City" placeholder="{{Page.Common.City}}" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Country" class="col-lg-2 control-label ">{{Page.Common.Country}}:</label>
+                    <div class="col-lg-9">
+                        <input type="text"  id="Country" class="form-control" ng-model="school.Country" placeholder="{{Page.Common.Country}}" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Street" class="col-lg-2 control-label ">{{Page.Common.Address}}:</label>
+                    <div class="col-lg-9">
+                        <input type="text"  id="Street" class="form-control" ng-model="school.Street" placeholder="{{Page.Common.Address}}" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Email" class="col-lg-2 control-label ">{{Page.Modal.Email}}:</label>
+                    <div class="col-lg-9">
+                        <input type="text"  id="Email" class="form-control" ng-model="school.Email" placeholder="{{Page.Modal.Email}}" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Url" class="col-lg-2 control-label ">{{Page.Common.Url}}:</label>
+                    <div class="col-lg-9">
+                        <input type="text"  id="Url" class="form-control" ng-model="school.Url" placeholder="{{Page.Common.Url}}" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Phone" class="col-lg-2 control-label ">{{Page.Common.Phone}}:</label>
+                    <div class="col-lg-9">
+                        <input type="text"  id="Phone" class="form-control" ng-model="school.Phone" placeholder="{{Page.Common.Phone}}" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Fire" class="col-lg-2 control-label ">{{Page.Common.Master}}:</label>
+                    <div class="col-lg-9">
+                        <label for="FirstName" class="col-lg-2 control-label ">{{Page.Common.Name}}:</label>
+                        <div class="col-lg-9">
+                            <input type="text"  id="FirstName" class="form-control" ng-model="school.FirstName" placeholder="{{Page.Common.Name}}" required="">
+                        </div>
+                        <label for="LastName" class="col-lg-2 control-label ">{{Page.Common.LastName}}:</label>
+                        <div class="col-lg-9">
+                            <input type="text"  id="LastName" class="form-control" ng-model="school.LastName" placeholder="{{Page.Common.LastName}}" required="">
+                        </div>
+                        <label for="Patronymic" class="col-lg-2 control-label ">{{Page.Common.Patronymic}}:</label>
+                        <div class="col-lg-9">
+                            <input type="text"  id="Patronymic" class="form-control" ng-model="school.Patronymic" placeholder="{{Page.Common.Patronymic}}" required="">
+                        </div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label  class="col-lg-3 control-label"></label>
                     <div class="col-lg-5">
-                        <button type="submit"  class="btn btn-success {{ButtonDisabled}}">Reg{{Page.SystemUser.TitleFirstName}}</button>
+                        <button type="submit"  class="btn btn-success {{ButtonDisabled}}" ng-click='CreateSchool(school)'>Reg{{Page.SystemUser.TitleFirstName}}</button>
                     </div>
                 </div>
             </form>

@@ -10,6 +10,7 @@
 
 <Property name="ShortDescription">
 <Type>%String</Type>
+<Parameter name="MAXLEN" value="200"/>
 </Property>
 
 <Method name="Create">

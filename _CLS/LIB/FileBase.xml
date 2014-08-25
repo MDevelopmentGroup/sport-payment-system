@@ -4,23 +4,20 @@
 <Super>%Persistent</Super>
 <TimeCreated>63337,43506.106124</TimeCreated>
 
-<Property name="Name">
+<Property name="FileType">
 <Type>%String</Type>
-<Parameter name="MAXLEN" value="5000"/>
 </Property>
 
-<Property name="Image">
+<Property name="FileName">
+<Type>%String</Type>
+</Property>
+
+<Property name="DefaultName">
+<Type>%String</Type>
+</Property>
+
+<Property name="Author">
 <Type>LIB.Person</Type>
-<Cardinality>one</Cardinality>
-<Inverse>Image</Inverse>
-<Relationship>1</Relationship>
-</Property>
-
-<Property name="SchoolImage">
-<Type>SPD.School</Type>
-<Cardinality>many</Cardinality>
-<Inverse>Image</Inverse>
-<Relationship>1</Relationship>
 </Property>
 
 <Storage name="Default">
@@ -43,6 +40,18 @@
 </Value>
 <Value name="4">
 <Value>Image</Value>
+</Value>
+<Value name="5">
+<Value>FileType</Value>
+</Value>
+<Value name="6">
+<Value>FileName</Value>
+</Value>
+<Value name="7">
+<Value>DefaultName</Value>
+</Value>
+<Value name="8">
+<Value>Author</Value>
 </Value>
 </Data>
 </Storage>

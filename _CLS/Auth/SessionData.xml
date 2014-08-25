@@ -10,7 +10,7 @@
 
 <Property name="DateTime">
 <Type>%TimeStamp</Type>
-<InitialExpression>$zdt($h,3)</InitialExpression>
+<InitialExpression>##class(Auth.SessionData).GetDate()</InitialExpression>
 </Property>
 
 <Property name="UserID">
@@ -29,6 +29,27 @@
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="200"/>
 </Property>
+
+<Method name="GetDate">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%TimeStamp</ReturnType>
+<Implementation><![CDATA[
+	set t=$h
+	set arr=$listfromstring(t,",")
+	if ($list(arr,2)+3600>86399)
+	{
+		set date=$list(arr,1)+1
+		set time=($list(arr,2)+3600)-86399
+	}
+	else
+	{
+		set date=$list(arr,1)
+		set time=($list(arr,2)+3600)
+	}
+	set t=$zdt(date_","_time,3)
+	ret t
+]]></Implementation>
+</Method>
 
 <Method name="%OnOpen">
 <Private>1</Private>

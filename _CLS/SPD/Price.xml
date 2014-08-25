@@ -20,11 +20,20 @@
 <Type>%DateTime</Type>
 </Property>
 
-<Property name="Semester">
-<Type>SPD.Semester</Type>
-<Cardinality>many</Cardinality>
-<Inverse>Price</Inverse>
-<Relationship>1</Relationship>
+<UDLText name="T">
+<Content><![CDATA[
+// Relationship Semester As SPD.Semester [ Cardinality = many, Inverse = Price ];??????????????
+
+]]></Content>
+</UDLText>
+
+<Property name="school">
+<Type>SPD.School</Type>
+</Property>
+
+<Property name="Actual">
+<Type>%Boolean</Type>
+<InitialExpression>1</InitialExpression>
 </Property>
 
 <Method name="Create">
@@ -56,8 +65,10 @@
 <Implementation><![CDATA[
 	set st=$$$OK
 	try{
+		
 	}
 	catch ex{
+		
 	}
 	ret st
 ]]></Implementation>
@@ -89,6 +100,12 @@
 </Value>
 <Value name="6">
 <Value>Semester</Value>
+</Value>
+<Value name="7">
+<Value>school</Value>
+</Value>
+<Value name="8">
+<Value>Actual</Value>
 </Value>
 </Data>
 </Storage>

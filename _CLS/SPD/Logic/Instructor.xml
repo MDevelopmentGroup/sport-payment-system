@@ -30,23 +30,29 @@
 ]]></Implementation>
 </Method>
 
-<Method name="InviteInstructor">
+<Method name="GetInstructorList">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>IdDancer</FormalSpec>
+<FormalSpec>IdSchool</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set st=$$$OK
-	try{
-		&sql(select count(id) into :count from SPD.Dancer where id=:IdDancer)
-		if (count=1)
-		{
-			//send invite
+	try
+	{
+		if (IdSchool'=""){
+			set SchoolQuery="select IdDancer->FirstName, IdDancer->LastName, IdDancer-> Patronymic, id "_
+			"from SPD.Instructor where OwnerSchool="_IdSchool			
 		}
+		else{
+			set SchoolQuery="select IdDancer->FirstName, IdDancer->LastName, IdDancer-> Patronymic, id from"_
+			"SPD.Instructor"
+		}
+		do ##class(SPD.School).GetJSONData(SchoolQuery)
 	}
-	catch{
-		
+	Catch exception
+	{
+		set st=exception
 	}
-	ret st
+	q st
 ]]></Implementation>
 </Method>
 </Class>

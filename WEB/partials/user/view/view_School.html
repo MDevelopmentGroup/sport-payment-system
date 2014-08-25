@@ -1,0 +1,29 @@
+<div class="WELL">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="well well-lg">
+                        <div class="col-lg-12">
+                            <div><img ng-src="img/upload/{{school.FileName}}" align="middle" class="SchoolImg" ng-bind>
+                            </div>
+                        </div>
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <div class="row">
+                                <h3>
+                                {{school.Name}}</h3>
+                            </div>
+                            <div class="row">
+                                <p ng-bind-html="school.Descript"></p>
+                            </div>
+                            <div class="row">
+                                {{Page.Common.Address}}:{{school.Country}}, {{school.City}}, {{school.Street}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

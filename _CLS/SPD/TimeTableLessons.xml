@@ -12,16 +12,30 @@
 <Type>SPD.School</Type>
 </Property>
 
-<Property name="Days">
+<Property name="Day">
+<Description>
+todo проверку на дни</Description>
 <Type>%String</Type>
 </Property>
 
-<Property name="Time">
+<Property name="TimeBegin">
+<Type>%Time</Type>
+</Property>
+
+<Property name="TimeEnd">
 <Type>%Time</Type>
 </Property>
 
 <Property name="Instructor">
 <Type>SPD.Instructor</Type>
+</Property>
+
+<Property name="Room">
+<Type>SPD.Room</Type>
+</Property>
+
+<Property name="ShortDescription">
+<Type>%String</Type>
 </Property>
 
 <Property name="Semester">
@@ -65,6 +79,21 @@
 </Value>
 <Value name="9">
 <Value>Semester</Value>
+</Value>
+<Value name="10">
+<Value>TimeBegin</Value>
+</Value>
+<Value name="11">
+<Value>TimeEnd</Value>
+</Value>
+<Value name="12">
+<Value>Room</Value>
+</Value>
+<Value name="13">
+<Value>ShortDescription</Value>
+</Value>
+<Value name="14">
+<Value>Day</Value>
 </Value>
 </Data>
 </Storage>

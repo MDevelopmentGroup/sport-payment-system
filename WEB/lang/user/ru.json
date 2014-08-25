@@ -55,6 +55,9 @@
             "Freelance":"фриланс"
         }
     },
+    "Email":{
+        "Send":"Отправить"
+    },
     "Company":{
         "Title":"Партнёры | InterSystems RUS",
         "Label":"Партнёры InterSystems Россия",
@@ -100,18 +103,36 @@
         "SearchText":"строка поиска",
         "Language":"Язык",
         "Name":"Имя",
-        "Surname":"Фамилия",
+        "LastName":"Фамилия",
         "Phone":"Телефон: ",
         "Close":"Закрыть",
         "Country":"Страна",
         "Solutions":"Решений",
         "Contacts":"Контакты",
         "WebSite":"Сайт :",
-        "Vacancies":"Вакансий",
         "Events":"Событий",
         "Address":"Адрес",
-        "Data":"Дата"
-
+        "Data":"Дата",
+        "Body":"Страница",
+        "title":"Название",
+        "AddInfo":"AddInfo",
+        "Image":"Image",
+        "Master":"Владелец",
+        "Patronymic":"Отчество",
+        "Url":"Url",
+        "Street":"Улица",
+        "TimeTable":"Расписание",
+        "Instructors":"Тренеры",
+        "Instructor":"Тренер",
+        "Price":"Прайс",
+        "TypeLesson":"Тип занятия"
+    },
+    "Price":{
+        "DateActual":"Актуальность цены",
+        "Cost":"Цена"
+    },
+    "LeftMenu":{
+        "MySchool":"Школа"
     },
     "Modal":{
         "Delete":"Подтвердите удаление",
@@ -130,14 +151,6 @@
     "Map":{
         "Hint":"Используйте двойной клик левой/правой клавиши мыши для изменения масштаба карты"
     },
-
-
-
-
-
-
-
-
     "navbar":{
         "balance":"Баланс",
         "Lessons":"Расписание",
@@ -146,6 +159,19 @@
         "Trainers":"Тренеры",
         "Groups":"Группы",
         "PrivateLessons":"Личные занятия"
+    },
+    "Create":{
+        "AddSchool":"Добавить школу",
+        "Add":"Добавить",
+        "Name":"Название",
+        "Descr":"Краткое описание",
+        "Delete":"Удалить",
+        "Update":"Обновить"
+    },
+    "Lesson":
+    {
+        "Begin":"Начало занятия",
+        "End":"Окончание занятия"
     }
-
 }
+

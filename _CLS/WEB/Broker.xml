@@ -7,20 +7,52 @@
 <XData name="UrlMap">
 <Data><![CDATA[
 <Routes>
-	   <Route Url="/test/" 							Method="POST" 		Call="WEB.UserBroker:Test"/>	   
+	   <Route Url="/test/" 							Method="POST" 		Call="WEB.UserBroker:Test"/>
 	   <Route Url="/news/Get/:ID"		   			Method="GET" 		Call="WEB.UserBroker:NewMethod2"/>
+	   
+	   
 	   <Route Url="/Reg/"							Method="POST"		Call="Auth.Logic.Auth:RegNewDancer"/>
+	   
+	   
 	   <Route Url="/Login/"							Method="POST" 		Call="Auth.Session:CreateSessionForm"/>
 	   <Route Url="/Logout/"						Method="POST" 		Call="Auth.Session:ClearSession"/>
+	   
+	   
+	   <Route Url="/upload/"						Method="POST" 		Call="LIB.Logic.Image:FileUpload"/>
+	   
+	   
+	   <Route Url="/GetSchools/"					Method="GET" 		Call="SPD.Logic.School:GetSchools"/>
+	   <Route Url="/GetSchool/:ID"					Method="GET" 		Call="SPD.Logic.School:GetSchool"/>
+	   
+	   
+	   <Route Url="/GetAddress/:ID"					Method="GET" 		Call="LIB.Logic.Address:GetAddress"/>
+	   
+	   
+	   <Route Url="/GetRoom/:ID"					Method="GET" 		Call="LIB.Logic.Room:GetRoom"/>
+	   
+	   <Route Url="/InviteAccept/:hash"				Method="POST" 		Call="SPD.Logic.School:InviteAccept"/>
+	   <Route Url="/InviteReject/:hash"				Method="POST" 		Call="SPD.Logic.School:InviteReject"/>
+	   
+	   <Route Url="/CreateNewInstructor/"			Method="POST" 		Call="SPD.Logic.School:CreateNewInstructor"/>
+	   
+	   
+	   
+	   
+	   <Route Url="/GetInstructorList/:ID"			Method="GET" 		Call="SPD.Logic.Instructor:GetInstructorList"/>
+	   <Route Url="/GetInstructorList/"				Method="GET" 		Call="SPD.Logic.Instructor:GetAllInstructorList"/>
+	   
+	   <Route Url="/GetLesson/:ID"						Method="GET"		Call="SPD.Logic.TimeTableLesons:GetLesson"/>
+	   
 </Routes>
 ]]></Data>
 </XData>
 
-<UDLText name="T">
-<Content><![CDATA[
-/*
-ClassMethod DispatchRequest(pUrl As %String, pMethod As %String) As %Status
-{
+<Method name="DispatchRequest">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>pUrl:%String,pMethod:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	/*
 	//W !,"jhgujyfkfyvh",pUrl,pMethod,!
 	//w %request.GetCgiEnv("HTTP_USER_AGENT")
 	///проверка сессии.
@@ -60,7 +92,7 @@ ClassMethod DispatchRequest(pUrl As %String, pMethod As %String) As %Status
 	}
 	catch ex{
 		
-	}
+	}*/
     #dim tSC As %Status = $$$OK
     #dim e As %Exception.AbstractException
     
@@ -158,11 +190,8 @@ ClassMethod DispatchRequest(pUrl As %String, pMethod As %String) As %Status
     If ..#UseSession=0 Set %session.EndSession=1
     
     Quit tSC
-}
-
-*/
-]]></Content>
-</UDLText>
+]]></Implementation>
+</Method>
 
 <Method name="Http404">
 <Description>

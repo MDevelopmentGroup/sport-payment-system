@@ -4,6 +4,12 @@
 <Super>LIB.Person,%Persistent</Super>
 <TimeCreated>63393,57121.501421</TimeCreated>
 
+<Property name="Gender">
+<Description>
+тру пол или не тру XD</Description>
+<Type>%Boolean</Type>
+</Property>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 </Storage>

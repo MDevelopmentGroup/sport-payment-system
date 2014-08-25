@@ -3,17 +3,20 @@
             <div class="row">
                     <ul class="nav nav-pills nav-stacked">
                         <li class="active" ng-if="User.success">
-                            <a href="#/Balance">
+                            <a href="#/Balance" ng-if="!IdSchool">
                                 <span class="badge pull-right">
                                     1
                                 </span>
                                 Текущий баланс
                             </a>
                         </li>
-                        <li ng-if="User.success">
+                        <li ng-if="IdSchool">
+                            <a href="#/MySchool">{{Page.LeftMenu.MySchool}}</a>
+                        </li>
+                        <li ng-if="User">
                             <a href="#/PrivateLessons">{{Page.navbar.PrivateLessons}}</a>
                         </li>
-                        <li ng-if="User.success">
+                        <li ng-if="User">
                             <a href="#/LK">{{Page.navbar.LK}}</a>
                         </li>
                         <li ng-if="!User.success">

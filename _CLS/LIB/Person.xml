@@ -36,12 +36,6 @@
 ]]></Content>
 </UDLText>
 
-<Property name="Gender">
-<Description>
-тру пол или не тру XD</Description>
-<Type>%Boolean</Type>
-</Property>
-
 <Property name="Email">
 <Description>
 добавить проверку корректности мыла</Description>

@@ -25,8 +25,7 @@
 		set dancer.Password=obj.Password
 		set dancer.Key=##class(Auth.Session).CreateSSN()
 		do dancer.%Save()
-		set dancerId=dancer.%Id()
-		
+		set dancerId=dancer.%Id()		
 		set session1=##class(Auth.SessionData).%New()		
 		set session1.IP=%request.GetCgiEnv("REMOTE_ADDR")
 		set session1.Agent=%request.GetCgiEnv("HTTP_USER_AGENT")		
@@ -41,7 +40,8 @@
 		do %response.SetCookie("uh",hash,t,"/")
 		do %response.SetCookie("userId",dancerId,t,"/")
 		do %response.SetCookie("Email",dancer.Email,t,"/")
-		
+		//ToDo затычка
+		do %response.SetCookie("Role",dancer.Access,t,"/")
 		w "{""children"":{"_
 		"""success"":"""_1_
 		""",""hash"":"""_hash_
@@ -52,54 +52,6 @@
 
 	catch ex{
 		set st=ex.AsStatus()
-	}
-	ret st
-]]></Implementation>
-</Method>
-
-<Method name="RegNewInstructor">
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set st=1
-	try
-	{
-		
-	}
-	catch{
-		
-	}
-	ret st
-]]></Implementation>
-</Method>
-
-<Method name="RegNewSchool">
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set st=1
-	try
-	{
-		
-	}
-	catch{
-		
-	}
-	ret st
-]]></Implementation>
-</Method>
-
-<Method name="Invite">
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set st=1
-	try
-	{
-		
-	}
-	catch{
-		
 	}
 	ret st
 ]]></Implementation>

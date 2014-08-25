@@ -50,12 +50,6 @@
 <Parameter name="MAXLEN" value="300"/>
 </Property>
 
-<Property name="Email">
-<Description>
-Адрес электронной почты</Description>
-<Type>%String</Type>
-</Property>
-
 <Property name="URL">
 <Description>
 Сайт/ссылка на ресурс </Description>
@@ -83,13 +77,6 @@
 Дополнительное описание для соц сетей</Description>
 <Type>%Text</Type>
 <Parameter name="MAXLEN" value="10000"/>
-</Property>
-
-<Property name="Links">
-<Description>
-Ссылки на размещённые ресурсы</Description>
-<Type>%Text</Type>
-<Parameter name="MAXLEN" value="1000"/>
 </Property>
 
 <Property name="RegDate">
@@ -249,8 +236,6 @@ ClassMethod Delete(ID) As %Status
 <StreamLocation>^LIB.MetaDescriptionS</StreamLocation>
 <ExtentSize>100000</ExtentSize>
 <Data name="MetaDescriptionDefaultData">
-<Structure>listnode</Structure>
-<Subscript/>
 <Value name="1">
 <Value>%%CLASSNAME</Value>
 </Value>

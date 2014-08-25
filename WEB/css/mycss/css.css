@@ -6,3 +6,9 @@
 .WELL{
     margin-top: 150px;
 }
+.center{
+    align: center !important;
+}
+.SchoolImg{
+    max-height: 150px;
+}

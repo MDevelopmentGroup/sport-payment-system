@@ -8,18 +8,19 @@
 <Type>%Integer</Type>
 </Property>
 
+<UDLText name="T">
+<Content><![CDATA[
+// todo связи
+
+]]></Content>
+</UDLText>
+
 <Property name="IdDancer">
 <Type>SPD.Dancer</Type>
-<Cardinality>one</Cardinality>
-<Inverse>Owner</Inverse>
-<Relationship>1</Relationship>
 </Property>
 
 <Property name="OwnerSchool">
 <Type>SPD.School</Type>
-<Cardinality>one</Cardinality>
-<Inverse>Owner</Inverse>
-<Relationship>1</Relationship>
 </Property>
 
 <Method name="CreateInstructon">
@@ -46,27 +47,6 @@
 		set st=exception
 	}
 	q st
-]]></Implementation>
-</Method>
-
-<Method name="InviteInstructor">
-<ClassMethod>1</ClassMethod>
-<FormalSpec>IdDancer</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set st=$$$OK
-	try{
-		&sql(select count(id) into :count from SPD.Dancer where id=:IdDancer)
-		if (count=1)
-		{
-			//send invite
-			
-		}
-	}
-	catch{
-		
-	}
-	ret st
 ]]></Implementation>
 </Method>
 

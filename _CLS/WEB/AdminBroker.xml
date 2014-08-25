@@ -31,6 +31,16 @@
 		<Route Url="/success/"				Method="POST" 		Call="REST.JSON:SuccessPayment"/>
 	<!-- -->
 		<Route Url="/Reg/"					Method="POST" 		Call="WEB.AdminBroker:Test"/>
+		
+	<!-- inviteSchool-->
+		<Route Url="/InviteSchool/"			Method="POST" 		Call="SPD.Logic.Invite:Invite"/>
+	<!-- -->
+	<!-- CreateSchool-->
+		<Route Url="/CreateSchool/" 		Method="POST" 		Call="SPD.Logic.School:Create"/>
+	<!-- -->
+	
+	
+	
     </Routes>
 ]]></Data>
 </XData>
@@ -45,7 +55,7 @@ Dispatch a REST request according to URL and Method</Description>
 	//W !,"jhgujyfkfyvh",pUrl,pMethod,!
 	//w %request.GetCgiEnv("HTTP_USER_AGENT")
 	///проверка сессии.
-
+	/*
 	try{
 	$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
 		set hash=obj.hash
@@ -81,7 +91,7 @@ Dispatch a REST request according to URL and Method</Description>
 	}
 	catch ex{
 		
-	}
+	}*/
     #dim tSC As %Status = $$$OK
     #dim e As %Exception.AbstractException
     

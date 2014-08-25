@@ -1,5 +1,5 @@
 angular.module('VACANCY',['ngCookies','ngResource','ngLocale', 'ngRoute','ngSanitize','ngAnimate','infinite-scroll',
-        'VACANCY.services','VACANCY.Filters','mgcrea.ngStrap','VACANCY.directive'
+        'VACANCY.services','VACANCY.Filters','mgcrea.ngStrap','VACANCY.directive','gantt'
       ])
     .config(['$routeProvider',  function($routeProvider) { $routeProvider.
 
@@ -19,44 +19,52 @@ angular.module('VACANCY',['ngCookies','ngResource','ngLocale', 'ngRoute','ngSani
 
         //***************************************** Trainer **********************************************************//
         when('/Trainers',                   {templateUrl: 'partials/user/view/view_Trainers.html', controller: ViewTrainerCtrl}).
-        when('/Trainers/:GroupId',          {templateUrl: 'partials/user/view/view_Trainer.html', controller: ViewTrainerCtrl}).
+        when('/Trainer/:Id',          {templateUrl: 'partials/user/view/view_Trainer.html', controller: ViewTrainerCtrl}).
         //***************************************** Trainer **********************************************************//
 
         when('/LK',                         {templateUrl: 'partials/user/view/view_School.html', controller: ViewLKCtrl}).
 
         //***************************************** Schools **********************************************************//
 
-        when('/schools',                    {templateUrl: 'partials/user/view/view_Schools.html', controller: ViewSchoolsCtrl}).
-        when('/schools/:GroupId',           {templateUrl: 'partials/user/view/view_School.html', controller: ViewSchoolsCtrl}).
-        when('/Createschool/',                    {templateUrl: 'partials/user/Create/Create_Schools.html', controller: CreateSchoolCtrl}).
+        when('/schools',                      {templateUrl: 'partials/user/view/view_Schools.html', controller: ViewSchoolsCtrl}).
+        when('/school/:SchoolId',             {templateUrl: 'partials/user/view/view_School.html', controller: ViewSchoolCtrl}).
+        when('/CreateSchool/',                {templateUrl: 'partials/user/Create/Create_School.html', controller: CreateSchoolCtrl}).
+        when('/UpdateMySchool/',              {templateUrl: 'partials/user/Update/Update_School.html', controller: UpdateSchoolCtrl}).
+
+        when('/MySchool/',                    {templateUrl: 'partials/user/view/My_School.html', controller: MySchoolCtrl}).
+        when('/LessonInTimeTable/',           {templateUrl: 'partials/user/view/LessonInTimeTable.html', controller: LessonInTimeTableCtrl}).
         //***************************************** Schools **********************************************************//
+
+        //***************************************** Invite **********************************************************//
+        when('/Invite/:hash',                        {templateUrl: 'partials/user/view/InviteInstructor.html', controller: InviteCtrl}).
+        when('/registryNewInstructor/:hash',         {templateUrl: 'partials/user/Create/registryNewInstructor.html', controller: registryNewInstructorCtrl}).
+        //***************************************** Invite **********************************************************//
+
 
         //***************************************** PrivateLessons **********************************************************//
         when('/PrivateLessons',                   {templateUrl: 'partials/user/view/view_PrivateLessons.html', controller: ViewPrivateLessonsCtrl}).
         when('/PrivateLessons/:GroupId',          {templateUrl: 'partials/user/view/view_PrivateLesson.html', controller: ViewPrivateLessonsCtrl}).
         //***************************************** PrivateLessons **********************************************************//
 
-        when('/vacancy/:VacancyID', {templateUrl: 'partials/user/view/view_vacancy.html',   controller: ViewVacancyCtrl}).
-        //***************************************** Vacancy **********************************************************//
-
-        //***************************************** Company **********************************************************//
-        when('/companies',          {templateUrl: 'partials/user/view/view_companies.html', controller: ViewCompaniesCtrl}).
-        when('/company/:CompanyID', {templateUrl: 'partials/user/view/view_company.html',   controller: ViewCompanyCtrl}).
-        //***************************************** Company **********************************************************//
-
-        //***************************************** Event **********************************************************//
-        when('/events',              {templateUrl: 'partials/user/view/view_events.html',     controller: ViewEventsCtrl}).
-        when('/event/:EventID',      {templateUrl: 'partials/user/view/view_event.html',      controller: ViewEventCtrl}).
-        //***************************************** Event **********************************************************//
-
-        when('/catalog',            {templateUrl: 'partials/user/view/view_catalog.html',   controller: ViewCatalogCtrl}).
-        when('/solution/:SolutionID',            {templateUrl: 'partials/user/view/view_solution.html',   controller: ViewSolutionCtrl}).
-
-
         when('/main',             {templateUrl: 'partials/user/about.html' ,   controller: ViewAboutCtrl}).
 
         otherwise({redirectTo: '/main'});
-    }]).
-    run(['LanguageFactory',function(LanguageFactory) {
+    }])
+    .run(['LanguageFactory',function(LanguageFactory) {
         LanguageFactory.Init();
-       }]);
+       }])
+
+    .config(function($datepickerProvider) {
+        angular.extend($datepickerProvider.defaults, {
+            dateFormat: 'dd/MM/yyyy',
+            startWeek: 1
+        });
+    })
+
+    .config(function($timepickerProvider) {
+        angular.extend($timepickerProvider.defaults, {
+            timeFormat: 'HH:mm:ss',
+            length: 4
+        });
+    })
+;

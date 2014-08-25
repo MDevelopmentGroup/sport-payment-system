@@ -5,6 +5,24 @@
 <ClassType>serial</ClassType>
 <TimeCreated>63292,43957.241629</TimeCreated>
 
+<Method name="GetCurrentUser">
+<ClassMethod>1</ClassMethod>
+<ReturnType>LIB.Person</ReturnType>
+<Implementation><![CDATA[
+	set prs=##class(LIB.Person).%OpenId(%request.GetCookie("userId"))
+	ret prs
+]]></Implementation>
+</Method>
+
+<Method name="GetCurrentSchool">
+<ClassMethod>1</ClassMethod>
+<ReturnType>SPD.School</ReturnType>
+<Implementation><![CDATA[
+	set school=##class(SPD.School).%OpenId(%request.GetCookie("IdSchool"))
+	ret school
+]]></Implementation>
+</Method>
+
 <Method name="AddData">
 <ClassMethod>1</ClassMethod>
 <FormalSpec>Data:%String</FormalSpec>
@@ -97,8 +115,8 @@
 	try{
 		$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
 		set pass=obj.Password	set Email=obj.Email
-		&sql(declare ses1 cursor for select ID, Access, Active, Email, FirstName, Gender,
-		 Key, LastName, Password, Patronymic into:UserID , :Access, :Active, :Email, :FirstName, :Gender, :Key, :LastName, :Password, :Patronymic
+		&sql(declare ses1 cursor for select ID, Access, Active, Email, FirstName,
+		 Key, LastName, Password, Patronymic into:UserID , :Access, :Active, :Email, :FirstName, :Key, :LastName, :Password, :Patronymic
 		 from LIB.Person where (Password=:pass & Email=:Email))
 		 
 		&sql(open ses1)
@@ -121,18 +139,24 @@
 			do session1.%Save()
 			set hash=$SYSTEM.Encryption.AESCBCEncrypt(UserID_":"_session1.RoleUser.Description,Key)
 			set hash=##class(Auth.Session).Encode(hash)
+			&sql(select id into :idschool from SPD.School where Person->Id=:UserID)
 			set t=+$H+1
 			set t=$ZD(t,11) _", " _$ZD(t,2) _ " 00:00:00 GMT"
+			set jsonCook="{"_
+			"""User"":{"_
+			"""success"":"""_1_
+			""",""hash"":"""_hash_
+			""",""userId"":"""_UserID_
+			""",""idschool"":"""_idschool_
+			""",""Email"":"""_Email_
+			"""}}"
 			do %response.SetCookie("success",1,t,"/")
 			do %response.SetCookie("uh",hash,t,"/")
 			do %response.SetCookie("userId",UserID,t,"/")
 			do %response.SetCookie("Email",Email,t,"/")
-			w "{""children"":{"_
-			"""success"":"""_1_
-			""",""hash"":"""_hash_
-			""",""userId"":"""_UserID_
-			""",""Email"":"""_Email_
-			"""}}"			
+			do %response.SetCookie("Role",session1.RoleUser.Access,t,"/")
+			do %response.SetCookie("IdSchool",idschool,t,"/")
+			w jsonCook
 		}
 	}
 	catch ex

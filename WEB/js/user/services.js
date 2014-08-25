@@ -125,7 +125,7 @@ app.factory('LanguageFactory',['$http','$rootScope',function($http,$rootScope){
 
 //************************************** ErrorLog End ****************************************************************//
 //***************************************** AuthenticationFactory ****************************************************//
-app.service('AuthenticationFactory',['$http','ErrorLogFactory',function($http,ErrorLogFactory){
+app.service('AuthenticationFactory',['$http','ErrorLogFactory','$rootScope',function($http,ErrorLogFactory,$rootScope){
     var AuthenticationFactory={};
     AuthenticationFactory.CurrentUser={ID:null,
         UserName:null,
@@ -154,6 +154,8 @@ app.service('AuthenticationFactory',['$http','ErrorLogFactory',function($http,Er
         AuthenticationFactory.CurrentUser.success=AuthenticationFactory.GetCookie('success');
         AuthenticationFactory.CurrentUser.Email=AuthenticationFactory.GetCookie('Email');
         AuthenticationFactory.CurrentUser.Hash=AuthenticationFactory.GetCookie('uh');
+        AuthenticationFactory.CurrentUser.Role=AuthenticationFactory.GetCookie('Role');
+        AuthenticationFactory.CurrentUser.IdSchool=AuthenticationFactory.GetCookie('IdSchool');
         return AuthenticationFactory.CurrentUser;
     };
     AuthenticationFactory.CleanCurrentUser=function(){
@@ -163,6 +165,7 @@ app.service('AuthenticationFactory',['$http','ErrorLogFactory',function($http,Er
         AuthenticationFactory.SetCookie('Email',   null,'/',-1);
         AuthenticationFactory.SetCookie('Login',   null,'/',-1);
         AuthenticationFactory.SetCookie('success',   null,'/',-1);
+
     };
     AuthenticationFactory.GetAccessLevels=function(value){
         switch (value){
@@ -182,8 +185,10 @@ app.service('AuthenticationFactory',['$http','ErrorLogFactory',function($http,Er
     AuthenticationFactory.Login=function(data){
         return $http.post(BaseUrl+'/Login/',data)
             .success(function(data, status, headers, config){
-                AuthenticationFactory.SetCookie('HASH', data.hash,'/',-1);
-                AuthenticationFactory.SetCookie('ID', data.UserID,'/',-1);
+                //AuthenticationFactory.SetCookie('HASH', data.hash,'/',-1);
+                //AuthenticationFactory.SetCookie('ID', data.UserID,'/',-1);
+                $rootScope.user=data.children;
+                console.log($rootScope.user);
             })
             .error(function(data, status, headers, config){
                 ErrorLogFactory.CreateErrorLog({data:data,status:status,headers:headers,config:config});
@@ -192,10 +197,12 @@ app.service('AuthenticationFactory',['$http','ErrorLogFactory',function($http,Er
 
     AuthenticationFactory.Logout=function(){
         var user=AuthenticationFactory.GetCurrentUser();
-        //AuthenticationFactory.SetCookie('userId',      null,'/',-1);
-        //AuthenticationFactory.SetCookie('success',null,'/',-1);
-        //AuthenticationFactory.SetCookie('Email',null,'/',-1);
-        //AuthenticationFactory.SetCookie('uh',   null,'/',-1);
+        AuthenticationFactory.SetCookie('userId',      null,'/',-1);
+        AuthenticationFactory.SetCookie('success',null,'/',-1);
+        AuthenticationFactory.SetCookie('Email',null,'/',-1);
+        AuthenticationFactory.SetCookie('uh',   null,'/',-1);
+        AuthenticationFactory.SetCookie('Role',   null,'/',-1);
+        AuthenticationFactory.SetCookie('IdSchool',   null,'/',-1);
         return $http.post(BaseUrl+'/Logout/',user)
             .success(function(data, status, headers, config){
                 AuthenticationFactory.CleanCurrentUser();})
@@ -213,6 +220,126 @@ app.service('AuthenticationFactory',['$http','ErrorLogFactory',function($http,Er
     return AuthenticationFactory;
 }]);
 //***************************************** AuthenticationFactory ****************************************************//
+
+//***************************************** FileFactory ****************************************************//
+app.factory('FileFactory',['$http','$rootScope','ErrorLogFactory',function($http,$rootScope,ErrorLogFactory) {
+    var FileFactory={};
+    FileFactory.FileUpload=function(InputName, call){
+        var formData = new FormData();
+        for(var i=0;i<document.getElementById(InputName).files.length;i++){
+            formData.append("file"+i, document.getElementById(InputName).files[i]);
+        }
+        var reader = new FileReader;
+        reader.readAsDataURL(document.getElementById(InputName).files[0]);
+        var place = document.getElementById("Img");
+
+        // Как только картинка загрузится
+        reader.onload = function(e) {
+            place.src = e.target.result;
+            //console.log('nenene');
+        }
+        var xhr = new XMLHttpRequest();
+        // Отправим данные на сервер
+        xhr.open("POST", "/rest/upload/", true);
+        /*
+        xhr.upload.onprogress = function(e) { // <<<
+            if (e.lengthComputable) {
+                progressBar.value = (e.loaded / e.total) * 100;
+            }
+        };
+        */
+        xhr.onreadystatechange=function(e){
+            $rootScope.$apply(function(){
+                if (xhr.readyState == 4) {
+                    call(xhr.responseText);
+                }
+            });
+        };
+        xhr.send(formData);
+    };
+
+
+    return FileFactory;
+}]);
+//***************************************** FileFactory ****************************************************//
+
+app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($http,$rootScope,ErrorLogFactory) {
+    var SchoolFactory={};
+    var schoolBroker="/dance-school";
+    SchoolFactory.CreateSchool=function(data) {
+        return $http.post("/dance-admin/CreateSchool/",data);
+    };
+    SchoolFactory.GetSchools=function(){
+        return $http.get(BaseUrl+"/GetSchools/");
+    };
+    SchoolFactory.GetSchool=function(IdSchool){
+        return $http.get(BaseUrl+"/GetSchool/"+IdSchool);
+    };
+    SchoolFactory.Update=function(data){
+        return $http.post(schoolBroker+"/UpdateSchool/",data);
+    };
+    SchoolFactory.AddRoomToSchool=function(data){
+        return $http.post(schoolBroker+"/CreateRoom/",data);
+    };
+    SchoolFactory.GetAllRoomsForSchool=function(){
+        return $http.get(schoolBroker + "/GetAllRoomsForSchool/");
+    };
+    SchoolFactory.UpdateRoom=function(data){
+        return $http.post(schoolBroker + "/UpdateRoom/",data);
+    };
+    SchoolFactory.DeleteRoom=function(IdRoom){
+        return $http.delete(schoolBroker+"/DeleteRoom/"+IdRoom);
+    };
+    SchoolFactory.UpdateAddress=function(data){
+        return $http.post(schoolBroker + "/UpdateAddress/",data);
+    };
+    SchoolFactory.GetAddress=function(IdAddress){
+        return $http.get(BaseUrl + "/GetAddress/"+IdAddress);
+    };
+    SchoolFactory.GetLessonTypes=function(){
+        return $http.get(schoolBroker + "/GetLessonTypes/");
+    };
+    SchoolFactory.AddPrice=function(data){
+        return $http.post(schoolBroker+"/AddPrice/",data);
+    };
+    SchoolFactory.GetPrice=function(ID){
+        return $http.get(schoolBroker + "/GetPrice/"+ID);
+    };
+    SchoolFactory.InviteInstructor=function(email){
+        return $http.get(schoolBroker + "/InviteInstructor/"+email);
+    };
+    SchoolFactory.InviteAccept=function(hash){
+        return $http.post(BaseUrl + "/InviteAccept/"+hash);
+    };
+    SchoolFactory.InviteReject=function(hash) {
+        return $http.post(BaseUrl + "/InviteReject/"+hash);
+    };
+    SchoolFactory.CreateNewInstructor=function(user){
+        return $http.post(BaseUrl + "/CreateNewInstructor/",user);
+    };
+    SchoolFactory.GetInstructorList=function(idschool){
+        return $http.get(BaseUrl+"/GetInstructorList/"+idschool)
+    };
+    SchoolFactory.RemoveFromSchool=function(ID){
+        return $http.get(schoolBroker+"/RemoveFromSchool/"+ID)
+    };
+    SchoolFactory.AddLessonInTable=function(data){
+        return $http.post(schoolBroker+"/AddLessonInTable/",data)
+    };
+    SchoolFactory.UpdateLessonInTable=function(data){
+        return $http.post(schoolBroker+"/UpdateLessonInTable/"+data.ID,data)
+    };
+    SchoolFactory.RemoveLessonFromTable=function(id){
+        return $http.post(schoolBroker+"/RemoveLessonFromTable/"+ID)
+    };
+    SchoolFactory.GetLessonsFromTable=function(){
+        return $http.get(schoolBroker+"/GetLessonsFromTable/")
+    };
+    SchoolFactory.GetLesson=function(id){
+        return $http.get(BaseUrl+"/GetLesson/"+id);
+    }
+    return SchoolFactory;
+}]);
 
 
 //***************************************** Setting ********************************************************************//
