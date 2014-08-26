@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="WEB.SChoolBroker">
+<Super>%CSP.REST</Super>
+<TimeCreated>63418,35431.517122</TimeCreated>
+
+<XData name="UrlMap">
+<Data><![CDATA[
+<Routes>
+	<Route Url="/UpdateSchool/" 			Method="POST" 		Call="SPD.Logic.School:Update"/>
+	<!-- RoomBroker	-->
+	<Route Url="/CreateRoom/" 				Method="POST" 		Call="SPD.Logic.Room:CreateRoom"/>
+	<Route Url="/GetAllRoomsForSchool/" 	Method="GET" 		Call="SPD.Logic.Room:GetAllRoomsForSchool"/>
+	<Route Url="/DeleteRoom/:IdRoom" 		Method="DELETE" 	Call="SPD.Logic.Room:DeleteRoom"/>
+	<Route Url="/UpdateRoom/"	 			Method="POST" 		Call="SPD.Logic.Room:UpdateRoom"/>
+	
+	<!--Instructor-->
+	<Route Url="/CreateInstructor/" 		Method="POST" 		Call="SPD.Logic.Instructor:CreateInstructor"/>	
+	<!--Instructor-->
+	
+	<!--School-->
+	<Route Url="/CreateJurnall/" 				Method="POST" 		Call="SPD.Logic.School:CreateJurnall"/>
+	<Route Url="/CreateTimeTable/" 				Method="POST" 		Call="SPD.Logic.School:CreateTimeTable"/>
+	<Route Url="/GetLessonTypes/"				Method="GET"		Call="SPD.Logic.School:GetLessonTypes"/>
+	<Route Url="/AddPrice/"						Method="POST"		Call="SPD.Logic.School:AddPrice"/>
+	<Route Url="/GetPrice/:ID"					Method="GET"		Call="SPD.Logic.School:GetPrice"/>
+	<Route Url="/InviteInstructor/:Email"		Method="GET"		Call="SPD.Logic.School:InviteInstructor"/>
+	<Route Url="/RemoveFromSchool/:ID"			Method="GET"		Call="SPD.Logic.School:RemoveFromSchool"/>
+	
+	<Route Url="/AddLessonInTable/"				Method="POST"		Call="SPD.Logic.TimeTableLessons:Create"/>
+	<Route Url="/UpdateLessonInTable/:ID"		Method="POST"		Call="SPD.Logic.TimeTableLessons:Update"/>
+	<Route Url="/RemoveLessonFromTable/:ID"		Method="DELETE"		Call="SPD.Logic.TimeTableLessons:Delete"/>
+	<Route Url="/UpdateLessonTable/"			Method="POST"		Call="SPD.Logic.TimeTableLessons:UpdateLessonTable"/>	
+	<Route Url="/GetLessonsFromTable/"			Method="GET"		Call="SPD.Logic.TimeTableLessons:GetLessonsFromTable"/>
+	
+	<!--School-->
+	
+	<!---->
+	
+	<!---->
+	
+</Routes>
+]]></Data>
+</XData>
+
+<UDLText name="T">
+<Content><![CDATA[
+/// todo реализовать dispatch request так чтобы только школы могли получать данные (причём только к своим)
+
+]]></Content>
+</UDLText>
+</Class>
+</Export>

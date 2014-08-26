@@ -337,6 +337,9 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     };
     SchoolFactory.GetLesson=function(id){
         return $http.get(BaseUrl+"/GetLesson/"+id);
+    };
+    SchoolFactory.UpdateLessonTable=function(table){
+        return $http.post(schoolBroker+"/UpdateLessonTable/",table);
     }
     return SchoolFactory;
 }]);

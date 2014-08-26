@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.TempInvite">
+<Super>%Persistent</Super>
+<TimeCreated>63418,40955.737285</TimeCreated>
+
+<Property name="md">
+<Type>%String</Type>
+</Property>
+
+<Property name="Type">
+<Type>%String</Type>
+</Property>
+
+<Property name="Dancer">
+<Type>SPD.Dancer</Type>
+</Property>
+
+<Property name="School">
+<Type>SPD.School</Type>
+</Property>
+
+<Property name="Email">
+<Type>%String</Type>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.TempInviteD</DataLocation>
+<DefaultData>TempInviteDefaultData</DefaultData>
+<IdLocation>^SPD.TempInviteD</IdLocation>
+<IndexLocation>^SPD.TempInviteI</IndexLocation>
+<StreamLocation>^SPD.TempInviteS</StreamLocation>
+<Data name="TempInviteDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>md</Value>
+</Value>
+<Value name="3">
+<Value>Type</Value>
+</Value>
+<Value name="4">
+<Value>Person</Value>
+</Value>
+<Value name="5">
+<Value>School</Value>
+</Value>
+<Value name="6">
+<Value>Email</Value>
+</Value>
+<Value name="7">
+<Value>Dancer</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Logic.School">
+<TimeCreated>63418,51393.737219</TimeCreated>
+
+<Method name="GetPrice">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ID</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	Try
+	{
+		set SchoolQuery="select ID, Actual, Cost, DateActualEnd, DateActualStart, TypeLesson->name As name, TypeLesson->ID as TypeLessonID, school "_
+		"from SPD.Price where school->id="_ID
+		set st=##class(SPD.School).GetJSONData(SchoolQuery)
+	}
+	catch ex{
+	set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetLessonTypes">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set school=##class(Auth.Session).GetCurrentSchool()
+	set schoolId=school.%Id()
+	&sql(select count(id) into :count from SPD.Price where school->id=:schoolId)
+	if (count){
+	set sql="select TypeLesson->id as TypeID,TypeLesson->name as TypeName, TypeLesson->ShortDescription as ShortDescription "_
+	" from SPD.Price where school->id="_schoolId
+	
+	set st=##class(SPD.School).GetJSONData(sql)
+	}
+	else {
+		SET mygenex = ##class(%Exception.General).%New("Exception","999",,"Don't find type lesson")
+    	THROW mygenex
+	}
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="AddPrice">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	Try
+	{
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		if (obj.TypeLessonId'="")
+		{
+			set TypeLesson=##class(SPD.TypeLesson).%OpenId(obj.idType)
+		} 
+		else {
+			set TypeLesson=##class(SPD.Logic.TypeLesson).Create(obj.TypeLesson,obj.ShortDescription)
+		}
+		set school=##class(Auth.Session).GetCurrentSchool()
+		set price=##class(SPD.Price).%New()
+		set price.Actual=1 set price.TypeLesson=TypeLesson
+		set price.Cost=obj.Cost
+		set price.DateActualEnd=$zdt($zdth(obj.dateActual,4),3)
+		set price.DateActualStart=$zdt($h,3)
+		set price.school=school
+		
+		set st=price.%Save()
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="Create">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	Try
+	{
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		///проверка на существование подобной школы по name и email
+		set Email=$ZCONVERT(obj.Email,"I","UTF8")
+		set Name=$ZCONVERT(obj.Name,"I","UTF8")
+		&sql(select count(id) into :count from SPD.School where Name=:Name or Person->Email=:Email)
+		//..%ParseJSON(pContent,pTargetClass,.pObject,,,,pIgnoreUnknownProps)
+		if (count=0){
+			if (obj.PersonId="") //для несуществующих пользователей
+			{
+				set person=##class(LIB.Person).%New()
+
+				set person.Access=##class(LIB.Role).%OpenId(2)
+				set person.Active=1
+				set person.FirstName=$ZCONVERT(obj.FirstName,"I","UTF8")
+				set person.LastName=$ZCONVERT(obj.LastName,"I","UTF8")
+				set person.Patronymic=$ZCONVERT(obj.Patronymic,"I","UTF8")
+				set person.Email=Email
+				//set dancer.Image=##class(LIB.FileBase).%OpenId(obj.ImageId)
+				set person.Password=obj.Password
+				set person.Key=##class(Auth.Session).CreateSSN()
+				set st=person.%Save()
+				
+			}
+			else
+			{
+				set person=##class(LIB.Person).%OpenId(obj.PersonId)
+			}
+			set school=##class(SPD.School).%New()
+			
+
+			set school.City=$ZCONVERT(obj.City,"I","UTF8")
+			set school.Country=$ZCONVERT(obj.Country,"I","UTF8")
+			set school.Street=$ZCONVERT(obj.Street,"I","UTF8")
+			
+
+			set school.AddInfo=$ZCONVERT(obj.AddInfo,"I","UTF8")
+			set school.Body=$ZCONVERT(obj.Body,"I","UTF8")
+
+			set school.RegDate=$zdt($h,3)
+
+			set school.DescTimeStamp=$zdt($h,3)	///TODO
+
+			if (obj.FirstPage="") set school.FirstPage=""
+			if (obj.ImageId=""){set school.Image=##class(LIB.FileBase).%OpenId(6)} else{set school.Image=##class(LIB.FileBase).%OpenId(obj.ImageId)}
+
+			set school.Lang=0
+			set school.Name=Name
+			set school.Person=person
+			set school.RegDate=$zdt($h,3)	///TODO 
+			set school.Telephone=$ZCONVERT(obj.Phone,"I","UTF8")
+			if (obj.Url=""){ set school.Url="" } else {set school.URL=obj.Url}
+			set school.isActive=1
+			set school.isBlocked=0
+			set st=school.%Save()
+		}
+		
+	}
+	Catch exception
+	{
+		set st=exception.AsStatus()
+	}
+	q st
+]]></Implementation>
+</Method>
+
+<Method name="Update">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	Try
+	{
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+			set school=##class(SPD.School).%OpenId(obj.ID)
+			set pers=##class(LIB.Person).%OpenId(%request.GetCookie("userId"))
+			if (obj.Password'="") {set pers.Password=obj.Password}
+			set school.AddInfo=$ZCONVERT(obj.AddInfo,"I","UTF8")
+			set school.Body=$ZCONVERT(obj.Body,"I","UTF8")
+			set school.City=$ZCONVERT(obj.City,"I","UTF8")
+			set school.Country=$ZCONVERT(obj.Country,"I","UTF8")
+			set school.RegDate=$zdt($h,3)
+			set school.DescTimeStamp=$zdt($h,3)	///TODO
+			set pers.Email=obj.Email
+			if (obj.FirstPage="") set school.FirstPage=""
+			if (obj.ImageId=""){set school.Image=##class(LIB.FileBase).%OpenId(6)} else{set school.Image=##class(LIB.FileBase).%OpenId(obj.ImageId)}
+			set school.Lang=0
+			set school.RegDate=$zdt($h,3)	///TODO 
+			set school.Street=$ZCONVERT(obj.Street,"I","UTF8")
+			set school.Telephone=$ZCONVERT(obj.Telephone,"I","UTF8")
+			if (obj.URL=""){ set school.URL="" } else {set school.URL=obj.URL}
+			set school.isActive=1
+			set school.isBlocked=0
+			set st=school.%Save()
+	}
+	Catch exception
+	{
+		set st=exception
+	}
+	q st
+]]></Implementation>
+</Method>
+
+<Method name="Delete">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ID</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set school=##class(SPD.School).%OpenId(ID)
+	set school.isActive=0
+]]></Implementation>
+</Method>
+
+<Method name="GetAll">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set SchoolQuery = "SELECT * "_
+				   	  "FROM SPD.School "
+				   				   				   
+	do ##class(SPD.School).GetJSONData(SchoolQuery)
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="Get">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ID:%Integer</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+
+	set SchoolQuery = "SELECT * "_
+				   	  "FROM SPD.School "_
+				   	  "WHERE ID="_ID
+				   				   				   
+	do ##class(SPD.School).GetJSONData(SchoolQuery)
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetSchools">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	set SchoolQuery = "SELECT ID, AddInfo, Body as Descript, City, Country, "_
+	"DescTimeStamp, FirstPage, Image->FileName, "_
+	"Lang, Name, Person, RegDate, Street, Telephone, "_
+	"URL, isActive, isBlocked "_
+	"FROM SPD.School where isActive=1"				   	  				   				   				   
+	
+	do ##class(SPD.School).GetJSONData(SchoolQuery)
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetSchool">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ID</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set SchoolQuery = "SELECT ID, AddInfo, Body as Body, City, Country, "_
+	"DescTimeStamp, Person->Email As Email,FirstPage, Image->FileName,Image->id As ImageId, "_
+	"Lang, Name, Person, RegDate, Street, Telephone, "_
+	"URL, isActive, isBlocked "_
+	"FROM SPD.School where id="_ID
+	
+	do ##class(SPD.School).GetJSONData(SchoolQuery)
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="InviteInstructor">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>Email</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	Try
+	{
+		&sql(select count(id), id into :count,:id from SPD.Dancer where Email=:Email and (Access->Access=2) or (Access->Access=3))
+		set temp=##class(SPD.TempInvite).%New()
+		set temp.Type="InviteInstructor"
+		//проверка на повторую отправку приглашения
+		&sql(select count(id) into :countEmail from SPD.TempInvite where Email=:Email)
+		if (countEmail){
+			SET mygenex = ##class(%Exception.General).%New("Exception","999",,"adsfdfadf")
+    		THROW mygenex
+		}
+		set school=##class(Auth.Session).GetCurrentSchool()
+		set temp.School=school
+		set temp.Email=Email
+		if (count=1)
+		{
+			//send invite
+			set dancer=##class(SPD.Dancer).%OpenId(id)
+			set temp.Dancer=dancer
+			set temp.md=##class(Auth.Session).Encode($SYSTEM.Encryption.MD5Hash(Email_" "_school.%Id()_"InviteInstructor"))
+			//w temp.md
+			do ##class(WEB.Util.Mail).NewMail(Email,"InstructorInviteToSchool",,temp.md)
+		}
+		else
+		{
+			set temp.md=##class(Auth.Session).Encode($SYSTEM.Encryption.MD5Hash(Email_" "_school.%Id()_"InviteNewInstructor"))
+			do ##class(WEB.Util.Mail).NewMail(Email,"NewInstructorInviteToSchool",,temp.md)
+		}
+		
+		do temp.%Save()
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="InviteAccept">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>hash</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	try{
+		&sql(select id,Dancer->id,School->id into :id,:DancerId,SchoolId from SPD.TempInvite where md=:hash)
+		set Dancer=##class(LIB.Person).%OpenId(DancerId)
+		set instructor=##class(SPD.Instructor).%New()
+		set instructor.IdDancer=Dancer
+		set instructor.InstructorPower=20
+		///todo InstructorPower
+		set instructor.OwnerSchool=##class(SPD.School).%OpenId(SchoolId)
+		set instructor.IdDancer.Access=##class(LIB.Role).%OpenId(3)
+		set st= instructor.%Save()
+		set st=##class(SPD.TempInvite).%DeleteId(id)
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="CreateInstructor">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	try{
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		
+		
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="InviteReject">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>hash</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	try{
+		&sql(select id into :id from SPD.TempInvite where md=:hash)
+		set st=##class(SPD.TempInvite).%DeleteId(id)
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="CreateNewInstructor">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		&sql(select id,School->id,Email into :id,:SchoolId,:email from SPD.TempInvite where md=:obj.hash)
+		if (id){
+			//создание нового пользователя
+			set dancer=##class(SPD.Dancer).%New()
+			set dancer.Access=##class(LIB.Role).%OpenId(3)
+			set dancer.Active=1
+			set dancer.FirstName=$ZCONVERT(obj.FirstName,"I","UTF8")
+			set dancer.LastName=$ZCONVERT(obj.LastName,"I","UTF8")
+			set dancer.Patronymic=$ZCONVERT(obj.Patronymic,"I","UTF8")
+			set dancer.Email=$ZCONVERT(email,"I","UTF8")
+			//set dancer.Image=##class(LIB.FileBase).%OpenId(obj.ImageId)		
+			set dancer.Gender=obj.gender
+			set dancer.Password=obj.Password
+			set dancer.Key=##class(Auth.Session).CreateSSN()
+			zw dancer
+			do dancer.%Save()
+			set dancerId=dancer.%Id()		
+			set session1=##class(Auth.SessionData).%New()		
+			set session1.IP=%request.GetCgiEnv("REMOTE_ADDR")
+			set session1.Agent=%request.GetCgiEnv("HTTP_USER_AGENT")		
+			set session1.RoleUser=dancer.Access		
+			set session1.UserID=dancerId
+			set st=session1.%Save()
+			set hash=$SYSTEM.Encryption.AESCBCEncrypt(dancerId_":"_dancer.Access.Description,dancer.Key)
+			set hash=##class(Auth.Session).Encode(hash)
+			set t=+$H+1
+			set t=$ZD(t,11) _", " _$ZD(t,2) _ " 00:00:00 GMT"
+			do %response.SetCookie("success",1,t,"/")
+			do %response.SetCookie("uh",hash,t,"/")
+			do %response.SetCookie("userId",dancerId,t,"/")
+			do %response.SetCookie("Email",dancer.Email,t,"/")
+			//ToDo затычка
+			do %response.SetCookie("Role",dancer.Access,t,"/")
+			w "{""children"":{"_
+			"""success"":"""_1_
+			""",""hash"":"""_hash_
+			""",""userId"":"""_dancerId_
+			""",""Email"":"""_dancer.Email_
+			"""}}"
+			w 1
+			set instructor=##class(SPD.Instructor).%New()
+			set instructor.IdDancer=dancer
+			set instructor.InstructorPower=20
+			///todo InstructorPower
+			set instructor.OwnerSchool=##class(SPD.School).%OpenId(SchoolId)
+			set st=instructor.%Save()
+			//set st=##class(SPD.TempInvite).%DeleteId(id)
+		}
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="RemoveFromSchool">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ID</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		&sql(select count(id) into :count from SPD.Instructor)
+		set instructor=##class(SPD.Instructor).%OpenId(ID)
+		if (count=1){
+			set instructor.IdDancer.Access=##class(LIB.Role).%OpenId(4)
+		}
+		set st=instructor.%Save()
+		do ##class(SPD.Instructor).%DeleteId(ID)
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+</Class>
+</Export>

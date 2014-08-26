@@ -141,6 +141,7 @@ function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFac
         })};
         $scope.GetLessontypes();
     }
+
     $scope.GetPrice=function(){
         var id=AuthenticationFactory.GetCurrentUser().IdSchool;
         SchoolFactory.GetPrice(id).success(function(data){
@@ -209,6 +210,19 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
     $scope.maxHeight = 0;
     $scope.showWeekends = true;
     $scope.showNonWorkHours = true;
+    $scope.toDate=(new Date(Date.parse("Sun Jan 11 2014 00:00:00"))).getDate();
+    console.log($scope.toDate);
+    $scope.Date={
+        0:"5 Jan 2014 ",
+        1:"6 Jan 2014 ",
+        2:"7 Jan 2014 ",
+        3:"8 Jan 2014 ",
+        4:"9 Jan 2014 ",
+        5:"10 Jan 2014 ",
+        6:"11 Jan 2014 "
+    };
+
+
     $rootScope.MenuActive = {};
     $rootScope.MenuActive.Page = 'partials/user/view/view_about.html';
     $rootScope.MenuActive.Controller = 'ViewAboutCtrl';
@@ -223,65 +237,104 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
     if ($scope.IdSchool) {
         $rootScope.User = $scope.User;
     }
+
     $scope.GetLessonsFromTable=function(){
-        SchoolFactory.GetLessonsFromTable().success(function(data){
-            var LessonList=data.children;
-            console.log($scope.LessonList);
-            var rows=[];
+        SchoolFactory.GetLessonsFromTable()
+            .success(function(data){
+            $scope.LessonList=data.children;
+            $scope.loadInGantt($scope.LessonList);
+                /*
+            $scope.rows=[];
             var date="5 Jan 2014 "
             var est=new Date("Sun Jan 05 2014 18:00:00");
             var lct=new Date("Sun Jan 06 2014 01:00:00");
-            for(var i=0;i<LessonList.length;i++){
+            for(var i=0;i<$scope.LessonList.length;i++){
                 var row={};
                 row.tasks=[];
-                switch (LessonList[i].Day){
-                    case 0 :
-                        var date="5 Jan 2014 ";
-                        break;
-                    case 1 :
-                        var date="6 Jan 2014 ";
-                        break;
-                    case 2 :
-                        var date="7 Jan 2014 ";
-                        break;
-                    case 3 :
-                        var date="8 Jan 2014 ";
-                        break;
-                    case 4 :
-                        var date="9 Jan 2014 ";
-                        break;
-                    case 5 :
-                        var date="10 Jan 2014 ";
-                        break;
-                    case 6 :
-                        var date="11 Jan 2014 ";
-                        break;
-                }
-
-                console.log("$scope.LessonList[i]=");console.log(LessonList[i]);
-                row.id=LessonList[i].RoomId;
-                row.description=LessonList[i].RoomName;
+                console.log("$scope.LessonList[i]=");console.log($scope.LessonList[i]);
+                row.id=$scope.LessonList[i].RoomId;
+                row.description=$scope.LessonList[i].RoomName;
                 row.order=1;
                 row.data="asdasdad";
                 var task={};
                 task.color="#93C47D";
                 task.data="#93C47D";
-                task.id=LessonList[i].ID; //$scope.LessonList[i].RoomDescr;
-                task.subject=LessonList[i].ShortDescription
-                task.from=new Date(Date.parse(date+LessonList[i].TimeBegin));
-                task.to=new Date(Date.parse(date+LessonList[i].TimeEnd));
+                task.id=$scope.LessonList[i].ID; //$scope.LessonList[i].RoomDescr;
+                task.subject=$scope.LessonList[i].ShortDescription
+                task.from=new Date(Date.parse($scope.Date[$scope.LessonList[i].Day]+$scope.LessonList[i].TimeBegin));
+                task.to=new Date(Date.parse($scope.Date[$scope.LessonList[i].Day]+$scope.LessonList[i].TimeEnd));
                 if((task.from-task.to)>0){
                     task.to.setDate(task.to.getDate()+1);
                 }
                 task.est=est;
                 task.lct=lct;
                 row.tasks.push(task);
-                rows[i]=row;
+                $scope.rows[i]=row;
+
             }
-            $scope.data=row;
-            console.log(rows);
-            $scope.loadData(rows);
+            console.log($scope.rows);
+                if($scope.loadData==undefined){
+
+                    setTimeout($scope.loadData($scope.rows), 2000);
+                }
+                else{
+                    $scope.loadData($scope.rows)
+                }*/
         });
+    }
+    $scope.loadInGantt=function(LessonList)
+    {
+        console.log(LessonList);
+        $scope.rows=[];
+        $scope.rows[0]={
+            "id": "ec0c5e31-449f-42d0-9e81-45c66322b640", "description": "Неделя", "order": 14, "tasks":
+                [
+                    {
+                        "id": "edf2cece-2d17-436f-bead-691edbc7386b", "subject": "", "color": "#FFFFFF", "from": new Date(2014,0,05,00, 00,00), "to": new Date(2014,0,05,00, 00,01)
+                    },
+                    {
+                        "id": "edf2cece-2d17-436f-bead-691edbc7386b", "subject": "", "color": "#FFFFFF", "from": new Date(2014,0,12,00, 00,00), "to": new Date(2014,0,12,00, 00,00)
+                    }
+                ]
+        };
+        var date="5 Jan 2014 "
+        var est="18:00:00";
+        var lct="23:00:00";
+        for(var i=0;i<LessonList.length;i++){
+            var row={};
+            row.tasks=[];
+            console.log("$scope.LessonList[i]=");console.log(LessonList[i]);
+            row.id=LessonList[i].RoomId;
+            row.description=LessonList[i].RoomName;
+            row.order=1;
+            row.data="asdasdad";
+            var task={};
+            task.color="#93C47D";
+            task.id=LessonList[i].ID; //$scope.LessonList[i].RoomDescr;
+            task.subject=LessonList[i].ShortDescription
+            task.from=new Date(Date.parse($scope.Date[LessonList[i].Day]+LessonList[i].TimeBegin));
+            task.to=new Date(Date.parse($scope.Date[LessonList[i].Day]+LessonList[i].TimeEnd));
+            if((task.from-task.to)>0){
+                task.to.setDate(task.to.getDate()+1);
+            }
+            task.est=new Date(Date.parse($scope.Date[LessonList[i].Day]+est));;
+            task.lct=new Date(Date.parse($scope.Date[LessonList[i].Day]+lct));;
+            task.data={}
+            task.data.InstructorID=LessonList[i].InstructorID
+            task.data.TypeLessonId=LessonList[i].TypeLessonId
+            row.tasks.push(task);
+            $scope.rows[i+1]=row;
+
+        }
+        console.log($scope.rows);
+        if($scope.loadData==undefined){
+
+            setTimeout($scope.loadData($scope.rows), 2000);
+        }
+        else{
+            $scope.loadData($scope.rows)
+        }
+        console.log($scope.rows);
     }
     $scope.GetLessonsFromTable();
     $scope.Days={"Sunday":{"ID":0,"Name":"Sunday"},
@@ -308,10 +361,6 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
     }
     $scope.GetAllRooms();
 
-    $scope.addSamples = function () {
-        console.log($scope.getSampleData().data1);
-        $scope.loadData($scope.getSampleData().data1);
-    };
     $scope.GetInstructorList=function(){
         SchoolFactory.GetInstructorList($scope.IdSchool).success(function(data){
                 $scope.InstructorList=data.children;
@@ -353,71 +402,115 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
             console.log('Scroll event: Right');
         }
     };
-    $scope.EditLesson=function(){
-        SchoolFactory.GetLesson($scope.EditLessonId).success(function(data){
-            $scope.Lesson=data.children;
+    $scope.EditLesson=function(event){
+        $scope.Lesson={};
+        $scope.Lesson.ID=event.task.id;
+        $scope.Lesson.InstructorID=event.task.data.InstructorID;
+        $scope.Lesson.TypeLessonId=event.task.data.TypeLessonId;
+        $scope.Lesson.TimeBegin=$scope.CheckTime(event.task.from.getHours())+":"+$scope.CheckTime(event.task.from.getMinutes())+":00";
+
+        console.log($scope.CheckTime(event.task.to.getHours()).toString());
+        $scope.Lesson.TimeEnd=$scope.CheckTime(event.task.to.getHours())+":"+$scope.CheckTime(event.task.to.getMinutes())+":00";
+        $scope.Lesson.ShortDescription=event.task.subject;
+        $scope.Lesson.Day=event.task.from.getDay();
+        $scope.Lesson.RoomId=event.task.row.id;
+
+        console.log($scope.Lesson);
             $scope.submit=function(Lesson){
                 SchoolFactory.UpdateLessonInTable(Lesson).success(function(){
-
-                    //modal.hide()
-                    $scope.Lesson=null;
-                })
-            }
-            var modal=$modal({scope:$scope,placement:"center",backdrop:false, template:'partials/user/modal/EditLesson.html',show:true})
-            });
-    }
-    $scope.taskEvent = function(event) {
-        // A task has been updated or clicked.
-        console.log('Task event (by user: ' + event.userTriggered + '): ' + event.task.subject + ' (Custom id: ' + event.task.id + ')');
-        $scope.EditLessonId=event.task.id;
-        $scope.EditLessionSubject=event.task.subject;
-        $scope.LessonBegin=event.task.from.getHours()+":"+event.task.from.getMinutes();
-
-    };
-
-    $scope.AddLesson=function(){
-            $scope.loadData(
-                {
-                    "id": "b8d10927-cf50-48bd-a056-3554decab824", "description": "Status meetings", "order": 1, "tasks":
-                    [
-                        {"id": "301d781f-1ef0-4c35-8398-478b641c0658", "subject": "Demo", "color": "#9FC5F8", "from": new Date(2013,9,25,15,0,0), "to": new Date(2013,9,25,18,30,0)},
-                        {"id": "0fbf344a-cb43-4b20-8003-a789ba803ad8", "subject": "Demo", "color": "#9FC5F8", "from": new Date(2013,10,1,15,0,0), "to": new Date(2013,10,1,18,0,0)},
-                        {"id": "12af138c-ba21-4159-99b9-06d61b1299a2", "subject": "Demo", "color": "#9FC5F8", "from": new Date(2013,10,8,15,0,0), "to": new Date(2013,10,8,18,0,0)},
-                        {"id": "73294eca-de4c-4f35-aa9b-ae25480967ba", "subject": "Demo", "color": "#9FC5F8", "from": new Date(2013,10,15,15,0,0), "to": new Date(2013,10,15,18,0,0)},
-                        {"id": "75c3dc51-09c4-44fb-ac40-2f4548d0728e", "subject": "Demo", "color": "#9FC5F8", "from": new Date(2013,10,24,9,0,0), "to": new Date(2013,10,24,10,0,0)}
-                    ]
-                },
-                {
-                    "id": "34473cc4-5ee5-4953-8289-98779172129e", "description": "Setup server", "order": 9, "tasks":
-                    [
-                    {"id": "43eb6d19-6402-493c-a281-20e59a6fab6e", "subject": "HW", "color": "#F1C232", "from": new Date(2013,10,18,8,0,0), "to": new Date(2013,10,18,12,0,0)}
-                    ]
-                },
-                {
-                    "id": "73cae585-5b2c-46b6-aeaf-8cf728c894f7", "description": "Config server", "order": 10, "tasks":
-                    [
-                        {
-                            "id": "8dbfda29-e775-4fa3-87c1-103b085d52ee", "subject": "SW / DNS/ Backups", "color": "#F1C232", "from": new Date(2013,10,18,12,0,0), "to": new Date(2013,10,21,18,0,0)
-                        }
-                    ]
-                },
-                {"id": "41cae585-ad2c-46b6-aeaf-8cf728c894f7", "description": "Deployment", "order": 11, "tasks": [
-                    {"id": "2dbfda09-e775-4fa3-87c1-103b085d52ee", "subject": "Depl. & Final testing", "color": "#F1C232", "from": new Date(2013,10,21,8,0,0), "to": new Date(2013,10,22,12,0,0)}
-                ]},
-                {"id": "33e1af55-52c6-4ccd-b261-1f4484ed5773", "description": "Workshop", "order": 12, "tasks": [
-                    {"id": "656b9240-00da-42ff-bfbd-dfe7ba393528", "subject": "On-side education", "color": "#F1C232", "from": new Date(2013,10,24,9,0,0), "to": new Date(2013,10,25,15,0,0)}
-                ]}
-            );
-        $scope.submit=function(lesson){
-            console.log(lesson)
-            SchoolFactory.AddLessonInTable(lesson).success(function(data){
                     modal.hide();
-                }
-            )
-        }
+                    $scope.Lesson=null;
+                    SchoolFactory.GetLessonsFromTable()
+                        .success(function(data){
+                            $scope.LessonList=data.children;
 
+                            $scope.loadInGantt($scope.LessonList);
+                        })
+
+                })
+            };
+            var modal=$modal({scope:$scope,placement:"center",backdrop:false, template:'partials/user/modal/EditLesson.html',show:true})
+    };
+    $scope.CheckTime=function(time){
+        if(time==0){
+            time="00"
+        }
+        if(time.toString().length==1){
+            time="0"+time.toString();
+        }
+        return time
+    }
+    $scope.AddLessonInTable=function(event){
+        $scope.Lesson={};
+        $scope.Lesson.TimeBegin=$scope.CheckTime(event.date.getHours())+":"+$scope.CheckTime(event.date.getMinutes())+":00";
+        console.log($scope.Lesson.TimeBegin);
+        $scope.Lesson.DayID=event.date.getDay();
+        $scope.Lesson.RoomId=event.row.id;
+        console.log($scope.Lesson);
+        $scope.submit=function(Lesson){
+                SchoolFactory.AddLessonInTable(Lesson).success(function(){
+                    SchoolFactory.GetLessonsFromTable()
+                        .success(function(data){
+                            $scope.LessonList=data.children;
+                            $scope.loadInGantt($scope.LessonList);});
+                modal.hide();
+                $scope.Lesson=null;
+            });
+        };
         var modal=$modal({scope:$scope,placement:"center",backdrop:false, template:'partials/user/modal/AddLesson.html',show:true})
     }
+
+    $scope.UpdateLessonTable=function(){
+        SchoolFactory.UpdateLessonTable($scope.LessonList).success(function(data){
+
+        })
+    }
+    $scope.taskEvent=function(event){
+        $scope.EditLessionSubject=event.task.subject;
+        if(event.evt)
+        {
+            if($scope.divEl) {
+                $scope.divEl.removeClass("action");
+            }
+            $scope.divEl=angular.element(event.evt.currentTarget);
+            $scope.divEl.addClass("action");
+        }
+    };
+    $scope.taskDbClEvent=function(event){
+        console.log('Task event taskDbClEvent (by user: ' + event.userTriggered + '): ' + event.task.subject + ' (Custom id: ' + event.task.id + ')');
+    };
+    $scope.taskContClEvent=function(event){
+        console.log('Task event taskContClEvent (by user: ' + event.userTriggered + '): ' + event.task.subject + ' (Custom id: ' + event.task.id + ')');
+    };
+
+    $scope.taskUpdateEvent = function(event) {
+        // A task has been updated or clicked.
+        console.log('Task upddateEvent (by user: ' + event.userTriggered + '): ' + event.task.subject + ' (Custom id: ' + event.task.id + ')');
+        /*var elememnt=document.getElementById("taskid_"+event.task.id);
+        $scope.EditLessionSubject=event.task.subject;
+        $scope.LessonBegin=event.task.from.getHours()+":"+event.task.from.getMinutes();*/
+        for (var i=0;i<$scope.LessonList.length;i++){
+            if($scope.LessonList[i].ID==event.task.id)
+            {
+                console.log(event);
+                //console.log(event.task.from.getHours()+":"+event.task.from.getMinutes()+":"+event.task.from.getSeconds());
+                $scope.LessonList[i].TimeBegin=event.task.from.getHours()+":"+event.task.from.getMinutes();
+                $scope.LessonList[i].TimeEnd=event.task.to.getHours()+":"+event.task.to.getMinutes();
+                $scope.LessonList[i].Day=event.task.from.getDay();
+                $scope.LessonList[i].RoomId = event.task.row.id;
+                console.log($scope.LessonList[i]);
+            }
+        }
+        var elem=document.getElementById(event.task.id);
+        //{}.toString.call(obj)
+    };
+    $scope.UpdateRow=function(event){
+        console.log("Row Update");
+    };
+    $scope.onTaskMoveEnd=function(event){
+        console.log("onTaskMoveEnd");
+    };
+
 
 
 

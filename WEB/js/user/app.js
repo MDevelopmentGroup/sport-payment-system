@@ -1,5 +1,5 @@
-angular.module('VACANCY',['ngCookies','ngResource','ngLocale', 'ngRoute','ngSanitize','ngAnimate','infinite-scroll',
-        'VACANCY.services','VACANCY.Filters','mgcrea.ngStrap','VACANCY.directive','gantt'
+angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute','ngSanitize','ngAnimate','infinite-scroll',
+        'VACANCY.services','VACANCY.Filters','mgcrea.ngStrap','VACANCY.directive'
       ])
     .config(['$routeProvider',  function($routeProvider) { $routeProvider.
 

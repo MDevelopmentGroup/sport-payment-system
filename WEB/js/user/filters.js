@@ -107,3 +107,10 @@ app.filter('NoImage', function() {
         return input=="" ? 'NoImage.png':input;
     };
 });
+
+
+app.filter('actionLimit', function() {
+    return function(input) {
+        return input ? 'action':'';
+    };
+});

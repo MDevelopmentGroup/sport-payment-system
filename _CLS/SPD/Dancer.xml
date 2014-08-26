@@ -6,7 +6,7 @@
 
 <Property name="Gender">
 <Description>
-тру пол или не тру XD</Description>
+Пол</Description>
 <Type>%Boolean</Type>
 </Property>
 

@@ -1,0 +1,56 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="row">
+                <br>
+                <div class="col-lg-12">
+                    <form class="form-horizontal" ng-model="Price" ng-submit='submit(Price)'>
+                        <div class="form-group">
+                            <label for="Price" class="col-lg-2 control-label ">{{Page.Common.TypeLesson}}</label>
+
+                            <div class="col-lg-7">
+                                <input type="text"  id="Price" class="form-control" ng-model="Price.TypeLesson" placeholder="{{Page.Common.TypeLesson}}" required="">
+                            </div>
+                            <div class="col-lg-2">
+                                <select class="form-control zindex2leftbordernone" ng-model="Price.TypeLessonId" ng-change="SetType()">
+                                    <option  value="" ng-selected="true"></option>
+                                    <option  ng-repeat="TypeLesson in ListLessonTypes" value="{{TypeLesson.TypeID}}">{{TypeLesson.TypeName}}</option>
+                                </select>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group">
+                            <label for="Body" class="col-lg-2 control-label ">{{Page.Create.DescrRoom}}:</label>
+                            <div class="col-lg-9">
+                                <textarea class="form-control" rows="14"  id="Body" redactor ng-model='Price.ShortDescription' placeholder="{{Page.Create.DescrRoom}}"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Price" class="col-lg-2 control-label ">{{Page.Price.Cost}}</label>
+                            <div class="col-lg-8">
+                                <input type="text"  id="Price" class="form-control" ng-model="Price.Cost" placeholder="{{Page.Price.Cost}}" required="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Price" class="col-lg-2 control-label ">{{Page.Price.DateActual}}</label>
+                            <div class="col-lg-6">
+                                <input type="text" size="10" class="form-control" ng-model="Price.sharedDate" data-autoclose="1" data-date-type="string" placeholder="Date" bs-datepicker>
+                            </div>
+                            <div class="col-lg-2">
+                                <input type="text" size="8" class="form-control" ng-model="Price.sharedTime" data-autoclose="1" data-time-type="string" placeholder="Time" bs-timepicker>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-lg-3 control-label"></label>
+                            <div class="col-lg-5">
+                                <button type="submit"  class="btn btn-success {{ButtonDisabled}}" >CreatePrice{{Page.SystemUser.TitleFirstName}}</button>
+                            </div>
+                        </div>
+                    </form>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

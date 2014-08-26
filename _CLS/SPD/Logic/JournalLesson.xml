@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Logic.JournalLesson">
+<TimeCreated>63425,69359.8237</TimeCreated>
+
+<Method name="GenerateJournalLesson">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+	set school=##class(Auth.Session).GetCurrentSchool()
+	set schoolId=school.%Id()
+	&sql(declare price cursor for 
+	select id, DateActualEnd, TypeLesson into :id,:DateActualEnd,:TypeLesson  from SPD.Price where Actual=1 and school->id=:schoolId)
+	&sql(open price)
+	for {
+		&sql(fetch price)
+		
+	
+	}
+	&sql(close price)
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+</Class>
+</Export>

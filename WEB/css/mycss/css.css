@@ -12,3 +12,6 @@
 .SchoolImg{
     max-height: 150px;
 }
+div.action{
+    background-color: rgb(241, 194, 50) !important;
+}

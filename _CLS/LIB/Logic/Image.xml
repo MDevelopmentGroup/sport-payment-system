@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="LIB.Logic.Image">
+<TimeCreated>63418,34634.338713</TimeCreated>
+
+<Method name="FileUpload">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	
+	set st=$$$OK
+	set Str=""
+	set str=""
+ 	set FileName="file0"
+ 	while(FileName'=""){
+	 	///ToDo проверку фзагружаемых файлов
+		//************************ Блок операций **************************************
+		//set Location=$GET(^VacancySettings("ImgDirURL"),"")
+		zn "%sys"
+		set t=##class(Security.Applications).Get("/dances",.PropAppl)
+		zn "mdg-dances"
+		set Location=PropAppl("Path")_"\img\upload\"
+		set Stream =%request.GetMimeData(FileName,1)
+		set fileUpload = ##class(LIB.FileBase).%New()		
+		set fileUpload.FileType=Stream.ContentType
+		set fileUpload.DefaultName=Stream.FileName
+		set fileUpload.Author=##class(LIB.Person).%OpenId(%request.GetCookie("userId"))
+		do fileUpload.%Save()
+		
+		set fileUpload2=##class(LIB.FileBase).%OpenId(fileUpload.%Id())
+		set ext=$PIECE(Stream.FileName,".",$LISTLENGTH($LISTFROMSTRING(Stream.FileName,"."))) //расширение файла
+		set Name="file_"_fileUpload.%Id()_"."_ext
+		set fileUpload2.FileName=Name
+		do fileUpload2.%Save()
+		
+		set file=##class(%Stream.FileBinary).%New()
+		set file.Filename=Location_Name
+		set st=file.CopyFromAndSave(Stream)
+		
+		set str=str_fileUpload.%Id()_","
+		//do file.OutputToDevice()
+		//************************ Блок операций **************************************
+		// Переходим к следующему файлу
+		set FileName=%request.NextMimeData(FileName)
+	}
+	w $E(str,1,*-1)
+	Quit st
+]]></Implementation>
+</Method>
+</Class>
+</Export>

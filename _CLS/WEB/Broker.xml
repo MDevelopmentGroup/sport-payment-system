@@ -41,7 +41,7 @@
 	   <Route Url="/GetInstructorList/:ID"			Method="GET" 		Call="SPD.Logic.Instructor:GetInstructorList"/>
 	   <Route Url="/GetInstructorList/"				Method="GET" 		Call="SPD.Logic.Instructor:GetAllInstructorList"/>
 	   
-	   <Route Url="/GetLesson/:ID"						Method="GET"		Call="SPD.Logic.TimeTableLesons:GetLesson"/>
+	   <Route Url="/GetLesson/:ID"						Method="GET"		Call="SPD.Logic.TimeTableLessons:GetLesson"/>
 	   
 </Routes>
 ]]></Data>

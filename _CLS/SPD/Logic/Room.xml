@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Logic.Room">
+<TimeCreated>63419,58985.586896</TimeCreated>
+
+<Method name="CreateRoom">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try 
+	{
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		set room=##class(SPD.Room).%New()
+		set addr=##class(LIB.Address).%New()
+		set addr.Country=$ZCONVERT(obj.Country,"I","UTF8")
+		set addr.City=$ZCONVERT(obj.City,"I","UTF8")
+		set addr.Street=$ZCONVERT(obj.Street,"I","UTF8")
+		set addr.Description=obj.ShortDescr
+		zw addr
+		do addr.%Save()
+		set room.Address=addr
+		set room.Name=$ZCONVERT(obj.Name,"I","UTF8")
+		
+		set userId=##class(LIB.Person).%OpenId(%request.GetCookie("userId")).%Id()	
+		&sql(select id into :idschool from SPD.School where Person->Id=:userId)
+		
+		set room.School=##class(SPD.School).%OpenId(idschool)
+		set room.ShorDescr=$ZCONVERT(obj.ShortDescr,"I","UTF8")
+		do room.%Save()		
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetAllRoomsForSchool">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	///todo столбцы указать явно
+	set userId=##class(LIB.Person).%OpenId(%request.GetCookie("userId")).%Id()
+	
+	&sql(select id into :idschool from SPD.School where Person->Id=:userId)
+	set SchoolQuery = "SELECT * "_
+				   	  "FROM SPD.Room where School->id="_idschool
+				   	  				   				   				   
+	do ##class(SPD.School).GetJSONData(SchoolQuery)
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetRoom">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>IdRoom</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+		///todo столбцы указать явно
+	set SchoolQuery = "SELECT Name,ShorDescr,School->ID As IdSchool, Address->ID As IdAddress, Address->City As City, Address->Country As Country, Address->Street As Street"_
+				   	  "FROM SPD.Room where id="_IdRoom
+				   	  				   				   				   
+	do ##class(SPD.School).GetJSONData(SchoolQuery)
+]]></Implementation>
+</Method>
+
+<Method name="UpdateRoom">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		set addr=##class(LIB.Address).%OpenId(obj.IdAddress)
+		set addr.Country=$ZCONVERT(obj.Country,"I","UTF8")
+		set addr.City=$ZCONVERT(obj.City,"I","UTF8")
+		set addr.Street=$ZCONVERT(obj.Street,"I","UTF8")
+		set addr.Description=$ZCONVERT(obj.ShortDescr,"I","UTF8")
+		do addr.%Save()
+		set room=##class(SPD.Room).%OpenId(obj.ID)
+		set room.Address=addr
+		set room.Name=$ZCONVERT(obj.Name,"I","UTF8")
+		set room.School=##class(SPD.School).%OpenId(obj.School)
+		set room.ShorDescr=$ZCONVERT(obj.ShortDescr,"I","UTF8")
+		do room.%Save()
+		
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="DeleteRoom">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>IdRoom</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		do ##class(SPD.Room).%DeleteId(IdRoom)
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+</Class>
+</Export>

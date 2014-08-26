@@ -1,0 +1,52 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="row">
+                <br>
+                <div class="col-lg-12">
+                    <form class="form-horizontal" ng-model="Room" ng-submit='AddRoom(Room)'>
+                        <div class="form-group">
+                            <label for="Room" class="col-lg-2 control-label ">{{Page.Create.RoomName}}</label>
+                            <div class="col-lg-9">
+                                <input type="text"  id="Room" class="form-control" ng-model="Room.Name" placeholder="{{Page.Create.RoomName}}" required="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Room" class="col-lg-2 control-label ">{{Page.Create.DescrRoom}} </label>
+                            <div class="col-lg-9">
+                                <input type="text"  id="ShortDescr" class="form-control" ng-model="Room.ShortDescr" placeholder="" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="City" class="col-lg-2 control-label ">{{Page.Common.City}}:</label>
+                            <div class="col-lg-9">
+                                <input type="text"  id="City" class="form-control" ng-model="Room.City" placeholder="{{Page.Common.City}}" required="">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Country" class="col-lg-2 control-label ">{{Page.Common.Country}}:</label>
+                            <div class="col-lg-9">
+                                <input type="text"  id="Country" class="form-control" ng-model="Room.Country" placeholder="{{Page.Common.Country}}" required="">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Street" class="col-lg-2 control-label ">{{Page.Common.Street}}:</label>
+                            <div class="col-lg-9">
+                                <input type="text"  id="Street" class="form-control" ng-model="Room.Street" placeholder="{{Page.Common.Street}}" required="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-lg-3 control-label"></label>
+                            <div class="col-lg-5">
+                                <button type="submit"  class="btn btn-success {{ButtonDisabled}}" >AddRoom{{Page.SystemUser.TitleFirstName}}</button>
+                            </div>
+                        </div>
+                    </form>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

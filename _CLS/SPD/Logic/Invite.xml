@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Logic.Invite">
+<TimeCreated>63418,41096.31924</TimeCreated>
+
+<Method name="Invite">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+		set st=$$$OK
+	    try{
+		$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
+			&sql(select id into :idUser from LIB.Person where Email=:obj.Email)
+			if (idUser)
+			{
+				set idRel=##class(Scrumbler.Logic.Group).AddUserToScrumblerUserGroup(idUser,obj.Group)
+				set st=##class(Util.Mail.SendMail).NewMail(idUser,obj.Email,"InstructorInviteToSChool",obj.Group)
+			}
+			else{
+				set tempinv=##class(SPD.TempInvite).%New()
+				set tempinv.Person=##class(Auth.Session).GetCurrentUser()
+				set tempinv.Type="school"
+				set tempinv.md=$SYSTEM.Encryption.MD5Hash(tempinv.Person.Email_""_tempinv.Type)
+				set st=tempinv.%Save()
+				//set st=##class(Util.Mail.SendMail).NewMail(href,obj.Email,"InviteSchool")
+			}
+			
+		}catch ex{set st=ex.AsStatus()}	
+		Q st
+		ret st
+]]></Implementation>
+</Method>
+</Class>
+</Export>

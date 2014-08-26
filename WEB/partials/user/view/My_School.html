@@ -1,0 +1,124 @@
+<div class="WELL">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                <div class="col-lg-2"><h4>{{school.Name}}</h4></div>
+                <div class="col-lg-3"><a href="#/UpdateMySchool/" class="label label-info"><span class="glyphicon glyphicon-refresh">Обновить</span></a></div>
+                <br>
+            </div>
+            <img id="Img" ng-src="img/upload/{{school.FileName}}">
+            <div class="form-group">
+                <div class="well well-lg ng-scope">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group" ng-bind-html="school.Body">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="well well-lg ng-scope">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group" ng-bind-html="school.AddInfo">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="well well-lg ng-scope">
+                    <div class="row">
+
+                        <div class="col-lg-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-1">
+                                            <h5>{{Page.Common.Price}}</h5>
+                                        </div>
+                                        <div class="col-lg-1">
+                                            <h5>
+                                                <a ng-click="AddPrice()"><label class="label label-success"><span class="glyphicon glyphicon-plus"></span></label></a>
+                                            </h5>
+                                        </div>
+                                        <div class="col-lg-9" ng-repeat="price in PriceList">
+                                            <div class="col-lg-3">
+                                                {{price.name}}
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <a class="btn btn-default ng-binding" ng-binding ng-click='UpdatePrice(price)'>{{Page.Create.Update}}  <label class="label label-info">
+                                                    <span class="glyphicon glyphicon-refresh"></span>
+                                                </label></a>
+                                            </div>
+                                            <div class="col-lg-1">
+                                                {{price.Cost}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+
+
+                            <div class="form-group">
+
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-1">
+                                            <h5>{{Page.Common.TimeTable}}</h5>
+                                        </div>
+                                        <div class="col-lg-1">
+                                            <h5>
+                                                <a href="#/LessonInTimeTable"><label class="label label-success"><span class="glyphicon glyphicon-plus"></span></label></a>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-1">
+                                            <h5>{{Page.Common.Instructors}}</h5>
+                                        </div>
+                                        <div class="col-lg-1">
+                                            <h5>
+                                                <a ng-click="InviteInstructor()"><label class="label label-success"><span class="glyphicon glyphicon-plus"></span></label></a>
+                                            </h5>
+                                        </div>
+                                        <div class="col-lg-9" ng-repeat="Instructor in InstructorList">
+                                            <div class="col-lg-3">
+                                                {{Instructor.FirstName}}
+                                                {{Instructor.LastName}}
+                                                {{Instructor.Patronomic}}
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <a class="btn btn-default ng-binding" ng-binding ng-click='RemoveFromSchool(Instructor.ID)'>{{Page.Create.Delete}}  <label class="label label-danger">
+                                                    <span class="glyphicon glyphicon-minus"></span>
+                                                </label></a>
+                                            </div>
+                                            <div class="col-lg-1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

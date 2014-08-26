@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Room">
+<Super>%Persistent</Super>
+<TimeCreated>63419,50698.564959</TimeCreated>
+
+<Property name="Name">
+<Type>%String</Type>
+</Property>
+
+<Property name="ShorDescr">
+<Type>%String</Type>
+</Property>
+
+<Property name="Address">
+<Type>LIB.Address</Type>
+</Property>
+
+<Property name="School">
+<Type>SPD.School</Type>
+<Cardinality>one</Cardinality>
+<Inverse>Rooms</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.RoomD</DataLocation>
+<DefaultData>RoomDefaultData</DefaultData>
+<IdLocation>^SPD.RoomD</IdLocation>
+<IndexLocation>^SPD.RoomI</IndexLocation>
+<StreamLocation>^SPD.RoomS</StreamLocation>
+<Data name="RoomDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Name</Value>
+</Value>
+<Value name="3">
+<Value>ShorDescr</Value>
+</Value>
+<Value name="4">
+<Value>Address</Value>
+</Value>
+<Value name="5">
+<Value>School</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

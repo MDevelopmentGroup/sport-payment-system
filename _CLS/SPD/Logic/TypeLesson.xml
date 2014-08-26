@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Logic.TypeLesson">
+<TimeCreated>63420,51478.531135</TimeCreated>
+
+<Method name="Create">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>name,ShortDescr</FormalSpec>
+<ReturnType>SPD.TypeLesson</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	Try
+	{
+		set type=##class(SPD.TypeLesson).%New()
+		set type.name=$ZCONVERT(name,"I","UTF8")
+		set type.ShortDescription=$ZCONVERT(ShortDescr,"I","UTF8")
+		do type.%Save()	
+	}
+	Catch exception
+	{
+		set st=exception.AsStatus()
+	}
+	//	w type
+	ret type
+]]></Implementation>
+</Method>
+</Class>
+</Export>

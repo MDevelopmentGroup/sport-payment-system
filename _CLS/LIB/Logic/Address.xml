@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="LIB.Logic.Address">
+<TimeCreated>63420,39268.45666</TimeCreated>
+
+<Method name="GetAddress">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>IdAddress</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	///todo столбцы указать явно
+	set SchoolQuery = "SELECT * "_
+				   	  "FROM LIB.Address where id="_IdAddress
+				   	  				   				   				   
+	do ##class(SPD.School).GetJSONData(SchoolQuery)
+	ret $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="UpdateAddress">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		set addr=##class(LIB.Address).%OpenId(obj.ID)
+		set addr.Country=$ZCONVERT(obj.Country,"I","UTF8")
+		set addr.City=$ZCONVERT(obj.City,"I","UTF8")
+		set addr.Street=$ZCONVERT(obj.Street,"I","UTF8")
+		set addr.Description=$ZCONVERT(obj.ShortDescr,"I","UTF8")
+		do addr.%Save()
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+</Class>
+</Export>

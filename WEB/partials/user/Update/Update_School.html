@@ -1,0 +1,119 @@
+<div class="WELL">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                <img id="Img" ng-src="img/upload/{{school.FileName}}">
+            </div>
+            <form class="form-horizontal" ng-model="school" ng-submit='Update(school)'>
+                <span style="text-align: center"><h2></h2></span>
+                <hr>
+                <br>
+
+                <div class="form-group">
+                    <label for="title" class="col-lg-2 control-label ">{{Page.Common.title}} школы:</label>
+                    <div class="col-lg-9">
+                        <input type="text"  id="title" class="form-control" ng-model="school.Name" placeholder="{{Page.SystemUser.TitleFirstName}}" value="school.Name" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="title" class="col-lg-2 control-label ">{{Page.Modal.Password}} школы:</label>
+                    <div class="col-lg-9">
+                        <input type="PASSWORD"  id="Password" class="form-control" ng-model="school.Password" placeholder="{{Page.Modal.Password}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="Image" class="col-lg-2 control-label ">{{Page.Common.Image}}:</label>
+                    <div class="col-lg-9">
+                        <input type="file" id="InputName" ng-change="FileUpload()" ng-model="Image">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Rooms" class="col-lg-2 control-label ">Помещения:</label>
+                    <div class="col-lg-9">
+                        <div class="row">
+                            <div class="col-lg-8" ng-repeat="room in rooms">
+                                {{room.Name}}
+                                <a class="btn btn-default ng-binding" ng-binding ng-click='DeleteRoom(room.ID)'>{{Page.Create.DeleteRoom}}  <label class="label label-danger">
+                                    <span class="glyphicon glyphicon-minus"></span>
+                                </label></a>
+                                <a class="btn btn-default ng-binding" ng-binding ng-click='UpdateRoom(room)'>{{Page.Create.Update}}  <label class="label label-info">
+                                    <span class="glyphicon glyphicon-refresh"></span>
+                                </label></a>
+                            </div>
+                            <div class="col-lg-3">
+                                <a class="btn btn-default ng-binding" ng-binding ng-click='CreateRoom()'>{{Page.Create.AddRoom}}  <label class="label label-success">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </label></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Body" class="col-lg-2 control-label ">{{Page.Common.Body}}:</label>
+                    <div class="col-lg-9">
+                        <textarea class="form-control" rows="14"  id="Body" redactor ng-model='school.Body' placeholder="{{Page.Common.Body}}"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="AddInfo" class="col-lg-2 control-label">{{Page.Common.AddInfo}}:</label>
+                    <div class="col-lg-9">
+                        <textarea class="form-control" rows="14"  id="AddInfo" redactor ng-model='school.AddInfo' placeholder="{{Page.Common.AddInfo}}"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="City" class="col-lg-2 control-label ">{{Page.Common.City}}:</label>
+                    <div class="col-lg-9">
+                        <input type="text"  id="City" class="form-control" ng-model="school.City" placeholder="{{Page.Common.City}}" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Country" class="col-lg-2 control-label ">{{Page.Common.Country}}:</label>
+                    <div class="col-lg-9">
+                        <input type="text"  id="Country" class="form-control" ng-model="school.Country" placeholder="{{Page.Common.Country}}" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Street" class="col-lg-2 control-label ">{{Page.Common.Address}}:</label>
+                    <div class="col-lg-9">
+                        <input type="text"  id="Street" class="form-control" ng-model="school.Street" placeholder="{{Page.Common.Address}}" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Email" class="col-lg-2 control-label ">{{Page.Modal.Email}}:</label>
+                    <div class="col-lg-9">
+                        <input type="text"  id="Email" class="form-control" ng-model="school.Email" placeholder="{{Page.Modal.Email}}" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Url" class="col-lg-2 control-label ">{{Page.Common.Url}}:</label>
+                    <div class="col-lg-9">
+                        <input type="text"  id="Url" class="form-control" ng-model="school.URL" placeholder="{{Page.Common.Url}}" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Phone" class="col-lg-2 control-label ">{{Page.Common.Phone}}:</label>
+                    <div class="col-lg-9">
+                        <input type="text"  id="Phone" class="form-control" ng-model="school.Telephone" placeholder="{{Page.Common.Phone}}" required="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label  class="col-lg-3 control-label"></label>
+                    <div class="col-lg-5">
+                        <button type="submit"  class="btn btn-success {{ButtonDisabled}}">Update{{Page.SystemUser.TitleFirstName}}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

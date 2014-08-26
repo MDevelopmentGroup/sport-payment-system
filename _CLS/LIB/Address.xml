@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="LIB.Address">
+<Super>%Persistent</Super>
+<TimeCreated>63419,49921.070577</TimeCreated>
+
+<Property name="Country">
+<Type>%String</Type>
+</Property>
+
+<Property name="City">
+<Type>%String</Type>
+</Property>
+
+<Property name="Street">
+<Type>%String</Type>
+</Property>
+
+<Property name="Description">
+<Type>%String</Type>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^LIB.AddressD</DataLocation>
+<DefaultData>AddressDefaultData</DefaultData>
+<IdLocation>^LIB.AddressD</IdLocation>
+<IndexLocation>^LIB.AddressI</IndexLocation>
+<StreamLocation>^LIB.AddressS</StreamLocation>
+<Data name="AddressDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Country</Value>
+</Value>
+<Value name="3">
+<Value>City</Value>
+</Value>
+<Value name="4">
+<Value>Street</Value>
+</Value>
+<Value name="5">
+<Value>Description</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>
