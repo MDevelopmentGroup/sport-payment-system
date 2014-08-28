@@ -43,17 +43,19 @@
                                                 <a ng-click="AddPrice()"><label class="label label-success"><span class="glyphicon glyphicon-plus"></span></label></a>
                                             </h5>
                                         </div>
-                                        <div class="col-lg-9" ng-repeat="price in PriceList">
-                                            <div class="col-lg-3">
-                                                {{price.name}}
-                                            </div>
-                                            <div class="col-lg-2">
-                                                <a class="btn btn-default ng-binding" ng-binding ng-click='UpdatePrice(price)'>{{Page.Create.Update}}  <label class="label label-info">
-                                                    <span class="glyphicon glyphicon-refresh"></span>
-                                                </label></a>
-                                            </div>
-                                            <div class="col-lg-1">
-                                                {{price.Cost}}
+                                        <div class="col-lg-9">
+                                            <div class="col-lg-11" ng-repeat="price in PriceList">
+                                                <div class="col-lg-3">
+                                                    {{price.name}}
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <a class="btn btn-default ng-binding" ng-binding ng-click='UpdatePrice(price)'>{{Page.Create.Update}}  <label class="label label-info">
+                                                        <span class="glyphicon glyphicon-refresh"></span>
+                                                    </label></a>
+                                                </div>
+                                                <div class="col-lg-1">
+                                                    {{price.Cost}}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

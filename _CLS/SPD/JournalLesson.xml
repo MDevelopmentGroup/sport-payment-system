@@ -4,24 +4,32 @@
 <Super>%Persistent</Super>
 <TimeCreated>63393,60231.452993</TimeCreated>
 
-<Property name="TypeLesson">
-<Type>SPD.TypeLesson</Type>
-</Property>
-
 <Property name="School">
 <Type>SPD.School</Type>
 </Property>
 
-<Property name="Days">
-<Type>%String</Type>
+<Property name="DateBegin">
+<Type>%TimeStamp</Type>
 </Property>
 
-<Property name="Time">
-<Type>%Time</Type>
+<Property name="DateEnd">
+<Type>%TimeStamp</Type>
+</Property>
+
+<Property name="Price">
+<Type>SPD.Price</Type>
 </Property>
 
 <Property name="Instructor">
 <Type>SPD.Instructor</Type>
+</Property>
+
+<Property name="LessonInTable">
+<Type>SPD.TimeTableLessons</Type>
+</Property>
+
+<Property name="countDancer">
+<Type>%Integer</Type>
 </Property>
 
 <Storage name="Default">
@@ -56,6 +64,21 @@
 </Value>
 <Value name="8">
 <Value>Instructor</Value>
+</Value>
+<Value name="9">
+<Value>DateBegin</Value>
+</Value>
+<Value name="10">
+<Value>DateEnd</Value>
+</Value>
+<Value name="11">
+<Value>Price</Value>
+</Value>
+<Value name="12">
+<Value>LessonInTable</Value>
+</Value>
+<Value name="13">
+<Value>countDancer</Value>
 </Value>
 </Data>
 </Storage>

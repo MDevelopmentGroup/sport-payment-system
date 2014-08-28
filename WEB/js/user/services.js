@@ -341,6 +341,9 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     SchoolFactory.UpdateLessonTable=function(table){
         return $http.post(schoolBroker+"/UpdateLessonTable/",table);
     }
+    SchoolFactory.GetEndTimeLastPrice=function(TypeLessonTypeID){
+        return $http.get(schoolBroker+"/GetLastActualPrice/"+TypeLessonTypeID);
+    }
     return SchoolFactory;
 }]);
 

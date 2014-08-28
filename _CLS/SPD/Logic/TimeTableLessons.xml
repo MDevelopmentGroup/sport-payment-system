@@ -135,6 +135,7 @@
 			set lesson.TimeBegin=$ztimeh(proxy.TimeBegin)
 			set lesson.TimeEnd=$ztimeh(proxy.TimeEnd)
 			set st=lesson.%Save()
+			set st=##class(SPD.Logic.JournalLesson).GenerateJournalLesson(lesson.%Id())
 		}
 	}
 	catch ex{	set st=ex}	

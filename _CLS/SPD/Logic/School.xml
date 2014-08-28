@@ -31,7 +31,7 @@
 	&sql(select count(id) into :count from SPD.Price where school->id=:schoolId)
 	if (count){
 	set sql="select TypeLesson->id as TypeID,TypeLesson->name as TypeName, TypeLesson->ShortDescription as ShortDescription "_
-	" from SPD.Price where school->id="_schoolId
+	" from SPD.Price where school->id="_schoolId_" group by TypeLesson->id"
 	
 	set st=##class(SPD.School).GetJSONData(sql)
 	}
@@ -53,19 +53,23 @@
 		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
 		if (obj.TypeLessonId'="")
 		{
-			set TypeLesson=##class(SPD.TypeLesson).%OpenId(obj.idType)
+			set TypeLesson=##class(SPD.TypeLesson).%OpenId(obj.TypeLessonId)
 		} 
 		else {
 			set TypeLesson=##class(SPD.Logic.TypeLesson).Create(obj.TypeLesson,obj.ShortDescription)
-		}
-		set school=##class(Auth.Session).GetCurrentSchool()
+		}		
+		set school=##class(Auth.Session).GetCurrentSchool() 
 		set price=##class(SPD.Price).%New()
-		set price.Actual=1 set price.TypeLesson=TypeLesson
+		set price.TypeLesson=TypeLesson		
 		set price.Cost=obj.Cost
 		set price.DateActualEnd=$zdt($zdth(obj.dateActual,4),3)
-		set price.DateActualStart=$zdt($h,3)
+		if (obj.DateBegin) && (obj.TimeBegin) {
+			set price.DateActualStart=$zdt($zdth(obj.DateBegin_" "_obj.TimeBegin,4),3)
+		}
+		else {
+			set price.DateActualStart=$zdt($h,3)
+		}
 		set price.school=school
-		
 		set st=price.%Save()
 	}
 	catch ex{
@@ -397,7 +401,6 @@
 			""",""userId"":"""_dancerId_
 			""",""Email"":"""_dancer.Email_
 			"""}}"
-			w 1
 			set instructor=##class(SPD.Instructor).%New()
 			set instructor.IdDancer=dancer
 			set instructor.InstructorPower=20

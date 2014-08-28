@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Project name="DANCE_CURR" LastModified="2014-08-22 20:38:53.20803">
+  <Items>
+    <ProjectItem name="Auth" type="PKG"></ProjectItem>
+    <ProjectItem name="LIB" type="PKG"></ProjectItem>
+    <ProjectItem name="REST" type="PKG"></ProjectItem>
+    <ProjectItem name="Robokassa" type="PKG"></ProjectItem>
+    <ProjectItem name="SPD" type="PKG"></ProjectItem>
+    <ProjectItem name="WEB" type="PKG"></ProjectItem>
+  </Items>
+</Project>
+</Export>

@@ -33,8 +33,37 @@
 
 <Property name="Actual">
 <Type>%Boolean</Type>
-<InitialExpression>1</InitialExpression>
+<Calculated>1</Calculated>
+<SqlComputeCode>set {Actual}=##class(SPD.Price).SetActual({DateActualEnd})</SqlComputeCode>
+<SqlComputed>1</SqlComputed>
 </Property>
+
+<Method name="SetActual">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>DateActualEnd</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	set bl=1
+	//w "now="_$zdt($h,3),!
+	//w "DateActualEnd="_DateActualEnd,!
+	set nowdate=$list($listfromstring($h,","),1)
+	set nowtime=$list($listfromstring($h,","),2)
+
+	set actdate=$list($listfromstring($zdatetimeh(DateActualEnd,3),","),1)
+	set acttime=$list($listfromstring($zdatetimeh(DateActualEnd,3),","),2)
+	//w "nowdate="_nowdate_"     nowtime="_nowtime,!
+	//w "actdate="_actdate_"     acttime="_acttime,!
+	if (nowdate>actdate)
+	{
+		set bl=0
+	}
+	elseif ((nowtime>acttime)&(nowdate>actdate) )
+	{
+		set bl=0
+	}
+	ret bl
+]]></Implementation>
+</Method>
 
 <Method name="Create">
 <ClassMethod>1</ClassMethod>

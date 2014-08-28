@@ -55,7 +55,7 @@ function NavBarCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFacto
 
     $scope.Auth=function(){
 
-    }
+    };
 
     $scope.SetLanguage=function(lang){
         $scope.lang=lang;
@@ -131,7 +131,7 @@ function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFac
             SchoolFactory.GetAllRoomsForSchool().success(function(data){
                 $scope.rooms=data.children;
             });
-        }
+        };
         $scope.GetAllRooms();
 
         $scope.lang=LanguageFactory.GetCurrentLanguage();
@@ -140,24 +140,39 @@ function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFac
 
         })};
         $scope.GetLessontypes();
-    }
+    };
 
     $scope.GetPrice=function(){
         var id=AuthenticationFactory.GetCurrentUser().IdSchool;
         SchoolFactory.GetPrice(id).success(function(data){
             $scope.PriceList=data.children;
         });
-    }
+    };
+
     $scope.AddPrice=function(price){
+            $scope.Price={};
+            $scope.SetType=function(TypeLessonTypeID){
+                SchoolFactory.GetEndTimeLastPrice(TypeLessonTypeID).success(function(data){
+                    var datetime=new Date(Date.parse(data.children));
+                    $scope.Price.TimeBegin=$scope.CheckTime(datetime.getHours())+":"+$scope.CheckTime(datetime.getMinutes())+":00";
+                    $scope.Price.DateBegin=$scope.CheckTime(datetime.getDate())+"/"+$scope.CheckTime(datetime.getMonth())+"/"+$scope.CheckTime(datetime.getFullYear());
+                });
+            };
+            $scope.ChangeType=function(id){
+                console.log(id)
+            };
             $scope.submit=function(price){
                 console.log(price);
                 price.dateActual=price.sharedDate+" "+price.sharedTime;
+                console.log(price);
                 SchoolFactory.AddPrice(price).success(function(data){
                     $scope.GetLessontypes();
+                    $scope.GetPrice();
                     modal.hide();
-                })};
+                })
+            };
         var modal=$modal({scope: $scope, placement:"center", backdrop:false, template: 'partials/user/modal/AddPrice.html', show: true});
-    }
+    };
 
     $scope.InviteInstructor=function(){
         $scope.submit=function(Instructor){
@@ -170,28 +185,37 @@ function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFac
         };
 
         var modal=$modal({scope: $scope, placement:"center", backdrop:false, template: 'partials/user/modal/InviteInstructor.html', show: true});
-    }
+    };
     $scope.GetInstructorList=function(){
         SchoolFactory.GetInstructorList($scope.IdSchool).success(function(data){
                 $scope.InstructorList=data.children;
             }
         );
-    }
+    };
     $scope.GetSchool=function(ID) {
         SchoolFactory.GetSchool(ID).success(function(data){
             $scope.school=data.children[0];
         });
-    }
+    };
     $scope.RemoveFromSchool=function(ID){
         SchoolFactory.RemoveFromSchool(ID).success(function(){
             $scope.GetInstructorList();
         });
 
-    }
+    };
     $scope.initit();
     $scope.GetPrice();
     $scope.GetInstructorList();
     if($rootScope.User) {$scope.GetSchool($rootScope.User.IdSchool)};
+    $scope.CheckTime=function(time){
+        if(time==0){
+            time="00"
+        }
+        if(time.toString().length==1){
+            time="0"+time.toString();
+        }
+        return time
+    }
 };
 //******************************************** MySchoolCtrl ***************************************************************//
 
@@ -409,7 +433,7 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
         $scope.Lesson.TypeLessonId=event.task.data.TypeLessonId;
         $scope.Lesson.TimeBegin=$scope.CheckTime(event.task.from.getHours())+":"+$scope.CheckTime(event.task.from.getMinutes())+":00";
 
-        console.log($scope.CheckTime(event.task.to.getHours()).toString());
+        //console.log($scope.CheckTime(event.task.to.getHours()).toString());
         $scope.Lesson.TimeEnd=$scope.CheckTime(event.task.to.getHours())+":"+$scope.CheckTime(event.task.to.getMinutes())+":00";
         $scope.Lesson.ShortDescription=event.task.subject;
         $scope.Lesson.Day=event.task.from.getDay();

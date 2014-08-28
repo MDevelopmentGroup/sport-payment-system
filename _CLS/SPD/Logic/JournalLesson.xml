@@ -5,26 +5,154 @@
 
 <Method name="GenerateJournalLesson">
 <ClassMethod>1</ClassMethod>
+<FormalSpec>idlessontable</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set st=$$$OK
 	try{
-	set school=##class(Auth.Session).GetCurrentSchool()
-	set schoolId=school.%Id()
-	&sql(declare price cursor for 
-	select id, DateActualEnd, TypeLesson into :id,:DateActualEnd,:TypeLesson  from SPD.Price where Actual=1 and school->id=:schoolId)
-	&sql(open price)
-	for {
-		&sql(fetch price)
 		
+		set lft=##class(SPD.TimeTableLessons).%OpenId(idlessontable)
+		set DateActualEnd=##class(SPD.Logic.JournalLesson).GetLastActualPrice(lft.TypeLesson.%Id())
+		set dattme=$zdt($H,3)
+		&sql(declare sPrice cursor for
+		select id into :idprice from SPD.Price where DateActualStart<:dattme and DateActualEnd>:dattme)
+		&sql(open sPrice)
+		for {
+			&sql(fetch sPrice)
+			w id
+			quit:(SQLCODE '= 0)
+		}
+		&sql(close sPrice)
+		
+		set price=##class(SPD.Price).%OpenId(idprice)
+		set count=($zdatetimeh(DateActualEnd,3,1)-$zdateh($zdate($h)))/7
+		
+		//w "lft.ShortDescription="_lft.ShortDescription_"    DateActualEnd="_DateActualEnd_"  price="_price.Cost_"   count="_count,!
+		set datebeg=$list($listfromstring($h,","),1)
+		set timebeg=lft.TimeBegin
+		
+		set TimeActualEnd=$list($listfromstring($zdatetimeh(DateActualEnd,3,1),","),2)
+		
+		set dateend=$zdateh(DateActualEnd,3,1)
 	
-	}
-	&sql(close price)
+		if (TimeActualEnd<dateend)
+		{
+			set count=count-1
+		}
+		set timeend=lft.TimeEnd
+		//w "count="_count,!
+		w "datebeg="_datebeg_" timebeg="_timebeg,!,"datebeg="_dateend_" timeend="_timeend,!
+		if (count>1){
+			for i=0:1:count{
+				set journalllesson=##class(SPD.JournalLesson).%New()
+				w $zdt((datebeg+7)_","_timebeg,3),!
+				w $zdt((datebeg+7)_","_timeend,3),!
+				set journalllesson.DateBegin=$zdt((datebeg)_","_timebeg,3)
+				set journalllesson.DateEnd=$zdt((datebeg)_","_timeend,3)
+				set journalllesson.Instructor=lft.Instructor
+				set journalllesson.Price=price
+				
+				//set s=##class(Auth.Session).GetCurrentSchool()
+				set journalllesson.School=##class(SPD.School).%OpenId(55)
+				set journalllesson.LessonInTable=##class(SPD.TimeTableLessons).%OpenId(idlessontable)
+				set st=journalllesson.%Save()
+				set datebeg=datebeg+7
+				set dateend=dateend+7
+			}
+		}
+		elseif (count=1)
+		{
+			
+		}
 	}
 	catch ex{
 		set st=ex.AsStatus()
 	}
 	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetJournalLessons">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ID</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set school=##class(SPD.School).%OpenId(ID)
+		//&sql(select )
+		set sqlquery="select "_
+		"ID, DateBegin, DateEnd, "_
+		"Instructor->id As InstructorId, Instructor->IdDancer->IFirstName, Instructor->IdDancer->LastName As ILastName, Instructor->IdDancer->Patrnymic As IPatrnymic"_
+		"LessonInTable->id as LessonInTableId, LessonInTable->Room->id As RoomId, LessonInTable->ShortDascription As LessonDescr"_
+		"Price->Cost As Cost, School->id as SchoolId, School->Name As SchoolName, countDancer, "_
+		"FROM SPD.JournalLesson where School->id="_ID
+		do ##class(SPD.School).GetJSONData(sqlquery)
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="MakeTime">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>t1,t2,*date</FormalSpec>
+<ReturnType>%Time</ReturnType>
+<Implementation><![CDATA[
+	set t=""
+	if ((t1+t2)>86399)
+	{
+		set date=date+1
+		set t=(t2+t1)-86399
+		
+	}
+	ret t
+]]></Implementation>
+</Method>
+
+<Method name="JSONGetLastActualPrice">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>IDTypeLseeon</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set dt=##class(SPD.Logic.JournalLesson).GetLastActualPrice(IDTypeLseeon)
+		w "{""children"":"""_dt_"""}"
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetLastActualPrice">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>IDTypeLseeon</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+		///todo
+		/*
+		&sql(declare price cursor for select TypeLesson->id as id,DateActualEnd,Actual into :id,:DateActualEnd,:Actual from SPD.Price order by DateActualEnd desc)
+		&sql(open price)
+		for {
+			&sql(fetch price)
+			if (id=IDTypeLseeon) && (Actual=1){
+				quit
+			}
+			quit:(SQLCODE '= 0)
+		}
+		&sql(close price)*/
+		
+		&sql(SELECT 
+		DateActualEnd into :DateActualEnd
+		FROM SPD.Price
+		where TypeLesson->id=9
+		order by DateActualEnd desc)
+	ret DateActualEnd
 ]]></Implementation>
 </Method>
 </Class>

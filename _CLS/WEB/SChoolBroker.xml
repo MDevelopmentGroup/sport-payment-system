@@ -33,6 +33,7 @@
 	<Route Url="/UpdateLessonTable/"			Method="POST"		Call="SPD.Logic.TimeTableLessons:UpdateLessonTable"/>	
 	<Route Url="/GetLessonsFromTable/"			Method="GET"		Call="SPD.Logic.TimeTableLessons:GetLessonsFromTable"/>
 	
+	<Route Url="/GetLastActualPrice/:ID"		Method="GET"		Call="SPD.Logic.JournalLesson:JSONGetLastActualPrice"/>
 	<!--School-->
 	
 	<!---->
