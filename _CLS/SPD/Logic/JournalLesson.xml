@@ -14,56 +14,128 @@
 		set lft=##class(SPD.TimeTableLessons).%OpenId(idlessontable)
 		set DateActualEnd=##class(SPD.Logic.JournalLesson).GetLastActualPrice(lft.TypeLesson.%Id())
 		set dattme=$zdt($H,3)
+		//set school=##class(Auth.Session).GetCurrentSchool()
+		///todo
+		set school=##class(SPD.School).%OpenId(lft.School.%Id())
+		set schoolid=school.%Id()
+		set datebeg=$list($listfromstring($h,","),1)
+		
+		set ^Days("Sut")=0 set ^Days("Mon")=1 set ^Days("Tue")=2 set ^Days("Wed")=3 set ^Days("Thu")=4 set ^Days("Fri")=5 set ^Days("Sat")=6
+		set GetDay=($list($listfromstring($zdt($h,11)," "),1))
+		set addorefday=0
+		//w "^Days(GetDay)="_^Days(GetDay),!
+		//w "lft.Day="_lft.Day,!
+		if ((lft.Day-^Days(GetDay))>0)
+		{
+			set addorefday=lft.Day-^Days(GetDay)
+		}
+		else{
+			set addorefday=7+(lft.Day-^Days(GetDay))
+		}
+		//w "addorefday="_addorefday
+		set datebeg=datebeg+addorefday
+		set idlessontype=lft.TypeLesson.%Id()
 		&sql(declare sPrice cursor for
-		select id into :idprice from SPD.Price where DateActualStart<:dattme and DateActualEnd>:dattme)
+		select id into :idprice from SPD.Price where DateActualEnd>:dattme and School->id=:schoolid and TypeLesson->id=:idlessontype and Actual=1)
+		&sql(open sPrice)
+		for {
+			//w "-------------------------------------------",!
+			&sql(fetch sPrice)
+			quit:(SQLCODE '= 0)
+			//w "idprice="_idprice,!
+			set price=##class(SPD.Price).%OpenId(idprice)
+			set DateActualEnd=price.DateActualEnd
+			
+			//w "DateActualEnd="_DateActualEnd,!
+			//w "($zdatetimeh(DateActualEnd,3,1)="_($zdatetimeh(DateActualEnd,3,1)),!
+			//w "$zdateh($zdate($h)="_$zdateh($zdate($h)),!
+			set count=($zdatetimeh(DateActualEnd,3,1)-datebeg)/7
+			
+			set timebeg=lft.TimeBegin
+			set TimeActualEnd=$list($listfromstring($zdatetimeh(DateActualEnd,3,1),","),2)
+			set timeend=lft.TimeEnd
+			if (timebeg>timeend){
+				//w 123123123,!
+				set dateend=datebeg+1
+			}
+			else
+			{
+				//w 312379807809789,!
+				set dateend=datebeg
+			}
+			
+			if (TimeActualEnd<$ztime($list($listfromstring($h,","),2)))
+			{
+				set count=count-1
+			}
+			if (count>=1){
+				for i=0:1:count{
+					set journalllesson=##class(SPD.JournalLesson).%New()
+					//w $zdt((datebeg)_","_timebeg,3),!
+					//w $zdt((dateend)_","_timeend,3),!
+					set journalllesson.DateBegin=$zdt((datebeg)_","_timebeg,3)
+					set journalllesson.DateEnd=$zdt((dateend)_","_timeend,3)
+					set journalllesson.Instructor=lft.Instructor
+					set journalllesson.Price=price
+					//w "cost_"_price.Cost,!
+					set journalllesson.School=##class(SPD.School).%OpenId(55)
+					set journalllesson.LessonInTable=##class(SPD.TimeTableLessons).%OpenId(idlessontable)
+					set st=journalllesson.%Save()
+					set datebeg=datebeg+7
+					set dateend=dateend+7
+					//
+				}
+			}
+			elseif (TimeActualEnd>$list($listfromstring($h,","),2)){
+					set journalllesson=##class(SPD.JournalLesson).%New()
+					//w $zdt((datebeg)_","_timebeg,3),!
+					//w $zdt((dateend)_","_timeend,3),!
+					set journalllesson.DateBegin=$zdt((datebeg)_","_timebeg,3)
+					set journalllesson.DateEnd=$zdt((dateend)_","_timeend,3)
+					set journalllesson.Instructor=lft.Instructor
+					set journalllesson.Price=price
+					//w "cost_"_price.Cost,!
+					set journalllesson.School=##class(SPD.School).%OpenId(55)
+					set journalllesson.LessonInTable=##class(SPD.TimeTableLessons).%OpenId(idlessontable)
+					set st=journalllesson.%Save()
+					set datebeg=datebeg+7
+					set dateend=dateend+7
+			}
+		}
+		&sql(close sPrice)
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="UpdateJournalLesson">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idlessontable</FormalSpec>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		
+		set lft=##class(SPD.TimeTableLessons).%OpenId(idlessontable)
+		set DateActualEnd=##class(SPD.Logic.JournalLesson).GetLastActualPrice(lft.TypeLesson.%Id())
+		set dattme=$zdt($H,3)
+		//set school=##class(Auth.Session).GetCurrentSchool()
+		///todo
+		set school=##class(SPD.School).%OpenId(lft.School.%Id())
+		set schoolid=school.%Id()
+		set idlessontype=lft.TypeLesson.%Id()
+		&sql(declare sPrice cursor for select id into :idJournalLesson from SPD.JournalLesson where LessonInTable->id=:idlessontable and Price->Actual=1)
 		&sql(open sPrice)
 		for {
 			&sql(fetch sPrice)
-			w id
 			quit:(SQLCODE '= 0)
-		}
-		&sql(close sPrice)
-		
-		set price=##class(SPD.Price).%OpenId(idprice)
-		set count=($zdatetimeh(DateActualEnd,3,1)-$zdateh($zdate($h)))/7
-		
-		//w "lft.ShortDescription="_lft.ShortDescription_"    DateActualEnd="_DateActualEnd_"  price="_price.Cost_"   count="_count,!
-		set datebeg=$list($listfromstring($h,","),1)
-		set timebeg=lft.TimeBegin
-		
-		set TimeActualEnd=$list($listfromstring($zdatetimeh(DateActualEnd,3,1),","),2)
-		
-		set dateend=$zdateh(DateActualEnd,3,1)
-	
-		if (TimeActualEnd<dateend)
-		{
-			set count=count-1
-		}
-		set timeend=lft.TimeEnd
-		//w "count="_count,!
-		w "datebeg="_datebeg_" timebeg="_timebeg,!,"datebeg="_dateend_" timeend="_timeend,!
-		if (count>1){
-			for i=0:1:count{
-				set journalllesson=##class(SPD.JournalLesson).%New()
-				w $zdt((datebeg+7)_","_timebeg,3),!
-				w $zdt((datebeg+7)_","_timeend,3),!
-				set journalllesson.DateBegin=$zdt((datebeg)_","_timebeg,3)
-				set journalllesson.DateEnd=$zdt((datebeg)_","_timeend,3)
-				set journalllesson.Instructor=lft.Instructor
-				set journalllesson.Price=price
-				
-				//set s=##class(Auth.Session).GetCurrentSchool()
-				set journalllesson.School=##class(SPD.School).%OpenId(55)
-				set journalllesson.LessonInTable=##class(SPD.TimeTableLessons).%OpenId(idlessontable)
-				set st=journalllesson.%Save()
-				set datebeg=datebeg+7
-				set dateend=dateend+7
-			}
-		}
-		elseif (count=1)
-		{
+			set jl=##class(SPD.JournalLesson).%OpenId(idJournalLesson)
+			set datebegin=7
 			
 		}
+		&sql(close sPrice)
 	}
 	catch ex{
 		set st=ex.AsStatus()
@@ -83,10 +155,13 @@
 		//&sql(select )
 		set sqlquery="select "_
 		"ID, DateBegin, DateEnd, "_
-		"Instructor->id As InstructorId, Instructor->IdDancer->IFirstName, Instructor->IdDancer->LastName As ILastName, Instructor->IdDancer->Patrnymic As IPatrnymic"_
-		"LessonInTable->id as LessonInTableId, LessonInTable->Room->id As RoomId, LessonInTable->ShortDascription As LessonDescr"_
-		"Price->Cost As Cost, School->id as SchoolId, School->Name As SchoolName, countDancer, "_
+		"Instructor->id As InstructorId, "_
+		"Instructor->IdDancer->FirstName As IFirstName, Instructor->IdDancer->LastName As ILastName, Instructor->IdDancer->Patronymic As IPatrnymic, "_
+		"LessonInTable->id as LessonInTableId, LessonInTable->Room->id As RoomId, LessonInTable->Room->Name as RoomName, "_ 
+		"LessonInTable->ShortDescription As LessonDescr, LessonInTable->TypeLesson->id As TypeLessonId, "_
+		"Price->Cost As Cost, School->id as SchoolId, School->Name As SchoolName, countDancer "_
 		"FROM SPD.JournalLesson where School->id="_ID
+		
 		do ##class(SPD.School).GetJSONData(sqlquery)
 	}
 	catch ex{
@@ -150,7 +225,7 @@
 		&sql(SELECT 
 		DateActualEnd into :DateActualEnd
 		FROM SPD.Price
-		where TypeLesson->id=9
+		where TypeLesson->id=:IDTypeLseeon
 		order by DateActualEnd desc)
 	ret DateActualEnd
 ]]></Implementation>

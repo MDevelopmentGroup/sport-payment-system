@@ -57,6 +57,10 @@
 <Type>%String</Type>
 </Property>
 
+<Property name="Phone">
+<Type>%String</Type>
+</Property>
+
 <Storage name="Default">
 <Type>%Library.CacheSerialState</Type>
 <DataLocation>^LIB.PersonD</DataLocation>
@@ -88,6 +92,9 @@
 </Value>
 <Value name="7">
 <Value>Email</Value>
+</Value>
+<Value name="8">
+<Value>Phone</Value>
 </Value>
 </Data>
 <Data name="PersonState">

@@ -19,8 +19,8 @@
 <Type>SPD.Dancer</Type>
 </Property>
 
-<Property name="OwnerSchool">
-<Type>SPD.School</Type>
+<Property name="School">
+<Type>SPD.TempListOfInstructorsInSchools</Type>
 </Property>
 
 <Method name="CreateInstructon">
@@ -70,6 +70,9 @@
 </Value>
 <Value name="4">
 <Value>OwnerSchool</Value>
+</Value>
+<Value name="5">
+<Value>School</Value>
 </Value>
 </Data>
 </Storage>

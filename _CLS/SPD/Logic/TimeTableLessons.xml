@@ -23,6 +23,7 @@
 		set lesson.TimeBegin=$ztimeh(obj.TimeBegin)
 		set lesson.TimeEnd=$ztimeh(obj.TimeEnd)
 		set st=lesson.%Save()		
+		set st=##class(SPD.Logic.JournalLesson).GenerateJournalLesson(lesson.%Id())
 	}
 	catch ex{	set st=ex}
 	ret st
@@ -47,7 +48,6 @@
 		set lesson.TimeBegin=$ztimeh(obj.TimeBegin)
 		set lesson.TimeEnd=$ztimeh(obj.TimeEnd)
 		set st=lesson.%Save()		
-				
 		
 		
 	}

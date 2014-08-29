@@ -281,8 +281,8 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     SchoolFactory.AddRoomToSchool=function(data){
         return $http.post(schoolBroker+"/CreateRoom/",data);
     };
-    SchoolFactory.GetAllRoomsForSchool=function(){
-        return $http.get(schoolBroker + "/GetAllRoomsForSchool/");
+    SchoolFactory.GetAllRoomsForSchool=function(id){
+        return $http.get(BaseUrl + "/GetAllRoomsForSchool/"+id);
     };
     SchoolFactory.UpdateRoom=function(data){
         return $http.post(schoolBroker + "/UpdateRoom/",data);
@@ -296,8 +296,8 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     SchoolFactory.GetAddress=function(IdAddress){
         return $http.get(BaseUrl + "/GetAddress/"+IdAddress);
     };
-    SchoolFactory.GetLessonTypes=function(){
-        return $http.get(schoolBroker + "/GetLessonTypes/");
+    SchoolFactory.GetLessonTypes=function(id){
+        return $http.get(BaseUrl + "/GetLessonTypes/"+id);
     };
     SchoolFactory.AddPrice=function(data){
         return $http.post(schoolBroker+"/AddPrice/",data);
@@ -340,10 +340,23 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     };
     SchoolFactory.UpdateLessonTable=function(table){
         return $http.post(schoolBroker+"/UpdateLessonTable/",table);
-    }
+    };
     SchoolFactory.GetEndTimeLastPrice=function(TypeLessonTypeID){
         return $http.get(schoolBroker+"/GetLastActualPrice/"+TypeLessonTypeID);
-    }
+    };
+    SchoolFactory.GetGetJournalLessons=function(id){
+        return $http.get(BaseUrl+"/GetGetJournalLessons/"+id);
+    };
+    SchoolFactory.ActualGetPrice=function(id){
+        return $http.get(BaseUrl+"/ActualGetPrice/"+id);
+    };
+    SchoolFactory.GetSchoolByTrainerId=function(id){
+        return $http.get(BaseUrl+"/GetSchoolByTrainerId/"+id);
+    };
+    SchoolFactory.GetTrainerInfo=function(id)
+    {
+        return $http.get(BaseUrl+"/GetTrainerInfo/"+id);
+    };
     return SchoolFactory;
 }]);
 

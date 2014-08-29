@@ -32,17 +32,24 @@
 	   
 	   <Route Url="/InviteAccept/:hash"				Method="POST" 		Call="SPD.Logic.School:InviteAccept"/>
 	   <Route Url="/InviteReject/:hash"				Method="POST" 		Call="SPD.Logic.School:InviteReject"/>
-	   
+	   <Route Url="/ActualGetPrice/:ID"				Method="GET"		Call="SPD.Logic.School:ActualGetPrice"/>
 	   <Route Url="/CreateNewInstructor/"			Method="POST" 		Call="SPD.Logic.School:CreateNewInstructor"/>
+	   <Route Url="/GetLessonTypes/:ID"				Method="GET"		Call="SPD.Logic.School:GetLessonTypes"/>
 	   
-	   
-	   
+	   <Route Url="/GetAllRoomsForSchool/:ID"		Method="GET" 		Call="SPD.Logic.Room:GetAllRoomsForSchool"/>
 	   
 	   <Route Url="/GetInstructorList/:ID"			Method="GET" 		Call="SPD.Logic.Instructor:GetInstructorList"/>
 	   <Route Url="/GetInstructorList/"				Method="GET" 		Call="SPD.Logic.Instructor:GetAllInstructorList"/>
+	   <Route Url="/GetTrainerInfo/:ID"				Method="GET"		Call="SPD.Logic.Instructor:GetTrainerInfo"/>
+	   <Route Url="/GetSchoolByTrainerId/:ID"		Method="GET"		Call="SPD.Logic.Instructor:GetSchoolByTrainerId"/>
+	   
 	   
 	   <Route Url="/GetLesson/:ID"					Method="GET"		Call="SPD.Logic.TimeTableLessons:GetLesson"/>
+	   
+	   
 	   <Route Url="/GetJournalLessons/:ID"			Method="GET"		Call="SPD.Logic.JournalLesson:GetJournalLessons"/>
+	   <Route Url="/GetGetJournalLessons/:ID"		Method="GET"		Call="SPD.Logic.JournalLesson:GetJournalLessons"/>
+	   
 	   
 </Routes>
 ]]></Data>

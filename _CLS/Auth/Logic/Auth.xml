@@ -11,9 +11,7 @@
 	try
 	{
 		$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
-		
 		set dancer=##class(SPD.Dancer).%New()		
-		
 		set dancer.Access=##class(LIB.Role).%OpenId(4)
 		set dancer.Active=1
 		set dancer.FirstName=$ZCONVERT(obj.FirstName,"I","UTF8")
@@ -24,6 +22,7 @@
 		set dancer.Gender=obj.gender
 		set dancer.Password=obj.Password
 		set dancer.Key=##class(Auth.Session).CreateSSN()
+		if (obj.Phone'=""){set dancer.Phone=obj.Phone} else {set dancer.Phone=""}
 		do dancer.%Save()
 		set dancerId=dancer.%Id()		
 		set session1=##class(Auth.SessionData).%New()		

@@ -37,6 +37,12 @@
 <Relationship>1</Relationship>
 </Property>
 
+<Property name="InstructorList">
+<Description>
+todo целостность не обеспечена </Description>
+<Type>SPD.TempListOfInstructorsInSchools</Type>
+</Property>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^SPD.SchoolD</DataLocation>
@@ -132,6 +138,9 @@
 </Value>
 <Value name="29">
 <Value>Person</Value>
+</Value>
+<Value name="30">
+<Value>InstructorList</Value>
 </Value>
 </Data>
 <Property name="%%CLASSNAME">

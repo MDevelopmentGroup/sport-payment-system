@@ -10,7 +10,7 @@
 	<Route Url="/UpdateSchool/" 			Method="POST" 		Call="SPD.Logic.School:Update"/>
 	<!-- RoomBroker	-->
 	<Route Url="/CreateRoom/" 				Method="POST" 		Call="SPD.Logic.Room:CreateRoom"/>
-	<Route Url="/GetAllRoomsForSchool/" 	Method="GET" 		Call="SPD.Logic.Room:GetAllRoomsForSchool"/>
+
 	<Route Url="/DeleteRoom/:IdRoom" 		Method="DELETE" 	Call="SPD.Logic.Room:DeleteRoom"/>
 	<Route Url="/UpdateRoom/"	 			Method="POST" 		Call="SPD.Logic.Room:UpdateRoom"/>
 	
@@ -21,7 +21,6 @@
 	<!--School-->
 	<Route Url="/CreateJurnall/" 				Method="POST" 		Call="SPD.Logic.School:CreateJurnall"/>
 	<Route Url="/CreateTimeTable/" 				Method="POST" 		Call="SPD.Logic.School:CreateTimeTable"/>
-	<Route Url="/GetLessonTypes/"				Method="GET"		Call="SPD.Logic.School:GetLessonTypes"/>
 	<Route Url="/AddPrice/"						Method="POST"		Call="SPD.Logic.School:AddPrice"/>
 	<Route Url="/GetPrice/:ID"					Method="GET"		Call="SPD.Logic.School:GetPrice"/>
 	<Route Url="/InviteInstructor/:Email"		Method="GET"		Call="SPD.Logic.School:InviteInstructor"/>
@@ -34,6 +33,10 @@
 	<Route Url="/GetLessonsFromTable/"			Method="GET"		Call="SPD.Logic.TimeTableLessons:GetLessonsFromTable"/>
 	
 	<Route Url="/GetLastActualPrice/:ID"		Method="GET"		Call="SPD.Logic.JournalLesson:JSONGetLastActualPrice"/>
+	
+	
+	
+	
 	<!--School-->
 	
 	<!---->

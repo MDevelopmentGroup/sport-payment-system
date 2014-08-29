@@ -38,13 +38,13 @@
 
 <Method name="GetAllRoomsForSchool">
 <ClassMethod>1</ClassMethod>
+<FormalSpec>idschool</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	///todo столбцы указать явно
-	set userId=##class(LIB.Person).%OpenId(%request.GetCookie("userId")).%Id()
-	
 	&sql(select id into :idschool from SPD.School where Person->Id=:userId)
-	set SchoolQuery = "SELECT * "_
+	set SchoolQuery = "SELECT Name, ShorDescr, Address->City as City, "_
+	"Address->Country as Country, Address-> Street as Street "_
 				   	  "FROM SPD.Room where School->id="_idschool
 				   	  				   				   				   
 	do ##class(SPD.School).GetJSONData(SchoolQuery)

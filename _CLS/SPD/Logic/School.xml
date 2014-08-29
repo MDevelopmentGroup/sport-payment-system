@@ -3,6 +3,28 @@
 <Class name="SPD.Logic.School">
 <TimeCreated>63418,51393.737219</TimeCreated>
 
+<Method name="ActualGetPrice">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idSchool</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set dt=$zdt($h,3)
+		set sqlquery="select Cost, TypeLesson->Name as name, "_
+		"TypeLesson->ShortDescription as ShortDescription "_
+		"from SPD.Price "_
+		"where DateActualEnd>'"_dt_"' and DateActualStart<'"_dt_"' and school->id="_idSchool
+		
+		set st=##class(SPD.School).GetJSONData(sqlquery)
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
 <Method name="GetPrice">
 <ClassMethod>1</ClassMethod>
 <FormalSpec>ID</FormalSpec>
@@ -11,9 +33,9 @@
 	set st=$$$OK
 	Try
 	{
-		set SchoolQuery="select ID, Actual, Cost, DateActualEnd, DateActualStart, TypeLesson->name As name, TypeLesson->ID as TypeLessonID, school "_
+		set sqlquery="select ID, Actual, Cost, DateActualEnd, DateActualStart, TypeLesson->name As name, TypeLesson->ID as TypeLessonID, school "_
 		"from SPD.Price where school->id="_ID
-		set st=##class(SPD.School).GetJSONData(SchoolQuery)
+		set st=##class(SPD.School).GetJSONData(sqlquery)
 	}
 	catch ex{
 	set st=ex.AsStatus()
@@ -64,12 +86,14 @@
 		set price.Cost=obj.Cost
 		set price.DateActualEnd=$zdt($zdth(obj.dateActual,4),3)
 		if (obj.DateBegin) && (obj.TimeBegin) {
+			//w obj.DateBegin_" "_obj.TimeBegin
 			set price.DateActualStart=$zdt($zdth(obj.DateBegin_" "_obj.TimeBegin,4),3)
 		}
 		else {
 			set price.DateActualStart=$zdt($h,3)
 		}
 		set price.school=school
+		//zw price
 		set st=price.%Save()
 	}
 	catch ex{
@@ -202,10 +226,10 @@
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set SchoolQuery = "SELECT * "_
+	set sqlquery = "SELECT * "_
 				   	  "FROM SPD.School "
 				   				   				   
-	do ##class(SPD.School).GetJSONData(SchoolQuery)
+	do ##class(SPD.School).GetJSONData(sqlquery)
 	quit $$$OK
 ]]></Implementation>
 </Method>
@@ -216,11 +240,11 @@
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 
-	set SchoolQuery = "SELECT * "_
+	set sqlquery = "SELECT * "_
 				   	  "FROM SPD.School "_
 				   	  "WHERE ID="_ID
 				   				   				   
-	do ##class(SPD.School).GetJSONData(SchoolQuery)
+	do ##class(SPD.School).GetJSONData(sqlquery)
 	quit $$$OK
 ]]></Implementation>
 </Method>
@@ -228,13 +252,13 @@
 <Method name="GetSchools">
 <ClassMethod>1</ClassMethod>
 <Implementation><![CDATA[
-	set SchoolQuery = "SELECT ID, AddInfo, Body as Descript, City, Country, "_
+	set sqlquery = "SELECT ID, AddInfo, Body as Descript, City, Country, "_
 	"DescTimeStamp, FirstPage, Image->FileName, "_
 	"Lang, Name, Person, RegDate, Street, Telephone, "_
 	"URL, isActive, isBlocked "_
 	"FROM SPD.School where isActive=1"				   	  				   				   				   
 	
-	do ##class(SPD.School).GetJSONData(SchoolQuery)
+	do ##class(SPD.School).GetJSONData(sqlquery)
 	quit $$$OK
 ]]></Implementation>
 </Method>
@@ -244,13 +268,13 @@
 <FormalSpec>ID</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set SchoolQuery = "SELECT ID, AddInfo, Body as Body, City, Country, "_
+	set sqlquery = "SELECT ID, AddInfo, Body as Body, City, Country, "_
 	"DescTimeStamp, Person->Email As Email,FirstPage, Image->FileName,Image->id As ImageId, "_
 	"Lang, Name, Person, RegDate, Street, Telephone, "_
 	"URL, isActive, isBlocked "_
 	"FROM SPD.School where id="_ID
 	
-	do ##class(SPD.School).GetJSONData(SchoolQuery)
+	do ##class(SPD.School).GetJSONData(sqlquery)
 	quit $$$OK
 ]]></Implementation>
 </Method>
@@ -275,6 +299,7 @@
 		set school=##class(Auth.Session).GetCurrentSchool()
 		set temp.School=school
 		set temp.Email=Email
+		
 		if (count=1)
 		{
 			//send invite
@@ -311,9 +336,18 @@
 		set instructor.IdDancer=Dancer
 		set instructor.InstructorPower=20
 		///todo InstructorPower
-		set instructor.OwnerSchool=##class(SPD.School).%OpenId(SchoolId)
-		set instructor.IdDancer.Access=##class(LIB.Role).%OpenId(3)
-		set st= instructor.%Save()
+		//set instructor.OwnerSchool=##class(SPD.School).%OpenId(SchoolId)
+		set instructor.IdDancer.Access=##class(LIB.Role).%OpenId(3)		
+		
+		set tempIS=##class(SPD.TempListOfInstructorsInSchools).%New()
+		set tempIS.Instructor=instructor
+		set school=##class(SPD.School).%OpenId(SchoolId)
+		set tempIS.School=school
+		set instructor.School=tempIS.School
+		set school.InstructorList=tempIS.Instructor
+		set st=school.%Save()
+		set st=tempIS.%Save()
+		set st=instructor.%Save()
 		set st=##class(SPD.TempInvite).%DeleteId(id)
 	}
 	catch ex{
@@ -376,7 +410,6 @@
 			set dancer.Gender=obj.gender
 			set dancer.Password=obj.Password
 			set dancer.Key=##class(Auth.Session).CreateSSN()
-			zw dancer
 			do dancer.%Save()
 			set dancerId=dancer.%Id()		
 			set session1=##class(Auth.SessionData).%New()		
@@ -405,7 +438,14 @@
 			set instructor.IdDancer=dancer
 			set instructor.InstructorPower=20
 			///todo InstructorPower
-			set instructor.OwnerSchool=##class(SPD.School).%OpenId(SchoolId)
+			set temp=##class(SPD.TempListOfInstructorsInSchools).%New()
+			set school=##class(SPD.School).%OpenId(SchoolId)
+			set temp.Instructor=instructor
+			set temp.School=school
+			set instructor.OwnerSchool=temp
+			set school.InstructorList=temp
+			set st=school.%Save()
+			set st=temp.%Save()
 			set st=instructor.%Save()
 			//set st=##class(SPD.TempInvite).%DeleteId(id)
 		}

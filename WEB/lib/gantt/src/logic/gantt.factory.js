@@ -22,6 +22,7 @@ gantt.factory('Gantt', ['Row', 'ColumnGenerator', 'HeaderGenerator', 'dateFuncti
                 default:
                     throw "Unsupported view scale: " + viewScale;
             }
+
             self.headerGenerator = new HeaderGenerator.instance(viewScale);
         };
 

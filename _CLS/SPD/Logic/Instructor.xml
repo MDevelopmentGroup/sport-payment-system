@@ -38,21 +38,58 @@
 	set st=$$$OK
 	try
 	{
-		if (IdSchool'=""){
-			set SchoolQuery="select IdDancer->FirstName, IdDancer->LastName, IdDancer-> Patronymic, id "_
-			"from SPD.Instructor where OwnerSchool="_IdSchool			
+		if (IdSchool'="undefined"){
+			set sqlQuery="select IdDancer->FirstName, IdDancer->LastName, IdDancer-> Patronymic, id "_
+			"from SPD.Instructor where School->School="_IdSchool			
 		}
 		else{
-			set SchoolQuery="select IdDancer->FirstName, IdDancer->LastName, IdDancer-> Patronymic, id from"_
+			set sqlQuery="select IdDancer->FirstName, IdDancer->LastName, IdDancer->Patronymic, id from "_
 			"SPD.Instructor"
 		}
-		do ##class(SPD.School).GetJSONData(SchoolQuery)
+		do ##class(SPD.School).GetJSONData(sqlQuery)
 	}
 	Catch exception
 	{
 		set st=exception
 	}
 	q st
+]]></Implementation>
+</Method>
+
+<Method name="GetTrainerInfo">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set sqlQuery="select idDancer->FirstName as FirstName, idDancer->LastName as LastName, "_
+		"idDancer->Patronymic as Patronymic, idDancer->Gender from SPD.Instructor where id="_id
+		do ##class(SPD.School).GetJSONData(sqlQuery)
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetSchoolByTrainerId">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set sqlQuery="select School->id as IdSchool, School->Name as SchoolName "_
+		" from SPD.TempListOfInstructorsInSchools where Instructor="_id
+		do ##class(SPD.School).GetJSONData(sqlQuery)
+		
+	}
+	catch ex{
+	}
+	ret st
 ]]></Implementation>
 </Method>
 </Class>

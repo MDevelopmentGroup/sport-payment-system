@@ -1403,7 +1403,6 @@ gantt.directive('gantt', ['Gantt', 'dateFunctions', 'mouseOffset', 'debounce', '
             self.setTasksMinMaxDate();
             task.row = self;
             task.updatePosAndSize();
-
         };
 
         // Remove the specified task from the row
