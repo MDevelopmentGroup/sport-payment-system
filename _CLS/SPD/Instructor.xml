@@ -8,19 +8,15 @@
 <Type>%Integer</Type>
 </Property>
 
-<UDLText name="T">
-<Content><![CDATA[
-// todo связи
-
-]]></Content>
-</UDLText>
-
 <Property name="IdDancer">
 <Type>SPD.Dancer</Type>
 </Property>
 
-<Property name="School">
+<Property name="RefInstructor">
 <Type>SPD.TempListOfInstructorsInSchools</Type>
+<Cardinality>many</Cardinality>
+<Inverse>Instructor</Inverse>
+<Relationship>1</Relationship>
 </Property>
 
 <Method name="CreateInstructon">

@@ -35,6 +35,7 @@
 	   <Route Url="/ActualGetPrice/:ID"				Method="GET"		Call="SPD.Logic.School:ActualGetPrice"/>
 	   <Route Url="/CreateNewInstructor/"			Method="POST" 		Call="SPD.Logic.School:CreateNewInstructor"/>
 	   <Route Url="/GetLessonTypes/:ID"				Method="GET"		Call="SPD.Logic.School:GetLessonTypes"/>
+	   <Route Url="/GetLessonsFromTable/:ID"		Method="GET"		Call="SPD.Logic.TimeTableLessons:GetLessonsFromTable"/>
 	   
 	   <Route Url="/GetAllRoomsForSchool/:ID"		Method="GET" 		Call="SPD.Logic.Room:GetAllRoomsForSchool"/>
 	   

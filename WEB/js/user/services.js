@@ -332,8 +332,8 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     SchoolFactory.RemoveLessonFromTable=function(id){
         return $http.post(schoolBroker+"/RemoveLessonFromTable/"+ID)
     };
-    SchoolFactory.GetLessonsFromTable=function(){
-        return $http.get(schoolBroker+"/GetLessonsFromTable/")
+    SchoolFactory.GetLessonsFromTable=function(id){
+        return $http.get(BaseUrl+"/GetLessonsFromTable/"+id)
     };
     SchoolFactory.GetLesson=function(id){
         return $http.get(BaseUrl+"/GetLesson/"+id);
@@ -344,8 +344,8 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     SchoolFactory.GetEndTimeLastPrice=function(TypeLessonTypeID){
         return $http.get(schoolBroker+"/GetLastActualPrice/"+TypeLessonTypeID);
     };
-    SchoolFactory.GetGetJournalLessons=function(id){
-        return $http.get(BaseUrl+"/GetGetJournalLessons/"+id);
+    SchoolFactory.GetJournalLessons=function(id){
+        return $http.get(BaseUrl+"/GetJournalLessons/"+id);
     };
     SchoolFactory.ActualGetPrice=function(id){
         return $http.get(BaseUrl+"/ActualGetPrice/"+id);
@@ -359,7 +359,17 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     };
     return SchoolFactory;
 }]);
-
+app.factory('DancerFactory',['$http','$rootScope','ErrorLogFactory',function($http,$rootScope,ErrorLogFactory) {
+    var DancerFactory={};
+    var BaseUrl="/rest";
+    DancerFactory.Subscribe=function(dancer){
+        return $http.post(BaseUrl+"/Subscribe/",dancer);
+    };
+    DancerFactory.GetJournallLesson=function(id){
+        return $http.get(BaseUrl+"/GetJournallLesson/"+id);
+    }
+    return DancerFactory;
+}]);
 
 //***************************************** Setting ********************************************************************//
 app.factory('SettingFactory',['$http','$rootScope','ErrorLogFactory',function($http,$rootScope,ErrorLogFactory){

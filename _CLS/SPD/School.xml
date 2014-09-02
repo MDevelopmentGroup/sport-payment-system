@@ -37,10 +37,13 @@
 <Relationship>1</Relationship>
 </Property>
 
-<Property name="InstructorList">
+<Property name="RefSchool">
 <Description>
 todo целостность не обеспечена </Description>
 <Type>SPD.TempListOfInstructorsInSchools</Type>
+<Cardinality>many</Cardinality>
+<Inverse>School</Inverse>
+<Relationship>1</Relationship>
 </Property>
 
 <Storage name="Default">

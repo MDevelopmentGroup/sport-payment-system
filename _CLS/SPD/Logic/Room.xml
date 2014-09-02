@@ -27,7 +27,7 @@
 		
 		set room.School=##class(SPD.School).%OpenId(idschool)
 		set room.ShorDescr=$ZCONVERT(obj.ShortDescr,"I","UTF8")
-		do room.%Save()		
+		set st=room.%Save()
 	}
 	catch ex{
 		set st=ex.AsStatus()
@@ -43,10 +43,10 @@
 <Implementation><![CDATA[
 	///todo столбцы указать явно
 	&sql(select id into :idschool from SPD.School where Person->Id=:userId)
-	set SchoolQuery = "SELECT Name, ShorDescr, Address->City as City, "_
-	"Address->Country as Country, Address-> Street as Street "_
+	set SchoolQuery = "SELECT id, Name, ShorDescr, Address->City as City, "_
+	"Address->Country as Country, Address-> Street as Street , Address->id as IdAddress "_
 				   	  "FROM SPD.Room where School->id="_idschool
-				   	  				   				   				   
+	//w SchoolQuery
 	do ##class(SPD.School).GetJSONData(SchoolQuery)
 	quit $$$OK
 ]]></Implementation>
@@ -77,13 +77,13 @@
 		set addr.City=$ZCONVERT(obj.City,"I","UTF8")
 		set addr.Street=$ZCONVERT(obj.Street,"I","UTF8")
 		set addr.Description=$ZCONVERT(obj.ShortDescr,"I","UTF8")
-		do addr.%Save()
+		set st=addr.%Save()
 		set room=##class(SPD.Room).%OpenId(obj.ID)
 		set room.Address=addr
 		set room.Name=$ZCONVERT(obj.Name,"I","UTF8")
-		set room.School=##class(SPD.School).%OpenId(obj.School)
+		//set room.School=##class(SPD.School).%OpenId(obj.School)
 		set room.ShorDescr=$ZCONVERT(obj.ShortDescr,"I","UTF8")
-		do room.%Save()
+		set st=room.%Save()
 		
 	}
 	catch ex{

@@ -10,8 +10,32 @@
 <Type>%Boolean</Type>
 </Property>
 
+<Property name="MyGroup">
+<Type>SPD.TempGroup</Type>
+<Cardinality>many</Cardinality>
+<Inverse>Dancer</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="Balance">
+<Type>SPD.Balance</Type>
+</Property>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
+<DefaultData>DancerDefaultData</DefaultData>
+<Data name="DancerDefaultData">
+<Subscript>"Dancer"</Subscript>
+<Value name="1">
+<Value>Group</Value>
+</Value>
+<Value name="2">
+<Value>MyGroup</Value>
+</Value>
+<Value name="3">
+<Value>Balance</Value>
+</Value>
+</Data>
 </Storage>
 </Class>
 </Export>

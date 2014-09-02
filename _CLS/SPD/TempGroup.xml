@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.TempGroup">
+<Super>%Persistent</Super>
+<TimeCreated>63431,43255.613236</TimeCreated>
+
+<Property name="TempGroup">
+<Type>SPD.Group</Type>
+<Cardinality>one</Cardinality>
+<Inverse>DancerGroup</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="Dancer">
+<Type>SPD.Dancer</Type>
+<Cardinality>one</Cardinality>
+<Inverse>MyGroup</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.TempGroupD</DataLocation>
+<DefaultData>TempGroupDefaultData</DefaultData>
+<IdLocation>^SPD.TempGroupD</IdLocation>
+<IndexLocation>^SPD.TempGroupI</IndexLocation>
+<StreamLocation>^SPD.TempGroupS</StreamLocation>
+<Data name="TempGroupDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Group</Value>
+</Value>
+<Value name="3">
+<Value>Dancer</Value>
+</Value>
+<Value name="4">
+<Value>TempGroup</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

@@ -39,8 +39,8 @@
 	try
 	{
 		if (IdSchool'="undefined"){
-			set sqlQuery="select IdDancer->FirstName, IdDancer->LastName, IdDancer-> Patronymic, id "_
-			"from SPD.Instructor where School->School="_IdSchool			
+			set sqlQuery="select Instructor->IdDancer->FirstName, Instructor->IdDancer->LastName, Instructor->IdDancer-> Patronymic, Instructor->id "_
+			"FROM SPD.TempListOfInstructorsInSchools where School="_IdSchool			
 		}
 		else{
 			set sqlQuery="select IdDancer->FirstName, IdDancer->LastName, IdDancer->Patronymic, id from "_

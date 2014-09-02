@@ -52,7 +52,7 @@
                    max-height="maxHeight"
                    clear-data="CreaAll()"
                    on-gantt-ready=""
-                   show-tooltips="false"
+                   show-tooltips="true"
                    on-label-clicked="labelEvent(event)"
                    on-label-dbl-clicked="labelEvent(event)"
                    on-label-context-clicked="labelEvent(event)"
@@ -66,19 +66,19 @@
                    on-row-updated="rowEvent(event)"
                    on-scroll="scrollEvent(event)"
                    on-task-clicked="taskEvent(event)"
-                   on-task-dbl-clicked="EditLesson(event)"
+                   on-task-dbl-clicked="DBClickTaskGantt(event)"
                    on-task-context-clicked="taskContClEvent(event)"
                    on-task-updated="taskUpdateEvent(event)"
                    on-task-move-end="onTaskMoveEnd(event)"
->
+                    >
             </gantt>
             <div class="form-group text-center">
                 <span class="help-block">Lesson Options</span>
-                <div class="btn-group">
+                <div class="btn-group" ng-if="school">
                     <button class="btn btn-default" ng-click="UpdateLessonTable()">Сохранить расписание</button>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>

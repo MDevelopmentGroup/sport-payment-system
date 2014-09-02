@@ -37,7 +37,7 @@ angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute'
         when('/UpdateMySchool/',              {templateUrl: 'partials/user/Update/Update_School.html', controller: UpdateSchoolCtrl}).
 
         when('/MySchool/',                    {templateUrl: 'partials/user/view/My_School.html', controller: MySchoolCtrl}).
-        when('/LessonInTimeTable/:ID',           {templateUrl: 'partials/user/view/LessonInTimeTable.html', controller: LessonInTimeTableCtrl}).
+        when('/LessonInTimeTable/:ID',           {templateUrl: 'partials/user/view/view_LessonInTimeTable.html', controller: LessonInTimeTableCtrl}).
         when('/JournallLessons/:ID',          {templateUrl: 'partials/user/view/JournallLessons.html', controller: JournallLessonsCtrl}).
         //***************************************** Schools **********************************************************//
 

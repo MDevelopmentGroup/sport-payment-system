@@ -46,14 +46,14 @@
 
 <Method name="GetLessonTypes">
 <ClassMethod>1</ClassMethod>
+<FormalSpec>ID</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set school=##class(Auth.Session).GetCurrentSchool()
-	set schoolId=school.%Id()
-	&sql(select count(id) into :count from SPD.Price where school->id=:schoolId)
+	
+	&sql(select count(id) into :count from SPD.Price where school->id=:ID)
 	if (count){
 	set sql="select TypeLesson->id as TypeID,TypeLesson->name as TypeName, TypeLesson->ShortDescription as ShortDescription "_
-	" from SPD.Price where school->id="_schoolId_" group by TypeLesson->id"
+	" from SPD.Price where school->id="_ID_" group by TypeLesson->id"
 	
 	set st=##class(SPD.School).GetJSONData(sql)
 	}
@@ -343,11 +343,10 @@
 		set tempIS.Instructor=instructor
 		set school=##class(SPD.School).%OpenId(SchoolId)
 		set tempIS.School=school
-		set instructor.School=tempIS.School
-		set school.InstructorList=tempIS.Instructor
-		set st=school.%Save()
+
+
 		set st=tempIS.%Save()
-		set st=instructor.%Save()
+
 		set st=##class(SPD.TempInvite).%DeleteId(id)
 	}
 	catch ex{
@@ -442,11 +441,9 @@
 			set school=##class(SPD.School).%OpenId(SchoolId)
 			set temp.Instructor=instructor
 			set temp.School=school
-			set instructor.OwnerSchool=temp
-			set school.InstructorList=temp
-			set st=school.%Save()
+			
 			set st=temp.%Save()
-			set st=instructor.%Save()
+
 			//set st=##class(SPD.TempInvite).%DeleteId(id)
 		}
 	}

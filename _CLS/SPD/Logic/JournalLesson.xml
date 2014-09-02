@@ -71,6 +71,7 @@
 			if (count>=1){
 				for i=0:1:count{
 					set journalllesson=##class(SPD.JournalLesson).%New()
+					
 					//w $zdt((datebeg)_","_timebeg,3),!
 					//w $zdt((dateend)_","_timeend,3),!
 					set journalllesson.DateBegin=$zdt((datebeg)_","_timebeg,3)
@@ -81,6 +82,10 @@
 					set journalllesson.School=##class(SPD.School).%OpenId(55)
 					set journalllesson.LessonInTable=##class(SPD.TimeTableLessons).%OpenId(idlessontable)
 					set st=journalllesson.%Save()
+					set Group=##class(SPD.Group).%New()
+					set Group.JournallLeson=journalllesson
+					set st=Group.%Save()
+					
 					set datebeg=datebeg+7
 					set dateend=dateend+7
 					//
@@ -98,6 +103,10 @@
 					set journalllesson.School=##class(SPD.School).%OpenId(55)
 					set journalllesson.LessonInTable=##class(SPD.TimeTableLessons).%OpenId(idlessontable)
 					set st=journalllesson.%Save()
+					set Group=##class(SPD.Group).%New()
+					set Group.JournallLeson=journalllesson
+					set st=Group.%Save()
+					
 					set datebeg=datebeg+7
 					set dateend=dateend+7
 			}

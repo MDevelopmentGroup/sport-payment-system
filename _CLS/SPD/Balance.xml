@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Balance">
+<Super>%String</Super>
+<TimeCreated>63431,51983.513416</TimeCreated>
+
+<Parameter name="PATTERN">
+<Default>1.5n1"."2n</Default>
+</Parameter>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.BalanceD</DataLocation>
+<DefaultData>BalanceDefaultData</DefaultData>
+<IdLocation>^SPD.BalanceD</IdLocation>
+<IndexLocation>^SPD.BalanceI</IndexLocation>
+<StreamLocation>^SPD.BalanceS</StreamLocation>
+<Data name="BalanceDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>User</Value>
+</Value>
+<Value name="3">
+<Value>Blnc</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

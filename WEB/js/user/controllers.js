@@ -232,13 +232,14 @@ function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFac
 
 //******************************************** LessonInTimeTableCtrl ***************************************************************//
 function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFactory,AuthenticationFactory,SchoolFactory){
-
+    $scope.taskMode=false;
     $scope.mode = "custom";
     $scope.maxHeight = 0;
     $scope.showWeekends = true;
     $scope.showNonWorkHours = true;
-    $scope.toDate=(new Date(Date.parse("Sun Jan 11 2014 00:00:00"))).getDate();
-    console.log($scope.toDate);
+    $scope.scale="hour";
+    $scope.toDate=new Date(2015,3,25,18,30,0);
+    $scope.FromDate=new Date(2013,3,25,18,30,0);
     $scope.Date={
         0:"5 Jan 2014 ",
         1:"6 Jan 2014 ",
@@ -260,13 +261,16 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
     $scope.User = AuthenticationFactory.GetCurrentUser();
     $scope.Name = $scope.User.UserName;
     $scope.HASH = $scope.User.HASH;
-    $scope.IdSchool = $scope.User.IdSchool;
-    if ($scope.IdSchool) {
+    $scope.IdSchool = $routeParams.ID;
+    console.log($scope.User);
+    if (($scope.User.IdSchool!="")&&($scope.User.IdSchool!=null)) {
+
+        $scope.taskMode=true;
         $rootScope.User = $scope.User;
     }
 
-    $scope.GetLessonsFromTable=function(){
-        SchoolFactory.GetLessonsFromTable()
+    $scope.GetLessonsFromTable=function(id){
+        SchoolFactory.GetLessonsFromTable(id)
             .success(function(data){
             $scope.LessonList=data.children;
             $scope.loadInGantt($scope.LessonList);
@@ -293,7 +297,7 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
         for(var i=0;i<LessonList.length;i++){
             var row={};
             row.tasks=[];
-            console.log("$scope.LessonList[i]=");console.log(LessonList[i]);
+            //console.log("$scope.LessonList[i]=");console.log(LessonList[i]);
             row.id=LessonList[i].RoomId;
             row.description=LessonList[i].RoomName;
             row.order=1;
@@ -316,7 +320,7 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
             $scope.rows[i+1]=row;
 
         }
-        console.log($scope.rows);
+        //console.log($scope.rows);
         if($scope.loadData==undefined){
 
             setTimeout($scope.loadData($scope.rows), 2000);
@@ -324,9 +328,9 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
         else{
             $scope.loadData($scope.rows)
         }
-        console.log($scope.rows);
+        //console.log($scope.rows);
     }
-    $scope.GetLessonsFromTable();
+    $scope.GetLessonsFromTable($scope.IdSchool);
     $scope.Days={"Sunday":{"ID":0,"Name":"Sunday"},
         "Monday":{"ID":1,"Name":"Monday"},
         "Tuesday":{"ID":2,"Name":"Tuesday"},
@@ -343,20 +347,20 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
         $scope.ListLessonTypes=data.children;
     })};
     $scope.GetLessontypes($scope.IdSchool);
-    $scope.GetAllRooms=function(){
-        SchoolFactory.GetAllRoomsForSchool().success(function(data){
+    $scope.GetAllRooms=function(id){
+        SchoolFactory.GetAllRoomsForSchool(id).success(function(data){
             $scope.rooms=data.children;
         });
-    }
-    $scope.GetAllRooms();
+    };
+    $scope.GetAllRooms($scope.IdSchool);
 
-    $scope.GetInstructorList=function(){
-        SchoolFactory.GetInstructorList($scope.IdSchool).success(function(data){
+    $scope.GetInstructorList=function(id){
+        SchoolFactory.GetInstructorList(id).success(function(data){
                 $scope.InstructorList=data.children;
             }
         );
-    }
-    $scope.GetInstructorList();
+    };
+    $scope.GetInstructorList($scope.IdSchool);
     $scope.removeSomeSamples = function () {
         $scope.removeData([
 
@@ -404,12 +408,12 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
         $scope.Lesson.Day=event.task.from.getDay();
         $scope.Lesson.RoomId=event.task.row.id;
 
-        console.log($scope.Lesson);
+        //console.log($scope.Lesson);
             $scope.submit=function(Lesson){
                 SchoolFactory.UpdateLessonInTable(Lesson).success(function(){
                     modal.hide();
                     $scope.Lesson=null;
-                    SchoolFactory.GetLessonsFromTable()
+                    SchoolFactory.GetLessonsFromTable($scope.IdSchool)
                         .success(function(data){
                             $scope.LessonList=data.children;
 
@@ -428,17 +432,17 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
             time="0"+time.toString();
         }
         return time
-    }
+    };
     $scope.AddLessonInTable=function(event){
         $scope.Lesson={};
         $scope.Lesson.TimeBegin=$scope.CheckTime(event.date.getHours())+":"+$scope.CheckTime(event.date.getMinutes())+":00";
-        console.log($scope.Lesson.TimeBegin);
+        //console.log($scope.Lesson.TimeBegin);
         $scope.Lesson.DayID=event.date.getDay();
         $scope.Lesson.RoomId=event.row.id;
-        console.log($scope.Lesson);
+        //console.log($scope.Lesson);
         $scope.submit=function(Lesson){
                 SchoolFactory.AddLessonInTable(Lesson).success(function(){
-                    SchoolFactory.GetLessonsFromTable()
+                    SchoolFactory.GetLessonsFromTable($scope.IdSchool)
                         .success(function(data){
                             $scope.LessonList=data.children;
                             $scope.loadInGantt($scope.LessonList);});
@@ -447,13 +451,13 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
             });
         };
         var modal=$modal({scope:$scope,placement:"center",backdrop:false, template:'partials/user/modal/AddLesson.html',show:true})
-    }
+    };
 
     $scope.UpdateLessonTable=function(){
         SchoolFactory.UpdateLessonTable($scope.LessonList).success(function(data){
 
         })
-    }
+    };
     $scope.taskEvent=function(event){
         $scope.EditLessionSubject=event.task.subject;
         if(event.evt)
@@ -506,14 +510,15 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
 };
 //******************************************** LessonInTimeTableCtrl ***************************************************************//
 
-function JournallLessonsCtrl($scope,$rootScope,$modal,$routeParams,LanguageFactory,AuthenticationFactory,SchoolFactory){
+function JournallLessonsCtrl($scope,$rootScope,$modal,$routeParams,LanguageFactory,AuthenticationFactory,SchoolFactory,DancerFactory){
     //for gantt
     $scope.mode = "custom";
     $scope.maxHeight = 0;
     $scope.showWeekends = true;
     $scope.showNonWorkHours = true;
+    $scope.taskMode=false;
     //gantt
-    console.log($routeParams);
+
     $rootScope.MenuActive = {};
     $rootScope.MenuActive.Page = 'partials/user/view/view_about.html';
     $rootScope.MenuActive.Controller = 'ViewAboutCtrl';
@@ -525,16 +530,22 @@ function JournallLessonsCtrl($scope,$rootScope,$modal,$routeParams,LanguageFacto
     $scope.Name = $scope.User.UserName;
     $scope.HASH = $scope.User.HASH;
     $scope.IdSchool = $scope.User.IdSchool;
-    if ($scope.IdSchool) {
+    if ($scope.IdSchool!="") {
+        $scope.taskMode=true;
         $rootScope.User = $scope.User;
     }
+    else if(($scope.User.Role==0)||($scope.User.Role==2))
+    {
+        $scope.taskMode=true;
 
-    $scope.GetGetJournalLessons=function(){
-        SchoolFactory.GetGetJournalLessons($routeParams.ID).success(function(data){
+    };
+
+    $scope.GetJournalLessons=function(id){
+        SchoolFactory.GetJournalLessons(id).success(function(data){
             $scope.JournallLessons=data.children;
             $scope.loadInGantt($scope.JournallLessons);
         });
-    }
+    };
 
 
     $scope.CheckTime=function(time){
@@ -554,7 +565,7 @@ function JournallLessonsCtrl($scope,$rootScope,$modal,$routeParams,LanguageFacto
         for(var i=0;i<LessonList.length;i++){
             var row={};
             row.tasks=[];
-            console.log("$scope.LessonList[i]=");console.log(LessonList[i]);
+            //console.log("$scope.LessonList[i]=");console.log(LessonList[i]);
             row.id=LessonList[i].RoomId;
             row.description=LessonList[i].RoomName;
             row.order=1;
@@ -582,15 +593,67 @@ function JournallLessonsCtrl($scope,$rootScope,$modal,$routeParams,LanguageFacto
             $scope.loadData($scope.rows)
         }
     };
+    $scope.GetLessontypes=function(id){SchoolFactory.GetLessonTypes(id).success(function(data){
+        $scope.ListLessonTypes=data.children;
+    })};
+    $scope.GetAllRooms=function(id){
+        SchoolFactory.GetAllRoomsForSchool(id).success(function(data){
+            $scope.rooms=data.children;
+        });
+    };
+    $scope.GetInstructorList=function(id){
+        SchoolFactory.GetInstructorList(id).success(function(data){
+                $scope.InstructorList=data.children;
+            }
+        );
+    };
+    $scope.DBClickTaskGantt=function(event){
+        console.log(event);
+        switch ($scope.User.Role)
+        {
+            case "3":
+                console.log("subscribeJL");
 
-    $scope.GetGetJournalLessons();
+
+                break;
+            case "2":
+                console.log("updateJL");
+
+
+                break;
+            case "1":
+                DancerFactory.GetJournallLesson(event.task.id).success(function(data){
+                    $scope.Lesson=data.children[0];
+                    $scope.submit=function(Lesson){
+                         SchoolFactory.Update(Lesson).success(function(){
+                             $scope.GetJournalLessons($routeParams.ID)
+                             .success(function(data){
+                                 $scope.LessonList=data.children;
+                                 $scope.loadInGantt($scope.LessonList);});
+                             modal.hide();
+                             $scope.Lesson=null;
+                         });
+                    };
+                });
+                var modal=$modal({scope:$scope,placement:"center",backdrop:false, template:'partials/user/modal/Update_JournallLesson.html',show:true})
+                break;
+            case "0":
+                console.log("updateJL");
+
+
+                break;
+            default:
+                console.log("default");
+
+
+                break;
+        }
+    };
+    $scope.GetLessontypes($routeParams.ID);
+    $scope.GetAllRooms($routeParams.ID);
+    $scope.GetInstructorList($routeParams.ID);
+    $scope.GetJournalLessons($routeParams.ID);
 };
-
-
-
-
-
-
 
 
 
@@ -666,13 +729,14 @@ function UpdateSchoolCtrl($scope,$rootScope,$modal,LanguageFactory,Authenticatio
         if ($scope.IdSchool) {
             $rootScope.User = $scope.User;
         }
-        $scope.GetAllRooms=function(){
-            SchoolFactory.GetAllRoomsForSchool().success(function(data){
+        $scope.GetAllRooms=function(id){
+            SchoolFactory.GetAllRoomsForSchool(id).success(function(data){
+
                 $scope.rooms=data.children;
                 console.log($scope.rooms);
             });
         };
-        $scope.GetAllRooms();
+        $scope.GetAllRooms($scope.IdSchool);
         $scope.lang=LanguageFactory.GetCurrentLanguage();
     };
     $scope.initit();
@@ -684,8 +748,7 @@ function UpdateSchoolCtrl($scope,$rootScope,$modal,LanguageFactory,Authenticatio
     };
     $scope.UpdateRoom=function(room){
         $scope.Room=room;
-
-        SchoolFactory.GetAddress(room.Address).success(function(data){
+        SchoolFactory.GetAddress(room.IdAddress).success(function(data){
             var Address=data.children[0];
             $scope.Room.IdAddress=Address.ID;
             $scope.Room.City=Address.City;
@@ -696,7 +759,7 @@ function UpdateSchoolCtrl($scope,$rootScope,$modal,LanguageFactory,Authenticatio
 
         $scope.Submit=function(room){
                     SchoolFactory.UpdateRoom(room).success(function(data) {
-                    $scope.GetAllRooms();
+                    $scope.GetAllRooms($scope.IdSchool);
                     $scope.Room={};
                     modal.hide();
             });
@@ -707,7 +770,7 @@ function UpdateSchoolCtrl($scope,$rootScope,$modal,LanguageFactory,Authenticatio
     $scope.CreateRoom=function(){
         $scope.AddRoom=function(Room){
             SchoolFactory.AddRoomToSchool(Room).success(function(data){
-                $scope.GetAllRooms();
+                $scope.GetAllRooms($scope.IdSchool);
             });
             modal.hide();
         };
@@ -827,6 +890,7 @@ function ViewPrivateLessonsCtrl($rootScope,$scope,SettingFactory,LanguageFactory
     };
     $scope.intit();
 }
+
 
 function ViewSchoolsCtrl($rootScope,$scope,SettingFactory,LanguageFactory,AuthenticationFactory,SchoolFactory) {
 
