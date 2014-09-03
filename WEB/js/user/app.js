@@ -45,7 +45,7 @@ angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute'
         when('/Invite/:hash',                        {templateUrl: 'partials/user/view/InviteInstructor.html', controller: InviteCtrl}).
         when('/registryNewInstructor/:hash',         {templateUrl: 'partials/user/Create/registryNewInstructor.html', controller: registryNewInstructorCtrl}).
         //***************************************** Invite **********************************************************//
-
+        when('/success/:CompleteDate/:FirstName/:LastName/:Patronymic/:DateTransactionInit/:OutSum',   {templateUrl: 'partials/user/view/Success.CSP', controller: successCtrl}).
 
         //***************************************** PrivateLessons **********************************************************//
         when('/PrivateLessons',                   {templateUrl: 'partials/user/view/view_PrivateLessons.html', controller: ViewPrivateLessonsCtrl}).

@@ -15,3 +15,11 @@
 div.action{
     background-color: rgb(241, 194, 50) !important;
 }
+.robokassa{
+    background-image:url(img/robokassa.png);
+    opacity:0;
+}
+.row{
+    padding-bottom: ;
+}
+

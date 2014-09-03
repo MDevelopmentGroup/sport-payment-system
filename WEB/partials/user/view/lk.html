@@ -1,10 +1,30 @@
 <div class="container full">
     <div class="well" style="margin-top:200px;">
         <div class="row">
-            <form style="height:100px;" class="form-control" ng-if="User.success">
-                К оплате
-                400 рублей
-                <a style="color: #fff;background-color: #3071a9;border-color: #285e8e;" class="btn btp-primary btn-lg active" role="button" ng-click="Payment()">Оплатить</a>
+            <form style="height:140px;" class="form-control" ng-submit="Payment(Pay)">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                Пополнить баланс
+                            </div>
+                            <div class="col-lg-2">
+                                <input type="text" ng-change="TestSum()" id="Pay" class="form-control" ng-model="Pay.Summ" placeholder="Сумма в рублях" required="">
+                            </div>
+                            <div class="col-lg-2">
+                                Максималная сумма 99999.99
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <button type="submit" ng-click='Pay.PayInit=0'><img src="img/robokassa.png"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <a ng-href="{{urlPay}}" ng-if="urlPay">Оплатить</a>
+                </div>
             </form>
         </div>
     </div>

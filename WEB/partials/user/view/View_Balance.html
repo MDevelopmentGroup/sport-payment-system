@@ -15,21 +15,29 @@
 
                     </div>
                     <div class="col-lg-11">
-                        <div class="">
-                            <ul class="nav nav-pills nav-stacked">
-                                <li class="active">
-                                    <div class="alert alert-success" role="alert">alert-success</div>
-                                </li>
-                                    <div class="alert alert-warning" role="alert">alert-warning</div>
-                                <li>
-                                    <div class="alert alert-success" role="alert">Успешно</div>
-                                </li>
 
-                                <li>
-                                    <div class="alert alert-success" role="alert">Успешно</div>
+                            <ul class="nav nav-pills nav-stacked">
+                                <li class="active" ng-repeat="t in Transactions">
+                                    <div class="row">
+                                        <div class="alert {{t.success==1|alertSuccess}}" role="alert" >
+
+                                            <div class="col-lg-3">Инициализация оплаты: {{t.DateTransactionInit}}
+                                            </div>
+                                            <div class="col-lg-3" ng-if="t.success==1">Подтверждение оплаты оплаты: {{t.CompleteDate}}
+                                            </div>
+                                            <div class="col-lg-3" ng-if="t.success==0">Отмена оплаты: {{t.CompleteDate}}
+                                            </div>
+                                            <div class="col-lg-4" ng-if="t.success==1">
+                                                Баланс пополнен {{t.OutSum}}
+                                            </div>
+                                            <div class="col-lg-4" ng-if="t.success==0">
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </li>
                             </ul>
-                        </div>
+
                     </div>
                 </div>
             </div>

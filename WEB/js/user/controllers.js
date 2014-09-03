@@ -14,22 +14,59 @@ function ViewLKCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFacto
         $rootScope.MenuActive={};
         $rootScope.MenuActive.Page='partials/user/view/main.html';
         $rootScope.MenuActive.Controller='ViewLKCtrl';
-        $scope.User=AuthenticationFactory.GetCurrentUser();
         //$rootScope.MenuActive.SettingsView='active';
         $scope.lang=LanguageFactory.GetCurrentLanguage();
-    }
-    $scope.Payment=function(){
-        var data={};
-        data.UserId=$scope.User.ID;
-        data.HASH=$scope.User.HASH;
-        PaymentFactory.Init(data).success(function(data){
-            if(data.urlPay) {
-                console.log(data.urlPay);
-                location=data.urlPay;
-            };
-        });
+        $scope.User=AuthenticationFactory.GetCurrentUser();
+        console.log($scope.User);
+    };
+    $scope.SummPattern = (function() {
+        var regexp = /^[0-9]+$/;
+        return {
+            test: function(value) {
+                console.log(value);
+                if( $scope.requireTel === false ){
+                    value=value.slice(0,(value.length()-2));
+                    return true;
+                }
+                else{ return regexp.test(value);
+                    console.log("else");
+                }
+            }
+        };
+    })();
+    $scope.Payment=function(Pay) {
+        switch (Pay.PayInit)
+        {
+            case 0:
+                var data = {};
+                data.UserId = $scope.User.userId;
+                data.HASH = $scope.User.Hash;
+                data.Summ=Pay.Summ;
+                PaymentFactory.Init(data).success(function (data) {
+                    //location = data.urlPay;
+                    $scope.urlPay=data.urlPay;
+                });
+                break;
+        }
+    };
+    $scope.TestSum=function(){
+        var regEx=/^-?[0-9]\d{0,4}(\.\d{0,2})?$/;
+        console.log($scope.Pay.Summ);
+        if (!(regEx.test($scope.Pay.Summ))) {
+            if ($scope.Pay.Summ != undefined) {
+                $scope.Pay.Summ = $scope.sum;
+            }
+            else{
+                $scope.Pay.Summ="";
+                $scope.sum="";
+            }
+        }
+        else{
+            $scope.sum=$scope.Pay.Summ;
+        }
     };
     $scope.init();
+
 }
 //******************************************** ViewLKCtrl ***************************************************************//
 
@@ -896,7 +933,7 @@ function ViewAboutCtrl($rootScope,$scope,SettingFactory)
 
 //******************************************** ViewAboutCtrl ***************************************************************//
 
-function ViewBalanceCtrl($rootScope,$scope,SettingFactory,LanguageFactory)
+function ViewBalanceCtrl($rootScope,$scope,SettingFactory,LanguageFactory,DancerFactory)
 {
     $scope.intit=function()
     {
@@ -906,7 +943,10 @@ function ViewBalanceCtrl($rootScope,$scope,SettingFactory,LanguageFactory)
         $rootScope.MenuActive.AboutView='active';
         $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
         $scope.lang=LanguageFactory.GetCurrentLanguage();
-
+        $scope.getTransactions=function(){
+            DancerFactory.getTransactions().success(function(data){$scope.Transactions=data.children;})
+        };
+        $scope.getTransactions();
     };
     $scope.intit();
 }
@@ -1009,7 +1049,7 @@ function ViewPrivateLessonsCtrl($rootScope,$scope,SettingFactory,LanguageFactory
             }
             if($scope.loadData==undefined){
 
-                setTimeout($scope.loadData($scope.rows), 2000);
+                setTimeout($scope.loadData($scope.rows), 4000);
             }
             else{
                 $scope.loadData($scope.rows)
@@ -1174,6 +1214,12 @@ function ViewTrainersCtrl($rootScope,$scope,SettingFactory,LanguageFactory,Schoo
     };
     $scope.GetTrainers();
     $scope.intit();
+}
+function successCtrl($rootScope,$scope,SettingFactory,LanguageFactory,SchoolFactory){
+    console.log(window);
+    console.log(document);
+    var fdata=new FormData();
+    console.log(fdata);
 }
 function UpdateDancerCtrl($rootScope,$scope,SettingFactory,LanguageFactory,SchoolFactory)
 {

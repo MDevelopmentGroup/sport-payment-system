@@ -9,8 +9,7 @@ app.factory('PaymentFactory',['$http','ErrorLogFactory',function($http,ErrorLogF
     var PaymentFactory={};
     PaymentFactory.Init=function(data){
         return $http.post(BaseUrl+'/InitPayment/',data);
-    }
-
+    };
     return PaymentFactory;
 }]);
 //************************************** Payment End *****************************************************************//
@@ -216,7 +215,7 @@ app.service('AuthenticationFactory',['$http','ErrorLogFactory','$rootScope',func
             .success(function(data,status,headers,config){
             }
         );
-    }
+    };
     return AuthenticationFactory;
 }]);
 //***************************************** AuthenticationFactory ****************************************************//
@@ -237,7 +236,7 @@ app.factory('FileFactory',['$http','$rootScope','ErrorLogFactory',function($http
         reader.onload = function(e) {
             place.src = e.target.result;
             //console.log('nenene');
-        }
+        };
         var xhr = new XMLHttpRequest();
         // Отправим данные на сервер
         xhr.open("POST", "/rest/upload/", true);
@@ -380,8 +379,11 @@ app.factory('DancerFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     DancerFactory.GetCurrentBalance=function(){
         return $http.get(BaseUrl+"/GetCurrentBalance/");
     };
-    DancerFactory.GetMyLessons=function(data){
-        return $http.post(BaseUrl+"/GetMyLessons/",data);
+    DancerFactory.GetMyLessons=function(data) {
+        return $http.post(BaseUrl + "/GetMyLessons/", data);
+    };
+    DancerFactory.getTransactions=function(){
+        return $http.get(BaseUrl + "/getTransactions/");
     }
     return DancerFactory;
 }]);

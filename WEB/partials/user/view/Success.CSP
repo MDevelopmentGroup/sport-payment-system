@@ -1,0 +1,27 @@
+
+
+<div>
+
+<script language="Cache" runat="Server">
+	
+	set idtrans=%request.Data("InvId",1)
+	&sql(select CompleteDate,Dancer->FirstName as FirstName, Dancer->LastName as LastName, 
+	Dancer->Patronymic as Patronymic,DateTransactionInit,OutSum into :CompleteDate,:FirstName,:LastName, :Patronymic,
+	:DateTransactionInit,:OutSum
+	from SPD.Transactions where id=:idtrans)
+	if (OutSum){
+		w "<script language='javascript'>"
+		w "location.href='index.html#/success/"_
+		CompleteDate_"/"_FirstName_"/"_LastName_"/"_Patronymic_"/"_DateTransactionInit_"/"_OutSum_"';"
+		w ""
+	}
+	else{
+		//w "<script language='javascript'>"
+		//w "location.href='index.html#/success/"_%request.Data("SignatureValue",1)_"/"_%request.Data("Culture",1)_"';"
+		//w ""
+	}
+	
+</script>
+
+</script>
+</div>

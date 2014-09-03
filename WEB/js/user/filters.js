@@ -114,3 +114,9 @@ app.filter('actionLimit', function() {
         return input ? 'action':'';
     };
 });
+
+app.filter('alertSuccess', function() {
+    return function(input) {
+        return input ? 'alert-success':'alert-warning';
+    };
+});
