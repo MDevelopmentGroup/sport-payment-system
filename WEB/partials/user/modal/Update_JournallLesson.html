@@ -11,8 +11,7 @@
                             <div class="col-lg-9">
 
                                 <select class="form-control zindex2leftbordernone" ng-model="Lesson.TypeLessonId" ng-change="SetType()" required>
-                                    <option  value="" ng-selected="true"></option>
-                                    <option  ng-repeat="TypeLesson in ListLessonTypes" value="{{TypeLesson.TypeID}}">{{TypeLesson.TypeName}}</option>
+                                    <option  ng-repeat="TypeLesson in ListLessonTypes" value="{{TypeLesson.TypeID}}" ng-selected="TypeLesson.TypeID==Lesson.TypeLessonId">{{TypeLesson.TypeName}}</option>
                                 </select>
                             </div>
 
@@ -31,7 +30,7 @@
                                 <div class="row">
                                     <div class="col-lg-8">
                                         <select class="form-control zindex2leftbordernone" ng-model="Lesson.RoomId" ng-change="SetType()" required>
-                                            <option  ng-repeat="room in rooms" value="{{room.ID}}" ng-selected="room.ID==Lesson.RoomId">{{room.Name}}</option>
+                                            <option  ng-repeat="room in rooms" value="{{room.ID}}" ng-selected="room.ID==Lesson.RoomId" ng-selected="room.ID==Lesson.RoomId">{{room.Name}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -44,8 +43,7 @@
                                 <div class="row">
                                     <div class="col-lg-8">
                                         <select class="form-control zindex2leftbordernone" ng-model="Lesson.InstructorID" required>
-                                            <option  value="" ng-selected="true"></option>
-                                            <option  ng-repeat="Instructor in InstructorList" value="{{Instructor.ID}}">{{Instructor.FirstName}} {{Instructor.LastName}} {{Instructor.Patronymic}}</option>
+                                            <option  ng-repeat="Instructor in InstructorList" value="{{Instructor.ID}}" ng-selected="Instructor.ID==Lesson.InstructorID">{{Instructor.FirstName}} {{Instructor.LastName}} {{Instructor.Patronymic}}</option>
                                             TimeEnd       </select>
                                     </div>
                                 </div>
@@ -54,26 +52,26 @@
 
                         <div class="form-group">
                             <label for="DayID" class="col-lg-2 control-label ">{{Page.Lesson.Begin}}</label>
-                            <div class="col-lg-4">
-                                <select class="form-control zindex2leftbordernone" ng-model="Lesson.DayID" ng-change="SetType()">
-                                    <option  ng-repeat="day in Days" value="{{day.ID}}" ng-selected="day.ID==Lesson.DayID">{{day.Name}}</option>
-                                </select>
+                            <div class="col-lg-6 col-md-8">
+
+                                    <input type="text" size="10" class="form-control" ng-model="Lesson.DateBegin" data-autoclose="1" data-date-type="string" placeholder="Date" bs-datepicker>
+
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 <input type="text" size="8" class="form-control" ng-model="Lesson.TimeBegin" data-autoclose="1" data-time-type="string" placeholder="Time" bs-timepicker required>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="TimeTo" class="col-lg-2 control-label ">{{Page.Lesson.End}}</label>
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 <input type="text" size="8" class="form-control" ng-model="Lesson.TimeEnd" data-autoclose="1" data-time-type="string" placeholder="Time" bs-timepicker required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label  class="col-lg-3 control-label"></label>
+                            <label  class="col-lg-2 col-md-5 control-label"></label>
                             <div class="col-lg-5">
-                                <button type="submit"  class="btn btn-success {{ButtonDisabled}}" >AddLesson{{Page.SystemUser.TitleFirstName}}</button>
+                                <button type="submit"  class="btn btn-success {{ButtonDisabled}}" >Update{{Page.SystemUser.TitleFirstName}}</button>
                             </div>
                         </div>
                     </form>

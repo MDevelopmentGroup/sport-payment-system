@@ -58,14 +58,25 @@
                                             </ul>
                                         </div>
                                     </div>
-                        <div class="col-lg-1">
-                            <h5>{{Page.Common.TimeTable}}</h5>
-                        </div>
-                        <div class="col-lg-1">
-                            <h5>
-                                <a ng-href="#/LessonInTimeTable/{{school.ID}}"><label class="label label-success"><span class="glyphicon glyphicon-plus"></span></label></a>
-                            </h5>
-                        </div>
+
+
+                            <div class="col-lg-1">
+                                <h5>{{Page.Common.TimeTable}}</h5>
+                            </div>
+                            <div class="col-lg-1">
+                                <h5>
+                                    <a ng-href="#/LessonInTimeTable/{{school.ID}}"><label class="label label-success"><span class="glyphicon glyphicon-plus"></span></label></a>
+                                </h5>
+                            </div>
+
+                            <div class="col-lg-1">
+                                <h5>Ближайшие занятия</h5>
+                            </div>
+                            <div class="col-lg-1">
+                                <h5>
+                                    <a ng-href="#/JournallLessons/{{school.ID}}"><label class="label label-success"><span class="glyphicon glyphicon-plus"></span></label></a>
+                                </h5>
+                            </div>
                     </div>
 
                     <div class="row" ng-if="ngshow==2">

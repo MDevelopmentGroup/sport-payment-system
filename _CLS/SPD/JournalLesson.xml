@@ -33,10 +33,18 @@
 </Property>
 
 <Property name="Group">
-<Type>SPD.Group</Type>
+<Type>SPD.GroupDancers</Type>
 <Cardinality>many</Cardinality>
-<Inverse>JournallLeson</Inverse>
+<Inverse>JournallLesson</Inverse>
 <Relationship>1</Relationship>
+</Property>
+
+<Property name="RoomDance">
+<Type>SPD.Room</Type>
+</Property>
+
+<Property name="Trainer">
+<Type>SPD.Instructor</Type>
 </Property>
 
 <Storage name="Default">
@@ -86,6 +94,12 @@
 </Value>
 <Value name="13">
 <Value>countDancer</Value>
+</Value>
+<Value name="14">
+<Value>RoomDance</Value>
+</Value>
+<Value name="15">
+<Value>Trainer</Value>
 </Value>
 </Data>
 </Storage>

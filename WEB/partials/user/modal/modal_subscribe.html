@@ -1,0 +1,31 @@
+<!--Создать новую индустрию-->
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" >
+                <h3 class="modal-title">Запись на занятие.</h3>
+            </div>
+            <div class="well">
+                <form  ng-model="SubscribeLesson" ng-submit="submit(SubscribeLesson)">
+                    <div>
+                        Вы желаете записаться на занятие "{{SubscribeLesson.Description}}"
+                    </div>
+                        <div class="row"><div class="col-lg-11">Время проведения:{{SubscribeLesson.DateBegin}}</div></div>
+                        <div class="row"><div class="col-lg-11">Место проведения:{{SubscribeLesson.Room}}</div></div>
+                        <div class="row"><div class="col-lg-10">По адресу:{{SubscribeLesson.Address}}</div></div>
+                        <div class="row"><div class="col-lg-11">Стоимость занятия:{{SubscribeLesson.Cost}}</div></div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-lg-5">
+                                <button type="submit"  class="btn btn-success {{ButtonDisabled}}" ng-click="SubscribeLesson.Accept=1">Записаться</button>
+                            </div>
+                            <div class="col-lg-5">
+                                <button type="submit"  class="btn btn-warning {{ButtonDisabled}}" ng-click="SubscribeLesson.Accept=0">Отказаться</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

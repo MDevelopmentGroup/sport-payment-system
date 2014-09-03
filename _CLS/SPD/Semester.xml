@@ -12,27 +12,19 @@
 <Type>%DateTime</Type>
 </Property>
 
-<Property name="TimeTable">
-<Type>SPD.TimeTableLessons</Type>
-<Cardinality>one</Cardinality>
-<Inverse>Semester</Inverse>
-<Relationship>1</Relationship>
-</Property>
+<UDLText name="T">
+<Content><![CDATA[
+// Relationship TimeTable As SPD.TimeTableLessons [ Cardinality = one, Inverse = Semester ];
 
-<Index name="TimeTableIndex">
-<Properties>TimeTable</Properties>
-</Index>
+]]></Content>
+</UDLText>
 
-<Property name="Price">
-<Type>SPD.Price</Type>
-<Cardinality>one</Cardinality>
-<Inverse>Semester</Inverse>
-<Relationship>1</Relationship>
-</Property>
+<UDLText name="T">
+<Content><![CDATA[
+// Relationship Price As SPD.Price [ Cardinality = one, Inverse = Semester ];
 
-<Index name="PriceIndex">
-<Properties>Price</Properties>
-</Index>
+]]></Content>
+</UDLText>
 
 <Property name="School">
 <Type>SPD.School</Type>

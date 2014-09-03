@@ -48,6 +48,8 @@
                    column-sub-scale="scale === 'week' && 7 || 6"
                    show-non-work-hours="showNonWorkHours"
                    to-date="toDate"
+                   allow-task-resizing="taskMode"
+                   allow-task-moving="taskMode"
                    show-weekends="showWeekends"
                    max-height="maxHeight"
                    clear-data="CreaAll()"
@@ -75,7 +77,7 @@
             <div class="form-group text-center">
                 <span class="help-block">Lesson Options</span>
                 <div class="btn-group" ng-if="school">
-                    <button class="btn btn-default" ng-click="UpdateLessonTable()">Сохранить расписание</button>
+                    <button class="btn btn-default" ng-click="UpdateJournallLessons()">Сохранить журнал занятий</button>
                 </div>
             </div>
         </div>

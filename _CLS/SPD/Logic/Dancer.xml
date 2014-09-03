@@ -36,7 +36,8 @@
 	try{
 		
 		set userid=##class(Auth.Session).GetCurrentUser().%Id()
-		&sql(select count(id) into :count from SPD.TempGroup 
+		&sql(select count(id) into :count 
+		from SPD.TempGroup 
 		where TempGroup->JournallLesson=:idJL and Dancer->id=:userid)
 		///todo сделать проверку на переполнение группы
 		if (count){

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.GroupDancers">
+<Super>%Persistent</Super>
+<TimeCreated>63432,46359.83247</TimeCreated>
+
+<Property name="Subscription">
+<Type>SPD.Subscription</Type>
+</Property>
+
+<Property name="DancerGroup">
+<Type>SPD.TempGroup</Type>
+<Cardinality>many</Cardinality>
+<Inverse>TempGroup</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="JournallLesson">
+<Type>SPD.JournalLesson</Type>
+<Cardinality>one</Cardinality>
+<Inverse>Group</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Index name="JournallLessonIndex">
+<Properties>JournallLesson</Properties>
+</Index>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.GroupDancersD</DataLocation>
+<DefaultData>GroupDancersDefaultData</DefaultData>
+<IdLocation>^SPD.GroupDancersD</IdLocation>
+<IndexLocation>^SPD.GroupDancersI</IndexLocation>
+<StreamLocation>^SPD.GroupDancersS</StreamLocation>
+<Data name="GroupDancersDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Subscription</Value>
+</Value>
+<Value name="3">
+<Value>DancerGroup</Value>
+</Value>
+<Value name="4">
+<Value>JournallLesson</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

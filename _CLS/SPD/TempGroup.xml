@@ -5,7 +5,7 @@
 <TimeCreated>63431,43255.613236</TimeCreated>
 
 <Property name="TempGroup">
-<Type>SPD.Group</Type>
+<Type>SPD.GroupDancers</Type>
 <Cardinality>one</Cardinality>
 <Inverse>DancerGroup</Inverse>
 <Relationship>1</Relationship>

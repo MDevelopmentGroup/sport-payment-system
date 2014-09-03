@@ -68,24 +68,30 @@
 			{
 				set count=count-1
 			}
+			w "count="_count,!
 			if (count>=1){
 				for i=0:1:count{
-					set journalllesson=##class(SPD.JournalLesson).%New()
-					
-					//w $zdt((datebeg)_","_timebeg,3),!
-					//w $zdt((dateend)_","_timeend,3),!
+					set journalllesson=##class(SPD.JournalLesson).%New()					
+					w $zdt((datebeg)_","_timebeg,3),!
+					w $zdt((dateend)_","_timeend,3),!
 					set journalllesson.DateBegin=$zdt((datebeg)_","_timebeg,3)
 					set journalllesson.DateEnd=$zdt((dateend)_","_timeend,3)
 					set journalllesson.Instructor=lft.Instructor
 					set journalllesson.Price=price
-					//w "cost_"_price.Cost,!
+					w "cost_"_price.Cost,!
 					set journalllesson.School=##class(SPD.School).%OpenId(55)
 					set journalllesson.LessonInTable=##class(SPD.TimeTableLessons).%OpenId(idlessontable)
-					set st=journalllesson.%Save()
-					set Group=##class(SPD.Group).%New()
-					set Group.JournallLeson=journalllesson
-					set st=Group.%Save()
 					
+					set journalllesson.RoomDance=##class(SPD.TimeTableLessons).%OpenId(idlessontable).Room
+					set journalllesson.Trainer=##class(SPD.TimeTableLessons).%OpenId(idlessontable).Instructor
+					
+					set st=journalllesson.%Save()
+					
+					set Group=##class(SPD.GroupDancers).%New()
+					
+					set Group.JournallLesson=journalllesson
+					
+					set st=Group.%Save()
 					set datebeg=datebeg+7
 					set dateend=dateend+7
 					//
@@ -93,17 +99,19 @@
 			}
 			elseif (TimeActualEnd>$list($listfromstring($h,","),2)){
 					set journalllesson=##class(SPD.JournalLesson).%New()
-					//w $zdt((datebeg)_","_timebeg,3),!
-					//w $zdt((dateend)_","_timeend,3),!
+					w $zdt((datebeg)_","_timebeg,3),!
+					w $zdt((dateend)_","_timeend,3),!
 					set journalllesson.DateBegin=$zdt((datebeg)_","_timebeg,3)
 					set journalllesson.DateEnd=$zdt((dateend)_","_timeend,3)
 					set journalllesson.Instructor=lft.Instructor
 					set journalllesson.Price=price
-					//w "cost_"_price.Cost,!
+					w "cost_"_price.Cost,!
 					set journalllesson.School=##class(SPD.School).%OpenId(55)
 					set journalllesson.LessonInTable=##class(SPD.TimeTableLessons).%OpenId(idlessontable)
+					set journalllesson.RoomDance=##class(SPD.TimeTableLessons).%OpenId(idlessontable).Room
+					set journalllesson.Trainer=##class(SPD.TimeTableLessons).%OpenId(idlessontable).Instructor
 					set st=journalllesson.%Save()
-					set Group=##class(SPD.Group).%New()
+					set Group=##class(SPD.GroupDancers).%New()
 					set Group.JournallLeson=journalllesson
 					set st=Group.%Save()
 					
@@ -135,16 +143,16 @@
 		set school=##class(SPD.School).%OpenId(lft.School.%Id())
 		set schoolid=school.%Id()
 		set idlessontype=lft.TypeLesson.%Id()
-		&sql(declare sPrice cursor for select id into :idJournalLesson from SPD.JournalLesson where LessonInTable->id=:idlessontable and Price->Actual=1)
-		&sql(open sPrice)
+		&sql(declare JL cursor for select id into :idJournalLesson from SPD.JournalLesson where LessonInTable->id=:idlessontable and Price->Actual=1)
+		&sql(open JL)
 		for {
-			&sql(fetch sPrice)
+			&sql(fetch JL)
 			quit:(SQLCODE '= 0)
 			set jl=##class(SPD.JournalLesson).%OpenId(idJournalLesson)
 			set datebegin=7
 			
 		}
-		&sql(close sPrice)
+		&sql(close JL)
 	}
 	catch ex{
 		set st=ex.AsStatus()
@@ -237,6 +245,44 @@
 		where TypeLesson->id=:IDTypeLseeon
 		order by DateActualEnd desc)
 	ret DateActualEnd
+]]></Implementation>
+</Method>
+
+<Method name="GetJournalLesson">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set sqlquery="select "_
+		"ID, DateBegin, DateEnd, Instructor->id as InstructorID, "_
+		"LessonInTable->id as LessonInTableId, LessonInTable->ShortDescription as ShortDescription, LessonInTable->TypeLesson->id as TypeLessonId, "_
+		"LessonInTable->Room->id as RoomId, "_
+		"Price->id as PriceId, Price->Cost as Cost, School->Name as SchoolName, School->id as SchoolID, countDancer "_
+		"FROM SPD.JournalLesson "_
+		"where id="_id
+		do ##class(SPD.School).GetJSONData(sqlquery)
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="Update">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		
+	}
+	catch err{
+		set st=err.AsStatus()
+	}
+	ret st
 ]]></Implementation>
 </Method>
 </Class>

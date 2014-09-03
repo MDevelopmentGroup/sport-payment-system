@@ -49,7 +49,8 @@
 	   
 	   
 	   <Route Url="/GetJournalLessons/:ID"			Method="GET"		Call="SPD.Logic.JournalLesson:GetJournalLessons"/>
-	   <Route Url="/GetGetJournalLessons/:ID"		Method="GET"		Call="SPD.Logic.JournalLesson:GetJournalLessons"/>
+	   <Route Url="/GetJournallLesson/:ID"			Method="GET"		Call="SPD.Logic.JournalLesson:GetJournalLesson"/>
+	   
 	   
 	   
 </Routes>

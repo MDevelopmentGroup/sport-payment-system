@@ -38,12 +38,12 @@ todo проверку на дни</Description>
 <Type>%String</Type>
 </Property>
 
-<Property name="Semester">
-<Type>SPD.Semester</Type>
-<Cardinality>many</Cardinality>
-<Inverse>TimeTable</Inverse>
-<Relationship>1</Relationship>
-</Property>
+<UDLText name="T">
+<Content><![CDATA[
+// Relationship Semester As SPD.Semester [ Cardinality = many, Inverse = TimeTable ];
+
+]]></Content>
+</UDLText>
 
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>

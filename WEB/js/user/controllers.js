@@ -301,11 +301,11 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
             row.id=LessonList[i].RoomId;
             row.description=LessonList[i].RoomName;
             row.order=1;
-            row.data="asdasdad";
+            row.data="";
             var task={};
             task.color="#93C47D";
             task.id=LessonList[i].ID; //$scope.LessonList[i].RoomDescr;
-            task.subject=LessonList[i].ShortDescription
+            task.subject=LessonList[i].ShortDescription;
             task.from=new Date(Date.parse($scope.Date[LessonList[i].Day]+LessonList[i].TimeBegin));
             task.to=new Date(Date.parse($scope.Date[LessonList[i].Day]+LessonList[i].TimeEnd));
             if((task.from-task.to)>0){
@@ -313,9 +313,9 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
             }
             task.est=new Date(Date.parse($scope.Date[LessonList[i].Day]+est));;
             task.lct=new Date(Date.parse($scope.Date[LessonList[i].Day]+lct));;
-            task.data={}
-            task.data.InstructorID=LessonList[i].InstructorID
-            task.data.TypeLessonId=LessonList[i].TypeLessonId
+            task.data={};
+            task.data.InstructorID=LessonList[i].InstructorID;
+            task.data.TypeLessonId=LessonList[i].TypeLessonId;
             row.tasks.push(task);
             $scope.rows[i+1]=row;
 
@@ -494,7 +494,6 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
                 console.log($scope.LessonList[i]);
             }
         }
-        var elem=document.getElementById(event.task.id);
         //{}.toString.call(obj)
     };
     $scope.UpdateRow=function(event){
@@ -539,15 +538,13 @@ function JournallLessonsCtrl($scope,$rootScope,$modal,$routeParams,LanguageFacto
         $scope.taskMode=true;
 
     };
-
+    console.log($scope.taskMode);
     $scope.GetJournalLessons=function(id){
         SchoolFactory.GetJournalLessons(id).success(function(data){
-            $scope.JournallLessons=data.children;
-            $scope.loadInGantt($scope.JournallLessons);
+            $scope.LessonList=data.children;
+            $scope.loadInGantt($scope.LessonList);
         });
     };
-
-
     $scope.CheckTime=function(time){
         if(time==0){
             time="00"
@@ -582,6 +579,7 @@ function JournallLessonsCtrl($scope,$rootScope,$modal,$routeParams,LanguageFacto
             task.data={};
             task.data.InstructorID=LessonList[i].InstructorId;
             task.data.TypeLessonId=LessonList[i].TypeLessonId;
+            task.data.Cost=LessonList[i].Cost;
             row.tasks.push(task);
             $scope.rows[i]=row;
         }
@@ -607,14 +605,45 @@ function JournallLessonsCtrl($scope,$rootScope,$modal,$routeParams,LanguageFacto
             }
         );
     };
+    $scope.CheckTime=function(time){
+        if(time==0){
+            time="00"
+        }
+        if(time.toString().length==1){
+            time="0"+time.toString();
+        }
+        return time
+    };
     $scope.DBClickTaskGantt=function(event){
-        console.log(event);
+
         switch ($scope.User.Role)
         {
             case "3":
-                console.log("subscribeJL");
+                $scope.SubscribeLesson={};
+                $scope.SubscribeLesson.id=event.task.id;
+                $scope.SubscribeLesson.Cost=event.task.data.Cost;
+                $scope.SubscribeLesson.Description=event.task.subject;
+                $scope.SubscribeLesson.Room=event.task.row.description;
+                var datetime=event.task.from;
+                $scope.SubscribeLesson.DateBegin=$scope.CheckTime(datetime.getDate())+"/"+($scope.CheckTime(datetime.getMonth()+1))+"/"+$scope.CheckTime(datetime.getFullYear())+" "+$scope.CheckTime(event.task.to.getHours())+":"+$scope.CheckTime(event.task.to.getMinutes())+":00";
+                DancerFactory.GetAddressByRoom(event.task.row.id).success(function(data){
+                    var Address=data.children[0];
+                    $scope.SubscribeLesson.Address=Address.Country+", "+ Address.City+", "+Address.Street;
+                    $scope.submit=function()
+                    {
+                        if ($scope.SubscribeLesson.Accept){
+                            DancerFactory.Subscribe($scope.SubscribeLesson.id).success(function() {
+                                modal_subscribe.hide();
+                                $rootScope.GetCurrentBalance();
+                            });
+                        }
+                        else {
+                            modal_subscribe.hide();
+                        }
+                    };
 
-
+                });
+                var modal_subscribe=$modal({scope:$scope,placement:"center",backdrop:false, template:'partials/user/modal/modal_subscribe.html',show:true});
                 break;
             case "2":
                 console.log("updateJL");
@@ -622,19 +651,29 @@ function JournallLessonsCtrl($scope,$rootScope,$modal,$routeParams,LanguageFacto
 
                 break;
             case "1":
-                DancerFactory.GetJournallLesson(event.task.id).success(function(data){
-                    $scope.Lesson=data.children[0];
+                $scope.Lesson={};
+                $scope.Lesson.ID=event.task.id;
+
+                $scope.Lesson.InstructorID=event.task.data.InstructorID;
+                $scope.Lesson.TypeLessonId=event.task.data.TypeLessonId;
+                var datetime=event.task.from;
+                $scope.Lesson.TimeBegin=$scope.CheckTime(datetime.getHours())+":"+$scope.CheckTime(datetime.getMinutes())+":00";
+
+                //console.log($scope.CheckTime(event.task.to.getHours()).toString());
+                $scope.Lesson.TimeEnd=$scope.CheckTime(event.task.to.getHours())+":"+$scope.CheckTime(event.task.to.getMinutes())+":00";
+                $scope.Lesson.ShortDescription=event.task.subject;
+                $scope.Lesson.DateBegin=$scope.CheckTime(datetime.getDate())+"/"+($scope.CheckTime(datetime.getMonth()+1))+"/"+$scope.CheckTime(datetime.getFullYear());
+                $scope.Lesson.RoomId=event.task.row.id;
                     $scope.submit=function(Lesson){
-                         SchoolFactory.Update(Lesson).success(function(){
-                             $scope.GetJournalLessons($routeParams.ID)
-                             .success(function(data){
+                         SchoolFactory.UpdateJournallLesson(Lesson).success(function(){
+                             $scope.GetJournalLessons($routeParams.ID).success(function(data){
                                  $scope.LessonList=data.children;
                                  $scope.loadInGantt($scope.LessonList);});
                              modal.hide();
                              $scope.Lesson=null;
                          });
                     };
-                });
+
                 var modal=$modal({scope:$scope,placement:"center",backdrop:false, template:'partials/user/modal/Update_JournallLesson.html',show:true})
                 break;
             case "0":
@@ -648,6 +687,53 @@ function JournallLessonsCtrl($scope,$rootScope,$modal,$routeParams,LanguageFacto
 
                 break;
         }
+    };
+
+    $scope.taskEvent=function(event){
+        $scope.EditLessionSubject=event.task.subject;
+        if(event.evt)
+        {
+            if($scope.divEl) {
+                $scope.divEl.removeClass("action");
+            }
+            $scope.divEl=angular.element(event.evt.currentTarget);
+            $scope.divEl.addClass("action");
+        }
+    };
+
+    $scope.taskUpdateEvent = function(event) {
+        // A task has been updated or clicked.
+        console.log('Task upddateEvent (by user: ' + event.userTriggered + '): ' + event.task.subject + ' (Custom id: ' + event.task.id + ')');
+        /*var elememnt=document.getElementById("taskid_"+event.task.id);
+         $scope.EditLessionSubject=event.task.subject;
+         $scope.LessonBegin=event.task.from.getHours()+":"+event.task.from.getMinutes();*/
+        for (var i=0;i<$scope.LessonList.length;i++){
+            if($scope.LessonList[i].ID==event.task.id)
+            {
+                console.log(event);
+                //console.log(event.task.from.getHours()+":"+event.task.from.getMinutes()+":"+event.task.from.getSeconds());
+
+                var datetimebegin=event.task.from;
+                var datetimeend=event.task.to;
+
+                $scope.LessonList[i].DateBegin=$scope.CheckTime(datetimebegin.getFullYear())+"-"+($scope.CheckTime(datetimebegin.getMonth()+1))+"-"+$scope.CheckTime(datetimebegin.getDate())
+                +" "+$scope.CheckTime(datetimebegin.getHours())+":"+$scope.CheckTime(datetimebegin.getMinutes())+":00";
+                $scope.LessonList[i].DateEnd=$scope.CheckTime(datetimeend.getFullYear())+"-"+($scope.CheckTime(datetimeend.getMonth()+1))+"-"+$scope.CheckTime(datetimeend.getDate())
+                +" "+$scope.CheckTime(datetimeend.getHours())+":"+$scope.CheckTime(datetimeend.getMinutes())+":00";
+                console.log($scope.LessonList[i].DateBegin);
+                $scope.LessonList[i].TimeBegin=$scope.CheckTime(datetimebegin.getHours())+":"+$scope.CheckTime(datetimebegin.getMinutes())+":00";
+                $scope.LessonList[i].TimeEnd=$scope.CheckTime(datetimeend.getHours())+":"+$scope.CheckTime(datetimeend.getMinutes())+":00";
+                $scope.LessonList[i].RoomId = event.task.row.id;
+                console.log($scope.LessonList[i]);
+            }
+        }
+        var elem=document.getElementById(event.task.id);
+        //{}.toString.call(obj)
+    };
+    $scope.UpdateJournallLessons=function(){
+        SchoolFactory.UpdateJournallLessons($scope.LessonList).success(function(data){
+            $scope.GetJournalLessons($routeParams.ID);
+        });
     };
     $scope.GetLessontypes($routeParams.ID);
     $scope.GetAllRooms($routeParams.ID);
@@ -876,7 +962,7 @@ function ViewTrainerCtrl($rootScope,$routeParams,$scope,SettingFactory,LanguageF
 
 
 
-function ViewPrivateLessonsCtrl($rootScope,$scope,SettingFactory,LanguageFactory) {
+function ViewPrivateLessonsCtrl($rootScope,$scope,SettingFactory,LanguageFactory,DancerFactory) {
 
     $scope.intit=function()
     {
@@ -887,8 +973,52 @@ function ViewPrivateLessonsCtrl($rootScope,$scope,SettingFactory,LanguageFactory
         $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
         $scope.lang=LanguageFactory.GetCurrentLanguage();
         //SettingFactory.GetSettings();
+        $scope.GetMyLessons=function(){
+            DancerFactory.GetMyLessons().success(function(data){
+                $scope.MyLessonList=data.children;
+                $scope.loadInGantt($scope.MyLessonList);
+            })
+        };
+        $scope.loadInGantt=function(LessonList)
+        {
+            $scope.rows=[];
+            var est="18:00:00";
+            var lct="23:00:00";
+            for(var i=0;i<LessonList.length;i++){
+                var row={};
+                row.tasks=[];
+                //console.log("$scope.LessonList[i]=");console.log(LessonList[i]);
+                row.id=LessonList[i].RoomId;
+                row.description=LessonList[i].RoomName;
+                row.order=1;
+                row.data="asdasdad";
+                var task={};
+                task.color="#93C47D";
+                task.id=LessonList[i].ID; //$scope.LessonList[i].RoomDescr;
+                task.subject=LessonList[i].LessonDescr+". Занятие будет проходить в "+LessonList[i].RoomName+", по адресу: "+LessonList[i].Country+", "+
+                LessonList[i].City+", "+LessonList[i].Street+", в школе "+LessonList[i].Name;
+                task.from=new Date(LessonList[i].DateBegin);
+                task.to=new Date(LessonList[i].DateEnd);
+                /*if((task.from-task.to)>0){
+                 task.to.setDate(task.to.getDate()+1);x`
+                 }*/
+                task.data={};
+                task.data.Cost=LessonList[i].Cost;
+                row.tasks.push(task);
+                $scope.rows[i]=row;
+            }
+            if($scope.loadData==undefined){
+
+                setTimeout($scope.loadData($scope.rows), 2000);
+            }
+            else{
+                $scope.loadData($scope.rows)
+            }
+        };
+
     };
     $scope.intit();
+    $scope.GetMyLessons();
 }
 
 
@@ -990,7 +1120,7 @@ function CreateSchoolCtrl($rootScope,$scope,SettingFactory,LanguageFactory,FileF
     
 
 }
-function LeftInfoPanelCtrl($rootScope,$scope,$modal,SettingFactory,LanguageFactory,AuthenticationFactory) {
+function LeftInfoPanelCtrl($rootScope,$scope,$modal,SettingFactory,LanguageFactory,AuthenticationFactory,DancerFactory) {
     $scope.intit=function()
     {
         $rootScope.MenuActive={};
@@ -1000,6 +1130,13 @@ function LeftInfoPanelCtrl($rootScope,$scope,$modal,SettingFactory,LanguageFacto
         $scope.User=AuthenticationFactory.GetCurrentUser();
         $scope.IdSchool=$scope.User.IdSchool;
         $scope.lang=LanguageFactory.GetCurrentLanguage();
+        $rootScope.GetCurrentBalance=function(){
+            DancerFactory.GetCurrentBalance().success(function(data){
+                $scope.Balance=data.children[0].Balance;
+
+            });
+        };
+        $rootScope.GetCurrentBalance();
 
     };
     $scope.reg_Dancer=function(){
