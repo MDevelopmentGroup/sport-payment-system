@@ -65,6 +65,26 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="Gender" class="col-lg-2 control-label ">{{Page.Lesson.Gender}}:</label>
+                            <div class="col-lg-9">
+                                <input type="checkbox" ng-model="Lesson.Gender" ng-true-value="1" ng-false-value="0">
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-if="Lesson.Gender==1">
+                            <label for="maxComuntM" class="col-lg-2 control-label ">{{Page.Lesson.maxCountM}}:</label>
+                            <div class="col-lg-2">
+                                <input type="text" size="8" class="form-control" ng-model="Lesson.maxCountM" required>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-if="Lesson.Gender==1">
+                            <label for="maxComuntW" class="col-lg-2 control-label ">{{Page.Lesson.maxCountW}}:</label>
+                            <div class="col-lg-2">
+                                <input type="text" size="8" class="form-control" ng-model="Lesson.maxCountW" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label for="TimeTo" class="col-lg-2 control-label ">{{Page.Lesson.End}}</label>
                             <div class="col-lg-2">
                                 <input type="text" size="8" class="form-control" ng-model="Lesson.TimeEnd" data-autoclose="1" data-time-type="string" placeholder="Time" bs-timepicker required>

@@ -3,7 +3,7 @@
     <div class="panel-body">
         <div class="col-lg-12">
     <div class="navbar-header">
-        <a class="navbar-brand">Dance</a>
+        <a class="navbar-brand">Бальные танцы</a>
     </div>
     <ui class="nav navbar-nav">
         <li class="dropdown user-dropdown" ng-if='!User.success'>
@@ -20,7 +20,7 @@
             </ul>
         </li>
         <li>
-            <a href="#/Balance">{{Page.navbar.balance}}</a>
+            <a href="#/Balance" ng-if="!IdSchool">{{Page.navbar.balance}}</a>
         </li>
         <li>
             <a href="#/schools">{{Page.navbar.schools}}</a>

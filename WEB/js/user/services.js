@@ -366,6 +366,7 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
 }]);
 app.factory('DancerFactory',['$http','$rootScope','ErrorLogFactory',function($http,$rootScope,ErrorLogFactory) {
     var DancerFactory={};
+    var addr="http://91.247.68.36:8090/dances/";
     var BaseUrl="/rest";
     DancerFactory.Subscribe=function(idLesson){
         return $http.post(BaseUrl+"/Subscribe/"+idLesson);
@@ -382,9 +383,20 @@ app.factory('DancerFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     DancerFactory.GetMyLessons=function(data) {
         return $http.post(BaseUrl + "/GetMyLessons/", data);
     };
-    DancerFactory.getTransactions=function(){
+    DancerFactory.getTransactions=function() {
         return $http.get(BaseUrl + "/getTransactions/");
-    }
+    };
+    DancerFactory.getUrlForCreateGoogleCalendarEvent=function(text, dates, location, details){
+
+        return 'https://www.google.com/calendar/render?action=TEMPLATE&hl=ru' +
+        '&text=' + text +
+        '&dates=' + dates +
+        '&location='+'%0A%0A'+ location +'%0A%0A'+
+        '&details=' +details+
+        '&sf=true&output=xml';
+    };
+
+
     return DancerFactory;
 }]);
 

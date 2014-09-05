@@ -9,14 +9,11 @@
                             <label for="Price" class="col-lg-2 control-label ">{{Page.Common.TypeLesson}}</label>
 
                                 <div class="col-lg-4">
-                                <input type="text" for="Price"  id="PriceTypeLesson" class="form-control" ng-model="Price.TypeLesson" placeholder="{{Page.Common.TypeLesson}}" required="">
+                                <input type="text" for="Price"  id="PriceTypeLesson" class="form-control" ng-model="Price.TypeLesson" placeholder="{{Page.Common.TypeLesson}}" required="" ng-change="ChangeType(Price)">
                                     </div>
                                 <div class="col-lg-2">
                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                                     <ul class="dropdown-menu pull-right">
-                                        <li>
-                                            <a data-ng-click='Price.TypeLessonId=""; Price.TypeLesson=""; SetType()'>
-                                        </a></li>
                                         <li ng-repeat="TypeLesson in ListLessonTypes">
                                             <a data-ng-click="Price.TypeLessonId=TypeLesson.TypeID; Price.TypeLesson=TypeLesson.TypeName; SetType(TypeLesson.TypeID)">{{TypeLesson.TypeName}}
                                         </a></li>
@@ -49,7 +46,7 @@
                         <div class="form-group">
                             <label for="Price" class="col-lg-2 control-label ">{{Page.Price.DateActual}}</label>
                             <div class="col-lg-6">
-                                <input type="text" size="10" class="form-control" ng-model="Price.sharedDate" data-autoclose="1" data-date-type="string" placeholder="Date" bs-datepicker>
+                                <input type="text" size="10" class="form-control" ng-model="Price.sharedDate" data-autoclose="1" data-start-date="{{fromDate}}" data-min-date="{{fromDate}}" data-date-type="string" placeholder="Date" bs-datepicker>
                             </div>
                                 <div class="col-lg-2">
                                 <input type="text" size="8" class="form-control" ng-model="Price.sharedTime" data-autoclose="1" data-time-type="string" placeholder="Time" bs-timepicker>

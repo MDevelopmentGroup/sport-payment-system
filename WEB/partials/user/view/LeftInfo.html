@@ -13,8 +13,8 @@
                         <li ng-if="IdSchool">
                             <a href="#/MySchool">{{Page.LeftMenu.MySchool}}</a>
                         </li>
-                        <li ng-if="User">
-                            <a href="#/PrivateLessons">{{Page.navbar.PrivateLessons}}</a>
+                        <li ng-if="User" >
+                            <a ng-if="!IdSchool" href="#/PrivateLessons">{{Page.navbar.PrivateLessons}}</a>
                         </li>
                         <li ng-if="User">
                             <a href="#/LK">{{Page.navbar.LK}}</a>

@@ -100,6 +100,7 @@
     },
     "Common":{
         "City":"Город",
+        "RoomNumber":"Номер помещения",
         "SearchText":"строка поиска",
         "Language":"Язык",
         "Name":"Имя",
@@ -115,17 +116,19 @@
         "Data":"Дата",
         "Body":"Страница",
         "title":"Название",
-        "AddInfo":"AddInfo",
-        "Image":"Image",
+        "AddInfo":"Доп. сведения",
+        "Image":"Картинка",
         "Master":"Владелец",
         "Patronymic":"Отчество",
         "Url":"Url",
         "Street":"Улица",
+        "Building":"Здание",
         "TimeTable":"Расписание",
         "Instructors":"Тренеры",
         "Instructor":"Тренер",
         "Price":"Прайс",
-        "TypeLesson":"Тип занятия"
+        "TypeLesson":"Тип занятия",
+        "MaxCountDancers":"Вместимость помещения"
     },
     "Price":{
         "DateActual":"Актуальность цены",
@@ -170,6 +173,9 @@
     },
     "Lesson":
     {
+        "Gender":"Пол",
+        "maxCountM":"Мужчины",
+        "maxCountW":"Женщины",
         "Begin":"Начало занятия",
         "End":"Окончание занятия"
     }

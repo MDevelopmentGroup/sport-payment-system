@@ -19,7 +19,7 @@
 		
 		w "<script language='javascript'>"
 		w "location.href='http://"_loc_"index.html#/success/"_
-		CompleteDate_"/"_FirstName_"/"_LastName_"/"_Patronymic_"/"_DateTransactionInit_"/"_OutSum_"';"
+		FirstName_"/"_LastName_"/"_Patronymic_"/"_DateTransactionInit_"/"_OutSum_"';"
 		w ""
 	}
 	else{
