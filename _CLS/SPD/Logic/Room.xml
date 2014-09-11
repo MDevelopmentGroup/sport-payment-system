@@ -10,14 +10,30 @@
 	set st=$$$OK
 	try 
 	{
+		
 		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		set Building=$ZCONVERT(obj.Building,"I","UTF8") set City=$ZCONVERT(obj.City,"I","UTF8")
+		set Country=$ZCONVERT(obj.Country,"I","UTF8") set Street=$ZCONVERT(obj.Street,"I","UTF8")
+		set RoomNumber=$ZCONVERT(obj.RoomNumber,"I","UTF8")
+		
+		&sql(SELECT 
+		id into :id
+		FROM LIB.Address
+		where Building like :Building and City like :City and Country like :Country and Street like :Street and 
+		RoomNumber=:RoomNumber
+		)
+		if (id){
+			set addr=##class(LIB.Address).%OpenId(id)
+		}
+		else {
+			set addr=##class(LIB.Address).%New()			
+			set addr.Country=Country
+			set addr.City=City
+			set addr.Street=Street
+			set addr.Building=Building
+			set addr.RoomNumber=RoomNumber
+		}
 		set room=##class(SPD.Room).%New()
-		set addr=##class(LIB.Address).%New()
-		set addr.Country=$ZCONVERT(obj.Country,"I","UTF8")
-		set addr.City=$ZCONVERT(obj.City,"I","UTF8")
-		set addr.Street=$ZCONVERT(obj.Street,"I","UTF8")
-		set addr.Description=obj.ShortDescr
-		zw addr
 		do addr.%Save()
 		set room.Address=addr
 		set room.Name=$ZCONVERT(obj.Name,"I","UTF8")
@@ -27,6 +43,7 @@
 		
 		set room.School=##class(SPD.School).%OpenId(idschool)
 		set room.ShorDescr=$ZCONVERT(obj.ShortDescr,"I","UTF8")
+		set room.MaxCountDancers=obj.MaxCountDancers
 		set st=room.%Save()
 	}
 	catch ex{
@@ -44,8 +61,9 @@
 	///todo столбцы указать явно
 	&sql(select id into :idschool from SPD.School where Person->Id=:userId)
 	set SchoolQuery = "SELECT id, Name, ShorDescr, Address->City as City, "_
-	"Address->Country as Country, Address-> Street as Street , Address->id as IdAddress "_
-				   	  "FROM SPD.Room where School->id="_idschool
+	"Address->Country as Country, Address-> Street as Street , Address->id as IdAddress,Address->Building as Building, "_
+	"Address->RoomNumber as RoomNumber, MaxCountDancers as MaxCountDancers "_
+	"FROM SPD.Room where School->id="_idschool
 	//w SchoolQuery
 	do ##class(SPD.School).GetJSONData(SchoolQuery)
 	quit $$$OK
@@ -57,9 +75,10 @@
 <FormalSpec>IdRoom</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-		///todo столбцы указать явно
-	set SchoolQuery = "SELECT Name,ShorDescr,School->ID As IdSchool, Address->ID As IdAddress, Address->City As City, Address->Country As Country, Address->Street As Street"_
-				   	  "FROM SPD.Room where id="_IdRoom
+	///todo столбцы указать явно
+	set SchoolQuery = "SELECT Name,ShorDescr,School->ID As IdSchool, Address->ID As IdAddress, Address->City As City, Address->Country As Country, Address->Street As Street, Address->Building as Building, "_
+	"Address->RoomNumber as RoomNumber, MaxCountDancers as MaxCountDancers "_
+	"FROM SPD.Room where id="_IdRoom
 				   	  				   				   				   
 	do ##class(SPD.School).GetJSONData(SchoolQuery)
 ]]></Implementation>
@@ -72,19 +91,35 @@
 	set st=$$$OK
 	try{
 		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
-		set addr=##class(LIB.Address).%OpenId(obj.IdAddress)
-		set addr.Country=$ZCONVERT(obj.Country,"I","UTF8")
-		set addr.City=$ZCONVERT(obj.City,"I","UTF8")
-		set addr.Street=$ZCONVERT(obj.Street,"I","UTF8")
-		set addr.Description=$ZCONVERT(obj.ShortDescr,"I","UTF8")
+		set Building=$ZCONVERT(obj.Building,"I","UTF8") set City=$ZCONVERT(obj.City,"I","UTF8") set Country=$ZCONVERT(obj.Country,"I","UTF8") set Street=$ZCONVERT(obj.Street,"I","UTF8")
+		set RoomNumber=$ZCONVERT(obj.RoomNumber,"I","UTF8")
+		
+		&sql(SELECT 
+		id into :id
+		FROM LIB.Address
+		where Building like :Building and City like :City and Country like :Country and Street like :Street and 
+		RoomNumber=:RoomNumber
+		)
+		if (id){
+			set addr=##class(LIB.Address).%OpenId(id)
+		}
+		else {
+			set addr=##class(LIB.Address).%OpenId(obj.IdAddress)		
+			set addr.Country=Country
+			set addr.City=City
+			set addr.Street=Street
+			set addr.Building=Building
+			set addr.RoomNumber=RoomNumber
+		}
 		set st=addr.%Save()
 		set room=##class(SPD.Room).%OpenId(obj.ID)
+		set room.ShorDescr=$ZCONVERT(obj.ShortDescr,"I","UTF8")
 		set room.Address=addr
 		set room.Name=$ZCONVERT(obj.Name,"I","UTF8")
+		set room.MaxCountDancers=obj.MaxCountDancers
 		//set room.School=##class(SPD.School).%OpenId(obj.School)
 		set room.ShorDescr=$ZCONVERT(obj.ShortDescr,"I","UTF8")
 		set st=room.%Save()
-		
 	}
 	catch ex{
 		set st=ex.AsStatus()
@@ -101,9 +136,30 @@
 	set st=$$$OK
 	try{
 		do ##class(SPD.Room).%DeleteId(IdRoom)
+		
 	}
 	catch ex{
 		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetAddressByRoom">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ID</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set sqlquery="select Address->City as City, Address->Country as Country, "_
+		"Address->Street as Street from SPD.Room where id="_ID
+		
+		do ##class(SPD.School).GetJSONData(sqlquery)
+		
+	}
+	catch er{
+		set sts=er.AsStatus()
 	}
 	ret st
 ]]></Implementation>

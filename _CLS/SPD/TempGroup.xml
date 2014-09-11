@@ -18,6 +18,17 @@
 <Relationship>1</Relationship>
 </Property>
 
+<Property name="UserSubscription">
+<Type>SPD.Subscription</Type>
+<Cardinality>one</Cardinality>
+<Inverse>TempGroup</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Index name="UserSubscriptionIndex">
+<Properties>UserSubscription</Properties>
+</Index>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^SPD.TempGroupD</DataLocation>
@@ -37,6 +48,12 @@
 </Value>
 <Value name="4">
 <Value>TempGroup</Value>
+</Value>
+<Value name="5">
+<Value>Subscription</Value>
+</Value>
+<Value name="6">
+<Value>UserSubscription</Value>
 </Value>
 </Data>
 </Storage>

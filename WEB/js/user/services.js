@@ -362,12 +362,33 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     {
         return $http.get(BaseUrl+"/GetTrainerInfo/"+id);
     };
+    SchoolFactory.AddLessInSubscription=function(data){
+        return $http.post(schoolBroker+"/AddLessInSubscription/",data);
+    };
+    SchoolFactory.GetLessonWithoutSub=function(){
+        return $http.get(schoolBroker+"/GetLessonWithoutSub/");
+    };
+    SchoolFactory.UpdateLessInSubscription=function(data){
+        return $http.post(schoolBroker+"/UpdateLessInSubscription/",data);
+    };
+    SchoolFactory.DeleteLessInSubscription=function(id){
+        return $http.delete(schoolBroker+"/DeleteLessFromSubscription/"+id);
+    };
+    SchoolFactory.CreateSubscription=function(data){
+        return $http.post(schoolBroker+"/CreateSubscription/",data);
+    };
     return SchoolFactory;
 }]);
 app.factory('DancerFactory',['$http','$rootScope','ErrorLogFactory',function($http,$rootScope,ErrorLogFactory) {
     var DancerFactory={};
     var addr="http://91.247.68.36:8090/dances/";
     var BaseUrl="/rest";
+    DancerFactory.Init=function(data){
+        return $http.post(BaseUrl+'/InitPayment/',data);
+    };
+    DancerFactory.GetSubscriptions=function(id){
+        return $http.get(BaseUrl+"/GetSubscriptions/"+id);
+    };
     DancerFactory.Subscribe=function(idLesson){
         return $http.post(BaseUrl+"/Subscribe/"+idLesson);
     };
@@ -386,6 +407,9 @@ app.factory('DancerFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     DancerFactory.getTransactions=function() {
         return $http.get(BaseUrl + "/getTransactions/");
     };
+    DancerFactory.GetSubscriptionFromList=function(id){
+        return $http.get(BaseUrl + "/GetSubscriptionFromList/"+id);
+    };
     DancerFactory.getUrlForCreateGoogleCalendarEvent=function(text, dates, location, details){
 
         return 'https://www.google.com/calendar/render?action=TEMPLATE&hl=ru' +
@@ -395,8 +419,6 @@ app.factory('DancerFactory',['$http','$rootScope','ErrorLogFactory',function($ht
         '&details=' +details+
         '&sf=true&output=xml';
     };
-
-
     return DancerFactory;
 }]);
 
@@ -429,4 +451,20 @@ app.factory('SettingFactory',['$http','$rootScope','ErrorLogFactory',function($h
 
     return SettingFactory;
 }]);
+
 //***************************************** Setting ********************************************************************//
+
+
+app.factory('MyFuntcions',['$rootScope',function($rootScope){
+    var MyFuntcions={};
+    MyFuntcions.CheckTime=function(time) {
+        if(time==0){
+            time="00"
+        }
+        if(time.toString().length==1){
+            time="0"+time.toString();
+        }
+        return time
+    };
+    return MyFuntcions;
+}]);

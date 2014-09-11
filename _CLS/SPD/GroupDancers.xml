@@ -22,6 +22,30 @@
 <Relationship>1</Relationship>
 </Property>
 
+<Property name="CountMan">
+<Type>%Integer</Type>
+<Calculated>1</Calculated>
+<InitialExpression>0</InitialExpression>
+<SqlComputeCode>set {CountMan}=##class(SPD.Logic.GroupDancers).GetMans({ID})</SqlComputeCode>
+<SqlComputed>1</SqlComputed>
+</Property>
+
+<Property name="CountWoman">
+<Type>%Integer</Type>
+<Calculated>1</Calculated>
+<InitialExpression>0</InitialExpression>
+<SqlComputeCode>set {CountWoman}=##class(SPD.Logic.GroupDancers).GetWomans({ID})</SqlComputeCode>
+<SqlComputed>1</SqlComputed>
+</Property>
+
+<Property name="CompleteGroup">
+<Type>%Boolean</Type>
+<Calculated>1</Calculated>
+<InitialExpression>0</InitialExpression>
+<SqlComputeCode>set {CompleteGroup}=##class(SPD.Logic.GroupDancers).CheckComplite({ID})</SqlComputeCode>
+<SqlComputed>1</SqlComputed>
+</Property>
+
 <Index name="JournallLessonIndex">
 <Properties>JournallLesson</Properties>
 </Index>
@@ -45,6 +69,12 @@
 </Value>
 <Value name="4">
 <Value>JournallLesson</Value>
+</Value>
+<Value name="5">
+<Value>CountMan</Value>
+</Value>
+<Value name="6">
+<Value>CountWoman</Value>
 </Value>
 </Data>
 </Storage>

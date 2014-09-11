@@ -5,8 +5,8 @@
 <script language="Cache" runat="Server">
 	
 	set idtrans=%request.Data("InvId",1)
-	&sql(select CompleteDate,Dancer->FirstName as FirstName, Dancer->LastName as LastName, 
-	Dancer->Patronymic as Patronymic,DateTransactionInit,OutSum into :CompleteDate,:FirstName,:LastName, :Patronymic,
+	&sql(select CompleteDate,
+	DateTransactionInit,OutSum into :CompleteDate,	
 	:DateTransactionInit,:OutSum
 	from SPD.Transactions where id=:idtrans)
 	if (OutSum){
@@ -19,7 +19,7 @@
 		
 		w "<script language='javascript'>"
 		w "location.href='http://"_loc_"index.html#/success/"_
-		FirstName_"/"_LastName_"/"_Patronymic_"/"_DateTransactionInit_"/"_OutSum_"';"
+		FirstName_"/"_OutSum_"';"
 		w ""
 	}
 	else{

@@ -19,21 +19,6 @@ function ViewLKCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFacto
         $scope.User=AuthenticationFactory.GetCurrentUser();
         console.log($scope.User);
     };
-    $scope.SummPattern = (function() {
-        var regexp = /^[0-9]+$/;
-        return {
-            test: function(value) {
-                console.log(value);
-                if( $scope.requireTel === false ){
-                    value=value.slice(0,(value.length()-2));
-                    return true;
-                }
-                else{ return regexp.test(value);
-                    console.log("else");
-                }
-            }
-        };
-    })();
     $scope.Payment=function(Pay) {
         switch (Pay.PayInit)
         {
@@ -149,9 +134,10 @@ function NavBarCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFacto
 
 
 //******************************************** MySchoolCtrl ***************************************************************//
-function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFactory,SchoolFactory){
+function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFactory,SchoolFactory,MyFuntcions){
     $scope.initit=function() {
         $rootScope.MenuActive = {};
+        $scope.startDate1=new Date();
         $rootScope.MenuActive.Page = 'partials/user/view/view_about.html';
         $rootScope.MenuActive.Controller = 'ViewAboutCtrl';
         $rootScope.MenuActive.AboutView = 'active';
@@ -178,6 +164,8 @@ function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFac
 
         })};
         $scope.GetLessontypes($scope.IdSchool);
+        var datetime=new Date();
+        $scope.startDate=MyFuntcions.CheckTime(datetime.getDate())+"/"+(MyFuntcions.CheckTime(datetime.getMonth()+1))+"/"+MyFuntcions.CheckTime(datetime.getFullYear());
     };
 
     $scope.GetPrice=function(){
@@ -189,17 +177,19 @@ function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFac
 
     $scope.AddPrice=function(price){
             $scope.Price={};
+                //MyFuntcions.CheckTime(datetime.getDate())+"/"+(MyFuntcions.CheckTime(datetime.getMonth()+1))+"/"+MyFuntcions.CheckTime(datetime.getFullYear());
             $scope.SetType=function(TypeLessonTypeID){
                 SchoolFactory.GetEndTimeLastPrice(TypeLessonTypeID).success(function(data){
                     var datetime=new Date(Date.parse(data.children));
-                    $scope.Price.TimeBegin=$scope.CheckTime(datetime.getHours())+":"+$scope.CheckTime(datetime.getMinutes())+":00";
-                    $scope.Price.DateBegin=$scope.CheckTime(datetime.getDate())+"/"+($scope.CheckTime(datetime.getMonth()+1))+"/"+$scope.CheckTime(datetime.getFullYear());
+                    $scope.Price.TimeBegin=MyFuntcions.CheckTime(datetime.getHours())+":"+MyFuntcions.CheckTime(datetime.getMinutes())+":00";
+                    $scope.Price.DateBegin=MyFuntcions.CheckTime(datetime.getDate())+"/"+(MyFuntcions.CheckTime(datetime.getMonth()+1))+"/"+MyFuntcions.CheckTime(datetime.getFullYear());
                     $scope.fromDate=new Date(Date.parse(data.children));
                     console.log($scope.fromDate);
                 });
             };
             $scope.ChangeType=function(Price){
                 var bl=true;
+                console.log($scope.startDate1);
                 for(var i=0; i<$scope.ListLessonTypes.length;i++){
                     if ($scope.Price.TypeLesson==$scope.ListLessonTypes[i].TypeName)
                     {
@@ -210,15 +200,17 @@ function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFac
                 }
                 if (bl) {
                     $scope.Price.TypeLessonId = "";
-                    $scope.Price.TimeBegin = "";
-                    $scope.Price.DateBegin = "";
+                    var datetime=new Date();
+                    $scope.Price.TimeBegin=MyFuntcions.CheckTime(datetime.getHours())+":"+MyFuntcions.CheckTime(datetime.getMinutes())+":00";
+                    $scope.Price.DateBegin=MyFuntcions.CheckTime(datetime.getDate())+"/"+(MyFuntcions.CheckTime(datetime.getMonth()+1))+"/"+MyFuntcions.CheckTime(datetime.getFullYear());
+
                 }
+                console.log($scope.Price.fromDate);
             };
             $scope.submit=function(price){
                 console.log(price);
                 price.dateActual=price.sharedDate+" "+price.sharedTime;
                 console.log(price);
-
                 SchoolFactory.AddPrice(price).success(function(data){
                     $scope.GetLessontypes($scope.IdSchool);
                     $scope.GetPrice();
@@ -374,16 +366,18 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
             $scope.rows[i+1]=row;
 
         }
-        //console.log($scope.rows);
-        if($scope.loadData==undefined){
+        console.log($scope.rows);
+        if($scope.rows) {
+            if ($scope.loadData == undefined) {
 
-            setTimeout($scope.loadData($scope.rows), 2000);
-        }
-        else{
-            $scope.loadData($scope.rows)
+                setTimeout($scope.loadData($scope.rows), 2000);
+            }
+            else {
+                $scope.loadData($scope.rows)
+            }
         }
         //console.log($scope.rows);
-    }
+    };
     $scope.GetLessonsFromTable($scope.IdSchool);
     $scope.Days={"Sunday":{"ID":0,"Name":"Sunday"},
         "Monday":{"ID":1,"Name":"Monday"},
@@ -1324,4 +1318,143 @@ function UpdateDancerCtrl($rootScope,$scope,SettingFactory,LanguageFactory,Schoo
 {
 
 }
+function ViewSubscriptionsCtrl($rootScope,$routeParams,$modal,$scope,SettingFactory,LanguageFactory,DancerFactory,AuthenticationFactory){
+
+    //$rootScope.Page.Menu.BrandTitle = $rootScope.Page.About.Title;
+    $rootScope.User= AuthenticationFactory.GetCurrentUser();
+    $scope.school={};
+    $scope.User = AuthenticationFactory.GetCurrentUser();
+    $scope.Name = $scope.User.UserName;
+    $scope.HASH = $scope.User.HASH;
+    $scope.IdSchool = $scope.User.IdSchool;
+    console.log($scope.User);
+    $scope.GetLessonWithoutSub=function(){
+        SchoolFactory.GetLessonWithoutSub().success(function(data){
+            $scope.LessonWithoutSub=data.children;
+        });
+    };
+    $scope.GetSubscriptions=function(id){
+        DancerFactory.GetSubscriptions(id).success(function(data){
+            $scope.SubscrList=data.children;
+        });
+    };
+    $scope.BuySubscription=function(idSub){
+        DancerFactory.BuySubscription(idSub).success(function(data){
+
+        });
+    };
+    $scope.GetSubscriptions($routeParams.ID);
+}
+function CreateSubscriptionsCtrl($rootScope,$routeParams,$modal,$scope,SettingFactory,LanguageFactory,SchoolFactory,AuthenticationFactory,MyFuntcions){
+    $rootScope.User= AuthenticationFactory.GetCurrentUser();
+    $scope.Subscr={};
+    $scope.school={};
+    $scope.User = AuthenticationFactory.GetCurrentUser();
+    $scope.Name = $scope.User.UserName;
+    $scope.HASH = $scope.User.HASH;
+    $scope.IdSchool = $scope.User.IdSchool;
+    var datetime=new Date();
+    $scope.Subscr.DateBegin=MyFuntcions.CheckTime(datetime.getDate())+"/"+(MyFuntcions.CheckTime(datetime.getMonth()+1))+"/"+MyFuntcions.CheckTime(datetime.getFullYear());
+    $scope.Subscr.TimeBegin=MyFuntcions.CheckTime(datetime.getHours())+":"+MyFuntcions.CheckTime(datetime.getMinutes())+":00";
+    $scope.GetLessonWithoutSub=function(){
+        SchoolFactory.GetLessonWithoutSub().success(function(data){
+            $scope.LessonWithoutSub=data.children;
+        });
+    };
+    $scope.CreateSubscription=function(Subscr){
+        console.log(Subscr);
+        SchoolFactory.CreateSubscription(Subscr).success(function(){
+
+        });
+    };
+    $scope.GetLessonTypes=function(){
+        SchoolFactory.GetLessonTypes($routeParams.ID).success(function(data){
+        $scope.ListLessonTypes=data.children;
+    })}();
+    $scope.AddLessInSubscription=function(){
+            $scope.lis={};
+            $scope.SetType=function(TypeLesson){
+                console.log(TypeLesson);
+                $scope.lis.TypeLesson=TypeLesson.TypeName;
+                $scope.lis.TypeLessonId=TypeLesson.TypeID;
+            };
+            $scope.submit=function(lis){
+                console.log(lis);
+                SchoolFactory.AddLessInSubscription(lis).success(function()
+                {
+                    console.log(1);
+                    $scope.GetLessonWithoutSub();
+                    modal.hide();
+                });
+            };
+            var modal=$modal({scope: $scope, placement:"center", backdrop:false, template: 'partials/user/modal/modal_create_lesInSub.html', show: true});
+    };
+    $scope.ChangeType=function(lis){
+        var bl=true;
+        console.log($scope.startDate1);
+        for(var i=0; i<$scope.ListLessonTypes.length;i++){
+            if ($scope.lis.TypeLesson==$scope.ListLessonTypes[i].TypeName)
+            {
+                $scope.lis.TypeLesson=$scope.ListLessonTypes[i].TypeName;
+                $scope.lis.TypeLessonId=$scope.ListLessonTypes[i].TypeID;
+                $scope.SetType($scope.Price.TypeLessonId); bl=false;
+            }
+        }
+        if (bl) {
+            $scope.Sub.TypeLessonId = "";
+        }
+    };
+    $scope.Update=function(lis){
+        console.log(lis);
+        $scope.submit=function(lis) {
+            SchoolFactory.UpdateLessInSubscription(lis).success(function(){
+                $scope.GetLessonWithoutSub();
+                    modal.hide();
+            });
+        };
+        $scope.lis=lis;
+        var modal=$modal({scope: $scope, placement:"center", backdrop:false, template: 'partials/user/modal/modal_updateLessInSubscription.html', show: true});
+    };
+    $scope.Delete=function(ID){
+        SchoolFactory.DeleteLessInSubscription(id).success(function(){
+            $scope.GetLessonWithoutSub();
+        });
+    };
+
+    $scope.TestSum=function(reg,refvar,obj,temp){
+        var s=$scope[obj.toString()];
+        var regEx=new RegExp(reg.toString());
+        if (!(regEx.test(s[refvar.toString()]))) {
+            if (s[refvar.toString()]!= undefined) {
+                s[refvar.toString()] = $scope[temp.toString()];
+            }
+            else{
+                s[refvar.toString()]="";
+                $scope[temp.toString()]="";
+            }
+        }
+        else{
+            $scope[temp.toString()]=s[refvar.toString()];
+        }
+    };
+    $scope.GetLessonWithoutSub();
+};
+function ViewSubscriptionCtrl($rootScope,$routeParams,$scope,SchoolFactory,AuthenticationFactory,MyFuntcions,DancerFactory)
+{
+    $rootScope.User= AuthenticationFactory.GetCurrentUser();
+    $scope.User = AuthenticationFactory.GetCurrentUser();
+    $scope.Name = $scope.User.UserName;
+    $scope.HASH = $scope.User.HASH;
+    $scope.IdSchool = $scope.User.IdSchool;
+    DancerFactory.GetSubscriptionFromList($routeParams.IDS).success(function(data){
+        $scope.Subscr=data.children[0];
+    });
+    $scope.Payment=function(Subscr){
+        DancerFactory.Init(Subscr).success(function(data){
+
+            //location = data.urlPay;
+            $scope.url=data.urlPay;
+        });
+    };
+};
 //******************************************** dance ***************************************************************//

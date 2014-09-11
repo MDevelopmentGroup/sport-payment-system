@@ -26,6 +26,9 @@
 	<Route Url="/InviteInstructor/:Email"		Method="GET"		Call="SPD.Logic.School:InviteInstructor"/>
 	<Route Url="/RemoveFromSchool/:ID"			Method="GET"		Call="SPD.Logic.School:RemoveFromSchool"/>
 	
+	<!--School-->
+	
+	
 	<Route Url="/AddLessonInTable/"				Method="POST"		Call="SPD.Logic.TimeTableLessons:Create"/>
 	<Route Url="/UpdateLessonInTable/:ID"		Method="POST"		Call="SPD.Logic.TimeTableLessons:Update"/>
 	<Route Url="/RemoveLessonFromTable/:ID"		Method="DELETE"		Call="SPD.Logic.TimeTableLessons:Delete"/>
@@ -33,13 +36,19 @@
 	
 	
 	<Route Url="/GetLastActualPrice/:ID"		Method="GET"		Call="SPD.Logic.JournalLesson:JSONGetLastActualPrice"/>
+	<Route Url="/UpdateJournallLesson/"			Method="POST"		Call="SPD.Logic.JournalLesson:Update"/>
+	<Route Url="/UpdateJournallLessons/"		Method="POST"		Call="SPD.Logic.JournalLesson:UpdateJournallLessons"/>
 	
+	<!--Subscription-->
+	<Route Url="/AddLessInSubscription/:ID"		Method="POST"		Call="SPD.Logic.LessonInSubscription:Create"/>
+	<Route Url="/AddLessInSubscription/"		Method="POST"		Call="SPD.Logic.LessonInSubscription:Create"/>
+	<Route Url="/DeleteLessFromSubscription/:ID"	Method="DELETE"		Call="SPD.Logic.LessonInSubscription:Delete"/>
+	<Route Url="/GetLessonWithoutSub/"			Method="GET"		Call="SPD.Logic.LessonInSubscription:GetLessonWithoutSub"/>
+	<Route Url="/UpdateLessInSubscription/"		Method="POST"		Call="SPD.Logic.LessonInSubscription:Update"/>
+	<Route Url="/UpdateLessInSubscription/:ID"	Method="POST"		Call="SPD.Logic.LessonInSubscription:Update"/>
 	
-	
-	
-	<!--School-->
-	
-	<!---->
+	<Route Url="/CreateSubscription/"			Method="POST"		Call="SPD.Logic.SubscriptionList:Create"/>
+	<!--Subscription-->
 	
 	<!---->
 	

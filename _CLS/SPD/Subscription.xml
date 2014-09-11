@@ -4,6 +4,35 @@
 <Super>%Persistent</Super>
 <TimeCreated>63393,57783.780633</TimeCreated>
 
+<Property name="School">
+<Description>
+Абонемент танцора</Description>
+<Type>SPD.School</Type>
+</Property>
+
+<Property name="QRString">
+<Type>%String</Type>
+</Property>
+
+<Property name="Sole">
+<Type>%String</Type>
+</Property>
+
+<Property name="Transaction">
+<Type>SPD.Transactions</Type>
+</Property>
+
+<Property name="DateGEnSub">
+<Type>%TimeStamp</Type>
+</Property>
+
+<Property name="TempGroup">
+<Type>SPD.TempGroup</Type>
+<Cardinality>many</Cardinality>
+<Inverse>UserSubscription</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^SPD.SubscriptionD</DataLocation>
@@ -13,10 +42,32 @@
 <StreamLocation>^SPD.SubscriptionS</StreamLocation>
 <ExtentSize>100000</ExtentSize>
 <Data name="SubscriptionDefaultData">
-<Structure>listnode</Structure>
-<Subscript/>
 <Value name="1">
 <Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>School</Value>
+</Value>
+<Value name="3">
+<Value>TypeLesson</Value>
+</Value>
+<Value name="4">
+<Value>QRString</Value>
+</Value>
+<Value name="5">
+<Value>Sole</Value>
+</Value>
+<Value name="6">
+<Value>Transaction</Value>
+</Value>
+<Value name="7">
+<Value>TableLessInSubscr</Value>
+</Value>
+<Value name="8">
+<Value>GroupDancer</Value>
+</Value>
+<Value name="9">
+<Value>DateGEnSub</Value>
 </Value>
 </Data>
 </Storage>

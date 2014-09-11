@@ -27,7 +27,7 @@ angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute'
         when('/Trainer/:ID',                {templateUrl: 'partials/user/view/view_Trainer.html', controller: ViewTrainerCtrl}).
         //***************************************** Trainer **********************************************************//
 
-        when('/LK/',                         {templateUrl: 'partials/user/view/LK.html', controller: ViewLKCtrl}).
+        when('/LK/:ID',                         {templateUrl: 'partials/user/view/LK.html', controller: ViewLKCtrl}).
 
         //***************************************** Schools **********************************************************//
 
@@ -39,6 +39,9 @@ angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute'
         when('/MySchool/',                    {templateUrl: 'partials/user/view/My_School.html', controller: MySchoolCtrl}).
         when('/LessonInTimeTable/:ID',           {templateUrl: 'partials/user/view/view_LessonInTimeTable.html', controller: LessonInTimeTableCtrl}).
         when('/JournallLessons/:ID',          {templateUrl: 'partials/user/view/JournallLessons.html', controller: JournallLessonsCtrl}).
+        when('/SubscriptionList/:ID',          {templateUrl: 'partials/user/view/view_Subscriptions.html', controller: ViewSubscriptionsCtrl}).
+        when('/SubscriptionList/:ID/:IDS',      {templateUrl: 'partials/user/view/view_Subscription.html', controller: ViewSubscriptionCtrl}).
+        when('/CreateSubscription/:ID',          {templateUrl: 'partials/user/Create/create_Subscription.html', controller: CreateSubscriptionsCtrl}).
         //***************************************** Schools **********************************************************//
 
         //***************************************** Invite **********************************************************//

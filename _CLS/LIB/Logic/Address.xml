@@ -11,7 +11,7 @@
 	///todo столбцы указать явно
 	set SchoolQuery = "SELECT * "_
 				   	  "FROM LIB.Address where id="_IdAddress
-				   	  				   				   				   
+
 	do ##class(SPD.School).GetJSONData(SchoolQuery)
 	ret $$$OK
 ]]></Implementation>

@@ -43,10 +43,6 @@
 <Type>SPD.Room</Type>
 </Property>
 
-<Property name="Trainer">
-<Type>SPD.Instructor</Type>
-</Property>
-
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^SPD.JournalLessonD</DataLocation>
@@ -100,6 +96,15 @@
 </Value>
 <Value name="15">
 <Value>Trainer</Value>
+</Value>
+<Value name="16">
+<Value>CountMan</Value>
+</Value>
+<Value name="17">
+<Value>CountWoman</Value>
+</Value>
+<Value name="18">
+<Value>Abonement</Value>
 </Value>
 </Data>
 </Storage>

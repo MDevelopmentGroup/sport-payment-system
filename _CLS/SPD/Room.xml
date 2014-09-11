@@ -23,6 +23,11 @@
 <Relationship>1</Relationship>
 </Property>
 
+<Property name="MaxCountDancers">
+<Type>%Integer</Type>
+<InitialExpression>20</InitialExpression>
+</Property>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^SPD.RoomD</DataLocation>
@@ -45,6 +50,9 @@
 </Value>
 <Value name="5">
 <Value>School</Value>
+</Value>
+<Value name="6">
+<Value>MaxCountDancers</Value>
 </Value>
 </Data>
 </Storage>

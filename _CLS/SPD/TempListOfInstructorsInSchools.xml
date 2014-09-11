@@ -27,6 +27,10 @@ todo целостность не обеспечена</Description>
 <Relationship>1</Relationship>
 </Property>
 
+<Property name="SchoolRate">
+<Type>%Integer</Type>
+</Property>
+
 <Index name="SchoolIndex">
 <Properties>School</Properties>
 </Index>
@@ -51,6 +55,12 @@ todo целостность не обеспечена</Description>
 </Value>
 <Value name="3">
 <Value>Instructor</Value>
+</Value>
+<Value name="4">
+<Value>InstructorRate</Value>
+</Value>
+<Value name="5">
+<Value>SchoolRate</Value>
 </Value>
 </Data>
 </Storage>

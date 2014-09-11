@@ -18,11 +18,17 @@
 			}
 			else{
 				set tempinv=##class(SPD.TempInvite).%New()
+				
 				set tempinv.Person=##class(Auth.Session).GetCurrentUser()
+				
 				set tempinv.Type="school"
-				set tempinv.md=$SYSTEM.Encryption.MD5Hash(tempinv.Person.Email_""_tempinv.Type)
+				
+				set tempinv.md=$SYSTEM.Encryption.MD5Hash(tempinv.Person.Email_""_tempinv.Type_""_$H)
+				
 				set st=tempinv.%Save()
+				
 				//set st=##class(Util.Mail.SendMail).NewMail(href,obj.Email,"InviteSchool")
+				
 			}
 			
 		}catch ex{set st=ex.AsStatus()}	

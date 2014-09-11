@@ -27,6 +27,7 @@
 		set type=##class(SPD.TypeLesson).%New()
 		set type.name=obj.nme
 		set type.ShortDescription=obj.ShortDescription
+		
 		set exception=12
 	}
 	Catch exception
@@ -113,6 +114,13 @@
 ]]></Implementation>
 </Method>
 
+<Property name="MatchTypeLesson">
+<Type>SPD.MatchPriceTypeLess</Type>
+<Cardinality>many</Cardinality>
+<Inverse>TypeLesson</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^SPD.TypeLessonD</DataLocation>
@@ -130,6 +138,12 @@
 </Value>
 <Value name="3">
 <Value>ShortDescription</Value>
+</Value>
+<Value name="4">
+<Value>Price</Value>
+</Value>
+<Value name="5">
+<Value>MatchTypeLesson</Value>
 </Value>
 </Data>
 </Storage>

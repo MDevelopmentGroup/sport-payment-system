@@ -7,13 +7,7 @@
 <Property name="OutSum">
 <Description>
 Сумма</Description>
-<Type>%Float</Type>
-</Property>
-
-<Property name="InVid">
-<Description>
-Номер счёта в магазине</Description>
-<Type>%Integer</Type>
+<Type>SPD.Balance</Type>
 </Property>
 
 <Property name="sSignatureValue">
@@ -43,8 +37,12 @@ MD5 сигнатура(для получения статистики)</Descript
 <Type>%TimeStamp</Type>
 </Property>
 
-<Property name="Transaction">
-<Type>SPD.Dancer</Type>
+<Property name="Subscription">
+<Type>SPD.SubscriptionList</Type>
+</Property>
+
+<Property name="email">
+<Type>%String</Type>
 </Property>
 
 <Storage name="Default">
@@ -91,6 +89,21 @@ MD5 сигнатура(для получения статистики)</Descript
 </Value>
 <Value name="12">
 <Value>Transaction</Value>
+</Value>
+<Value name="13">
+<Value>Dancer</Value>
+</Value>
+<Value name="14">
+<Value>rSignatureValue</Value>
+</Value>
+<Value name="15">
+<Value>Sbuscription</Value>
+</Value>
+<Value name="16">
+<Value>email</Value>
+</Value>
+<Value name="17">
+<Value>Subscription</Value>
 </Value>
 </Data>
 </Storage>

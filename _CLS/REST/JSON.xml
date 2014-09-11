@@ -3,78 +3,6 @@
 <Class name="REST.JSON">
 <TimeCreated>63313,43933.858721</TimeCreated>
 
-<Method name="GetAllCompanies">
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-    
-   set st=$$$OK
-   try {    
-   do ##class(%ZEN.Auxiliary.jsonSQLProvider).%WriteJSONFromSQL(,"select * from Data.Company")
-   } catch ex {
-       set st=ex.AsStatus()
-   }
-   quit st
-]]></Implementation>
-</Method>
-
-<Method name="testjson">
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-    s st=$$$OK
-    try {
-    // Берём JSON из запроса и конвертируем в объект класса Data.Company
-    $$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,"",.obj,1))
-    write "Hello!"
-    $$$THROWONERROR(st,$$$OK)
-    }
-    catch ex {
-        s st=ex.AsStatus()
-    }
-    quit st
-]]></Implementation>
-</Method>
-
-<Method name="DeleteCompany">
-<ClassMethod>1</ClassMethod>
-<FormalSpec>compid:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-    set st=$$$OK
-    try {
-        $$$THROWONERROR(st,##class(Data.Company).%DeleteId(compid))
-    } catch ex {
-        s st=ex.AsStatus()
-    }
-    quit st
-]]></Implementation>
-</Method>
-
-<Method name="UpdateCompany">
-<ClassMethod>1</ClassMethod>
-<FormalSpec>compid:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
- set st=$$$OK
- try {
-   
-   $$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
-   
-   // Открываем объект, который хотим отредактировать
-   set comp=##class(Data.Company).%OpenId(compid)
-   throw:comp=$$$NULLOREF ##class(%Exception.StatusException).CreateFromStatus($$$ERROR(5001,"Company does not exist"))
-    // Редактируем и сохраняем
-   set comp.Name=obj.Name
-   $$$THROWONERROR(st,comp.%Save())
- } 
- catch ex {
-   set st=ex.AsStatus()
- }
- quit st
-]]></Implementation>
-</Method>
-
 <Method name="SuccessURL">
 <Description>
 метод для получения данных при успешном проведении платежа(чек)</Description>
@@ -123,40 +51,43 @@
 	set st=$$$OK
  	try {
 	$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
-		
+	
 	set MrchLogin="23g561sqw67uthg45"
-	set outSum="400.00"
+	
+	//set outSum="400.00"
 	set sIncCurrLabel="W1R"
 	set sCulture="ru"
-	set InvId="1"
 	set desc="Dances"
 	set mrjpass="adsfer920rne45"
+	set mrjpass2="95093wqn4b23h6"
 	///test parameters
-	set shpUserId=obj.UserId
+	//set shpUserId=##class(Auth.Session).GetCurrentUser().%Id()
 	set transaction=##class(SPD.Transactions).%New()
-	set transaction.InVid=InvId
-	set transaction.OutSum=outSum
-	set transaction.UserId=##class(SPD.SPDUser).%OpenId(obj.UserId)
+	set sub=##class(SPD.SubscriptionList).%OpenId(obj.idSL)
+	set transaction.Subscription=sub
+	set outSum=sub.cost
+	set transaction.OutSum=##class(REST.JSON).SetSum(outSum)
+	
 	do transaction.%Save()
-	set trnstnId=transaction.%Id()
-	set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_MrchLogin_":"_outSum_":"_InvId_":"_mrjpass_":shpId="_trnstnId_":shpUserId="_shpUserId)
+	if (obj.email'="")
+	{
+		set transaction.email=obj.email
+	}
+	set sole=##class(SPD.Logic.Subscription).GenerateSole(sub.cost_""_sub.School_""_sub.ShorDescription)
+	set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_MrchLogin_":"_outSum_":"_transaction.%Id()_":"_mrjpass)
+	set sole=##class(Auth.Session).Encode(sole)
+	set hex=##class(Auth.Session).Encode(SignatureValue)
+	set transaction.sSignatureValue=$ZCONVERT(hex,"I","UTF8")
 	
-	set hex="" f i=1:1:$L(SignatureValue) set hex=hex_$J($ZHEX($A(SignatureValue,i)),2)
-	set hex=$TR(hex," ","0")
-	set hex=$ZCVT(hex,"l")
-	
-	set transaction.sSignatureValue=hex
 	do transaction.%Save()
-	
 	set url="http://test.robokassa.ru/Index.aspx?MrchLogin="_MrchLogin_
     "&OutSum="_outSum_
-    "&InvId="_InvId_
+    "&InvId="_transaction.%Id()_
     "&Desc="_desc_
     "&SignatureValue="_hex_
     "&sIncCurrLabel="_sIncCurrLabel_
-    "&sCulture="_sCulture_
-    "&shpId="_trnstnId_
-    "&shpUserId="_shpUserId
+    "&sCulture="_sCulture
+    
     w "{""urlPay"":"""_url_"""}"
  	}
     catch ex {
@@ -170,6 +101,25 @@
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[	// есть юзер id и SignatureValue
+]]></Implementation>
+</Method>
+
+<Method name="SetSum">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>sum</FormalSpec>
+<Implementation><![CDATA[
+	set arr=$listfromstring(sum,".")
+	if ($LISTLENGTH(arr)'=2){		
+		set sum=sum_".00"
+	}
+	elseif ($LISTLENGTH(arr)=2)
+	{
+		if (($LENGTH($list(arr,2))=1))
+		{
+			set sum=sum_"0"
+		}
+	}
+	ret sum
 ]]></Implementation>
 </Method>
 
@@ -209,18 +159,35 @@
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set st=$$$OK
-	try {    
+	try {
+			
+	set MrchLogin="23g561sqw67uthg45"
+	//set outSum="400.00"
+	set sIncCurrLabel="W1R"
+	set sCulture="ru"
+	set InvId="1"
+	set desc="Dances"
+	set mrjpass="adsfer920rne45"
+	
 		set OutSum=$Get(%request.Data("OutSum",1))
 		set InvId=$Get(%request.Data("InvId",1))
 		set Culture=$Get(%request.Data("Culture",1))		
 		set SignValue=$Get(%request.Data("SignatureValue",1))
 		set transactionId=$Get(%request.Data("shpId",1))
 		set UserId=$Get(%request.Data("shpUserId",1))
-		&sql(select id,count(id) into :id,:count from SPD.Transactions where (sSignatureValue=:SignValue & UserId=:UserId))
+		set transaction=##class(SPD.Transactions).%OpenId(transactionId)
+		&sql(select id,sSignatureValue,count(id) into :id,:sSignatureValue ,:count from SPD.Transactions where (id=:transactionId & Dancer=:UserId))
+		w "sSignatureValue="_sSignatureValue,!
+		
+		set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_MrchLogin_":"_OutSum_":"_InvId_":"_mrjpass_":shpId="_transactionId_":shpUserId="_UserId)
+		
+		w "SignValue="_$ZCVT(SignValue,"l"),!
+		set design=##class(Auth.Session).Encode(SignatureValue)
+		w "design="_design,!
 		if (count=1){
-			set transaction=##class(SPD.Transactions).%OpenId(id)
+			
 			set transaction.CompleteDate=$H
-			set transaction.success=1	
+			set transaction.success=1
 		}		
 	} catch ex {
 		set st=ex.AsStatus()
@@ -235,23 +202,26 @@
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	
+	set mrjpass="adsfer920rne45"
 	set mrjpass2="95093wqn4b23h6"
 	//try {
 	set OutSum=$Get(%request.Data("OutSum",1))
 	set InvId=$Get(%request.Data("InvId",1))
-	set SignValue=$Get(%request.Data("SignatureValue",1))
-	set UserId=$Get(%request.Data("shpUserId",1))
-	//set SignValue=##class(Auth.Session).Decode(SignValue)
-	set transactionId=$Get(%request.Data("shpId",1))
-	set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_OutSum_":"_InvId_":"_mrjpass2_":shpId="_transactionId_":shpUserId="_UserId)
+	set SignValue=$Get(%request.Data("SignatureValue",1))	
+	//set UserId=$Get(%request.Data("shpUserId",1))
+	set transaction=##class(SPD.Transactions).%OpenId(InvId)
+	set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_transaction.OutSum_":"_transaction.%Id()_":"_mrjpass2)
 	set SignatureValue=##class(Auth.Session).Encode(SignatureValue)
-	w transactionId
+	w "SignatureValue="_SignatureValue,!
+	w "SignValue="_SignValue,!
 	if (SignatureValue=$ZCVT(SignValue,"l"))
-	{
-		set transaction=##class(SPD.Transactions).%OpenId(transactionId)
+	{		
 		set transaction.success=1
-		set transaction.CompleteDate=$ZDT($H,3)
-		do transaction.%Save()
+		set transaction.CompleteDate=$ZDT($H,3)		
+		///сгенерировать абонемент
+
+		set st=transaction.%Save()
 	}
 	quit $$$OK
 ]]></Implementation>
@@ -261,18 +231,16 @@
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set st=$$$OK	
-	try {    
+	set st=$$$OK
+	try {   
+		w 1
 		set OutSum=$Get(%request.Data("OutSum",1))
-		set InvId=$Get(%request.Data("InvId",1))
+		set transactionId=$Get(%request.Data("InvId",1))
 		set Culture=$Get(%request.Data("Culture",1))		
-		set SignValue=$Get(%request.Data("SignatureValue",1))
-		set UserId=$Get(%request.Data("shpUserId",1))
-		&sql(select id,count(id) into :id,:count from SPD.Transactions where (sSignatureValue=:SignValue & UserId=:UserId))
-		if (count=1){
-			set transaction=##class(SPD.Transactions).%OpenId(id)
+		set transaction=##class(SPD.Transactions).%OpenId(transactionId)
+			set transaction.CompleteDate=$zdt($h,3)
 			set transaction.success=0
-		}		
+			set st=transaction.%Save()
 	} catch ex {
 		set st=ex.AsStatus()
 	}

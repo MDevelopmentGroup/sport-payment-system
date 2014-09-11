@@ -10,15 +10,74 @@
 <Implementation><![CDATA[
 	set st=$$$OK
 	try{
-		//set dancer=##class(LIB.Person).%New()
-		set dancer=##class(Auth.Session).GetCurrentUser()
+		set dancer=##class(SPD.Dancer).%New()
+		set dancer=##class(SPD.Dancer).%OpenId(##class(Auth.Session).GetCurrentUser().%Id())
 		set myfroup=##class(SPD.TempGroup).%New()
-		set myfroup.DancerGroup=##class(SPD.Group).%OpenId(groupid)		
-		set myfroup.TempGroup=##class(SPD.JournalLesson).%OpenId(idJL).Group
-		set st=myfroup.%Save()
-		set st=WithDraw(idJL)
-		///todo снятие денег
+		&sql(select id into :idgroup from SPD.GroupDancers where JournallLesson->id=:idJL)		
+		set myfroup.TempGroup=##class(SPD.GroupDancers).%OpenId(idgroup)
+		if (myfroup.TempGroup.JournallLesson.LessonInTable.Gender=1){
+			if (myfroup.TempGroup.CompleteGroup'=1){
+				if (dancer.Gender=0){
+					&sql(select count(Dancer) into :count from SPD.TempGroup where TempGroup->id=:id and Dancer->Gender=0)
+					if (count<myfroup.TempGroup.JournallLesson.LessonInTable.maxCountM)					
+					{
+						
+					}
+					else
+					{
+						SET mygenex = ##class(%Exception.General).%New("Exception","999",,"Количество мужчин в группе максимально.")
+		    			THROW mygenex
+					}
+				}
+				else {
+					
+					&sql(select count(Dancer) into :count from SPD.TempGroup where TempGroup->id=:id and Dancer->Gender=1)
+					if (count<myfroup.TempGroup.JournallLesson.LessonInTable.maxCountЦ)
+					{
+						
+					}
+					else
+					{
+						SET mygenex = ##class(%Exception.General).%New("Exception","999",,"Количество женщин в группе максимально.")
+		    			THROW mygenex
+					}
+				}
+			}
+			else {
+				SET mygenex = ##class(%Exception.General).%New("Exception","999",,"Группа укомплектована")
+		    	THROW mygenex
+			}
+		}
+		else{
+			&sql(select count(Dancer) into :count from SPD.TempGroup where TempGroup->id=:id)
+			if (count>myfroup.TempGroup.JournallLesson.RoomDance.MaxCountDancers){
+				SET mygenex = ##class(%Exception.General).%New("Exception","999",,"Группа укомплектована")
+		    	THROW mygenex
+			}
+		}
 		
+		set jl=##class(SPD.JournalLesson).%OpenId(idJL)
+		set myfroup.Dancer=dancer
+		///todo сделать проверку на переполнение группы
+		if (jl.Price.Cost>dancer.Balance)
+		{
+			SET mygenex = ##class(%Exception.General).%New("Exception","999",,"Суммы на вашем балансе недостаточно.")
+    		THROW mygenex
+		}
+		else {
+		set userid=##class(Auth.Session).GetCurrentUser().%Id()
+		&sql(select count(id) into :count 
+			from SPD.TempGroup 
+			where TempGroup->JournallLesson=:idJL and Dancer->id=:userid)
+			if (count<1){
+				set st=##class(SPD.Logic.Dancer).WithDraw(idJL)
+				set st=myfroup.%Save()
+			}
+			else{
+				SET mygenex = ##class(%Exception.General).%New("Exception","999",,"Повторная оплата занятия.")
+    			THROW mygenex
+			}
+		}		
 	}
 	catch er{
 		set st=er.AsStatus()
@@ -36,20 +95,90 @@
 	try{
 		
 		set userid=##class(Auth.Session).GetCurrentUser().%Id()
-		&sql(select count(id) into :count 
-		from SPD.TempGroup 
-		where TempGroup->JournallLesson=:idJL and Dancer->id=:userid)
-		///todo сделать проверку на переполнение группы
-		if (count){
 			set dancer=##class(SPD.Dancer).%OpenId(userid)
 			set jl=##class(SPD.JournalLesson).%OpenId(idJL)
-			set dancer.Balance=dancer.Balance-jl.Price.Cost
-			
-		}
-		else{
-			///повторная оплата
-			
-		}
+			set Balance=dancer.Balance-jl.Price.Cost			
+			set dancer.Balance=##class(REST.JSON).SetSum(Balance)
+			set st=dancer.%Save()
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="CheckBalance">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>Balance</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	set bl=1
+	if ($LISTLENGTH($listfromstring(Balance,"."))>1){
+		set bl=0
+	}
+	ret bl
+]]></Implementation>
+</Method>
+
+<Method name="GetCurrentBalance">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set userid=##class(Auth.Session).GetCurrentUser().%Id()
+		set sqlquery="select Balance "_
+		"from SPD.Dancer where id="_userid		
+		do ##class(SPD.School).GetJSONData(sqlquery)
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetMyLessons">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+	set DancerId=##class(Auth.Session).GetCurrentUser().%Id()
+	set sqlquery="select TempGroup->JournallLesson->DateBegin as DateBegin , "_
+		"TempGroup->JournallLesson->id as ID, "_
+		"TempGroup->JournallLesson->DateEnd as DateEnd, TempGroup->JournallLesson->Price->Cost as Cost, "_
+		"TempGroup->JournallLesson->RoomDance->Name As RoomName, "_
+		"TempGroup->JournallLesson->RoomDance->id As RoomId, "_
+		"TempGroup->JournallLesson->LessonInTable->ShortDescription as LessonDescr, "_
+		"TempGroup->JournallLesson->School->Name, "_
+		"TempGroup->JournallLesson->RoomDance->Address->City as City, "_
+		"TempGroup->JournallLesson->RoomDance->Address->Country as Country, "_
+		"TempGroup->JournallLesson->RoomDance->Address->Street as Street "_
+		"FROM SPD.TempGroup "_
+		"where Dancer->id="_DancerId
+		do ##class(SPD.School).GetJSONData(sqlquery)
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="getTransactions1">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try {
+		set dancer=##class(Auth.Session).GetCurrentUser()
+		set sqlquery1="SELECT ID, CompleteDate, "_
+		"Dancer, DateTransactionInit, OutSum, Valuta, sSignatureValue, success "_
+		"FROM SPD.Transactions "_
+		"where CompleteDate is not null and Dancer->id="_dancer.%Id()_" order by DateTransactionInit DESC"
+		do ##class(SPD.School).GetJSONData(sqlquery1)
+		
 	}
 	catch er{
 		set st=er.AsStatus()

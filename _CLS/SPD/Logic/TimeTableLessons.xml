@@ -16,7 +16,11 @@
 		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
 		set lesson.Day=obj.DayID
 		set lesson.Instructor=##class(SPD.Instructor).%OpenId(obj.InstructorID)
-		
+		if (obj.Gender'=""){
+			set lesson.Gender=$ZCONVERT(obj.Gender,"I","UTF8")
+			set lesson.maxCountM=$ZCONVERT(obj.maxCountM,"I","UTF8")
+			set lesson.maxCountW=$ZCONVERT(obj.maxCountW,"I","UTF8")
+		}
 		set lesson.Room=##class(SPD.Room).%OpenId(obj.RoomId)
 		set lesson.School=##class(Auth.Session).GetCurrentSchool()
 		set lesson.ShortDescription=$ZCONVERT(obj.ShortDescription,"I","UTF8")
@@ -44,15 +48,20 @@
 		set lesson.Instructor=##class(SPD.Instructor).%OpenId(obj.InstructorID)
 		set lesson.Room=##class(SPD.Room).%OpenId(obj.RoomId)
 		set lesson.School=##class(Auth.Session).GetCurrentSchool()
+		if (obj.Gender'=""){
+			set lesson.Gender=$ZCONVERT(obj.Gender,"I","UTF8")
+			set lesson.maxCountM=$ZCONVERT(obj.maxCountM,"I","UTF8")
+			set lesson.maxCountW=$ZCONVERT(obj.maxCountW,"I","UTF8")
+		}
 		set lesson.ShortDescription=$ZCONVERT(obj.ShortDescription,"I","UTF8")
 		set lesson.TypeLesson=##class(SPD.TypeLesson).%OpenId(obj.TypeLessonId)
 		set lesson.TimeBegin=$ztimeh(obj.TimeBegin)
 		set lesson.TimeEnd=$ztimeh(obj.TimeEnd)
-		set st=lesson.%Save()		
-		
+		set st=lesson.%Save()
+		zw st
 		
 	}
-	catch ex{	set st=ex}	
+	catch ex{	set st=ex.AsStatus()}
 	ret st
 ]]></Implementation>
 </Method>
@@ -85,20 +94,34 @@
 		set SchoolQuery="select ID, Day, Instructor->id as InstructorID,Instructor->IdDancer->FirstName as InstructorName, "_
 		"Room->id as RoomId, Room->Name as RoomName ,"_
 		" ShortDescription, TimeBegin, TimeEnd, TypeLesson->id as TypeLessonId, "_
-		"TypeLesson->name as TypeLessonTypeName "_
+		"TypeLesson->name as TypeLessonTypeName, "_
+		"Gender as Gender, maxCountM as maxCountM, maxCountW as maxCountW "_
 		"FROM SPD.TimeTableLessons where School->id="_ID
 		//w SchoolQuery,!
 		set st=##class(SPD.School).GetJSONData(SchoolQuery)	
 	}
-	catch ex{	set st=ex}	
+	catch ex{	set st=ex.AsStatus()}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="TimeTableLessonsRoom">
+<Description>
+методы создания, редактирования, удаления для индивидуальных занятий. Доступны инструктору(тренеру)
+</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		
+	}
+	catch ex{	set st=ex.AsStatus()}
 	ret st
 ]]></Implementation>
 </Method>
 
 <Method name="GetLesson">
-<Description>
-методы создания, редактирования, удаления для индивидуальных занятий. Доступны инструктору(тренеру)
-</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>ID</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -136,8 +159,13 @@
 			set lesson.TypeLesson=##class(SPD.TypeLesson).%OpenId(proxy.TypeLessonId)
 			set lesson.TimeBegin=$ztimeh(proxy.TimeBegin)
 			set lesson.TimeEnd=$ztimeh(proxy.TimeEnd)
+			if (obj.Gender'=""){
+				set lesson.Gender=$ZCONVERT(obj.Gender,"I","UTF8")
+				set lesson.maxCountM=$ZCONVERT(obj.maxCountM,"I","UTF8")
+				set lesson.maxCountW=$ZCONVERT(obj.maxCountW,"I","UTF8")
+			}
 			set st=lesson.%Save()
-			set st=##class(SPD.Logic.JournalLesson).GenerateJournalLesson(lesson.%Id())
+			//set st=##class(SPD.Logic.JournalLesson).GenerateJournalLesson(lesson.%Id())
 		}
 	}
 	catch ex{	set st=ex}	

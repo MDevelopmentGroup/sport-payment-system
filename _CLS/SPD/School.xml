@@ -30,6 +30,13 @@
 <Properties>Person</Properties>
 </Index>
 
+<Property name="SchoolRate">
+<Type>%Integer</Type>
+<InitialExpression>0</InitialExpression>
+<Parameter name="MAXVAL" value="100"/>
+<Parameter name="MINVAL" value="0"/>
+</Property>
+
 <Property name="Rooms">
 <Type>SPD.Room</Type>
 <Cardinality>many</Cardinality>
@@ -144,6 +151,9 @@ todo целостность не обеспечена </Description>
 </Value>
 <Value name="30">
 <Value>InstructorList</Value>
+</Value>
+<Value name="31">
+<Value>SchoolRate</Value>
 </Value>
 </Data>
 <Property name="%%CLASSNAME">

@@ -37,7 +37,7 @@
                         <div class="form-group" ng-if="Price.TimeBegin">
                             <label for="Price" class="col-lg-2 control-label ">{{Page.Price.DateActual}} от:</label>
                             <div class="col-lg-6">
-                                <input type="text" size="10" class="form-control" ng-model="Price.DateBegin" data-autoclose="1" data-date-type="string" placeholder="Date" bs-datepicker>
+                                <input type="text" size="10" class="form-control" ng-model="Price.DateBegin" data-min-date="{{startDate1}}" data-autoclose="1" data-date-type="string" placeholder="Date" bs-datepicker>
                             </div>
                             <div class="col-lg-2">
                                 <input type="text" size="8" class="form-control" ng-model="Price.TimeBegin" data-autoclose="1" data-time-type="string" placeholder="Time" bs-timepicker>
@@ -46,7 +46,7 @@
                         <div class="form-group">
                             <label for="Price" class="col-lg-2 control-label ">{{Page.Price.DateActual}}</label>
                             <div class="col-lg-6">
-                                <input type="text" size="10" class="form-control" ng-model="Price.sharedDate" data-autoclose="1" data-start-date="{{fromDate}}" data-min-date="{{fromDate}}" data-date-type="string" placeholder="Date" bs-datepicker>
+                                <input type="text" size="10" class="form-control" ng-model="Price.sharedDate" data-autoclose="1" data-min-date="{{fromDate}}" data-date-type="string" placeholder="Date" bs-datepicker>
                             </div>
                                 <div class="col-lg-2">
                                 <input type="text" size="8" class="form-control" ng-model="Price.sharedTime" data-autoclose="1" data-time-type="string" placeholder="Time" bs-timepicker>

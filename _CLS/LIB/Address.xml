@@ -16,8 +16,12 @@
 <Type>%String</Type>
 </Property>
 
-<Property name="Description">
-<Type>%String</Type>
+<Property name="Building">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="RoomNumber">
+<Type>%Integer</Type>
 </Property>
 
 <Storage name="Default">
@@ -28,8 +32,6 @@
 <IndexLocation>^LIB.AddressI</IndexLocation>
 <StreamLocation>^LIB.AddressS</StreamLocation>
 <Data name="AddressDefaultData">
-<Structure>listnode</Structure>
-<Subscript/>
 <Value name="1">
 <Value>%%CLASSNAME</Value>
 </Value>
@@ -44,6 +46,15 @@
 </Value>
 <Value name="5">
 <Value>Description</Value>
+</Value>
+<Value name="6">
+<Value>building</Value>
+</Value>
+<Value name="7">
+<Value>Building</Value>
+</Value>
+<Value name="8">
+<Value>RoomNumber</Value>
 </Value>
 </Data>
 </Storage>

@@ -38,6 +38,18 @@ todo проверку на дни</Description>
 <Type>%String</Type>
 </Property>
 
+<Property name="maxCountW">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="maxCountM">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="Gender">
+<Type>%Boolean</Type>
+</Property>
+
 <UDLText name="T">
 <Content><![CDATA[
 // Relationship Semester As SPD.Semester [ Cardinality = many, Inverse = TimeTable ];
@@ -94,6 +106,24 @@ todo проверку на дни</Description>
 </Value>
 <Value name="14">
 <Value>Day</Value>
+</Value>
+<Value name="15">
+<Value>maxComuntW</Value>
+</Value>
+<Value name="16">
+<Value>MaxCountM</Value>
+</Value>
+<Value name="17">
+<Value>bl</Value>
+</Value>
+<Value name="18">
+<Value>Gender</Value>
+</Value>
+<Value name="19">
+<Value>maxCountM</Value>
+</Value>
+<Value name="20">
+<Value>maxCountW</Value>
 </Value>
 </Data>
 </Storage>
