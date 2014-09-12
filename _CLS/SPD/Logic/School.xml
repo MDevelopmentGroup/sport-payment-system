@@ -89,7 +89,6 @@
 		set price=##class(SPD.Price).%New()		
 		set price.Cost=obj.Cost
 		set price.DateActualEnd=$zdt($zdth(obj.dateActual,4),3)
-		zw obj
 		if ((obj.DateBegin)'="" && (obj.TimeBegin'="")) {
 			//w obj.DateBegin_" "_obj.TimeBegin			
 			set price.DateActualStart=$zdt($zdth(obj.DateBegin_" "_obj.TimeBegin,4),3)
@@ -98,12 +97,25 @@
 			set price.DateActualStart=$zdt($h,3)
 		}
 		set price.school=school		
-		//zw price
+		
 		set match=##class(SPD.MatchPriceTypeLess).%New()
-		zw price
+		set sl=##class(SPD.SubscriptionList).%New()
+		set sl.cost=##class(REST.JSON).SetSum($ZCONVERT(price.Cost,"I","UTF8"))
+		set sl.DateActualEnd=price.DateActualEnd
+		set sl.DateActualStart=price.DateActualStart
+		set sl.Duration=0
+		set sl.School=price.school
+		set sl.Show=0
+		set sl.ShortDescription="Абонемент на 1 занятие "_TypeLesson.name_"."
+		set st=sl.%Save()
+
+		set lis=##class(SPD.LessonsInSubscription).%New()
+		set lis.Subscription=sl
+		set lis.LessonType=TypeLesson
+		set st=lis.%Save()
 		set match.Price=price
 		set match.TypeLesson=TypeLesson
-		zw match
+		
 		set st=match.%Save()
 		set st=price.%Save()		
 		set st=TypeLesson.%Save()

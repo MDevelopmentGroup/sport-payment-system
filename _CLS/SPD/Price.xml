@@ -34,6 +34,10 @@
 <Type>SPD.School</Type>
 </Property>
 
+<Property name="SubscriptionList">
+<Type>SPD.SubscriptionList</Type>
+</Property>
+
 <Property name="Actual">
 <Type>%Boolean</Type>
 <Calculated>1</Calculated>
@@ -131,6 +135,9 @@
 </Value>
 <Value name="9">
 <Value>MatchTypeLess</Value>
+</Value>
+<Value name="10">
+<Value>SubscriptionList</Value>
 </Value>
 </Data>
 </Storage>

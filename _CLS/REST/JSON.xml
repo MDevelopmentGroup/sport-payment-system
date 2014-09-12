@@ -67,14 +67,19 @@
 	set transaction.Subscription=sub
 	set outSum=sub.cost
 	set transaction.OutSum=##class(REST.JSON).SetSum(outSum)
-	
+	if (obj.JournallLesson=""){
+		set jls=0
+	}
+	else {
+		set jls=obj.JournallLesson
+ 	}
 	do transaction.%Save()
 	if (obj.email'="")
 	{
 		set transaction.email=obj.email
 	}
 	set sole=##class(SPD.Logic.Subscription).GenerateSole(sub.cost_""_sub.School_""_sub.ShorDescription)
-	set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_MrchLogin_":"_outSum_":"_transaction.%Id()_":"_mrjpass)
+	set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_MrchLogin_":"_outSum_":"_transaction.%Id()_":"_mrjpass_":shpjls="_jls_":shpsub="_sub.%Id())
 	set sole=##class(Auth.Session).Encode(sole)
 	set hex=##class(Auth.Session).Encode(SignatureValue)
 	set transaction.sSignatureValue=$ZCONVERT(hex,"I","UTF8")
@@ -86,7 +91,9 @@
     "&Desc="_desc_
     "&SignatureValue="_hex_
     "&sIncCurrLabel="_sIncCurrLabel_
-    "&sCulture="_sCulture
+    "&sCulture="_sCulture_
+    "&:shpjls=="_jls_
+    "&shpsub="_sub.%Id()
     
     w "{""urlPay"":"""_url_"""}"
  	}
@@ -209,9 +216,10 @@
 	set OutSum=$Get(%request.Data("OutSum",1))
 	set InvId=$Get(%request.Data("InvId",1))
 	set SignValue=$Get(%request.Data("SignatureValue",1))	
+	set sub=$Get(%request.Data("shpsub",1))
 	//set UserId=$Get(%request.Data("shpUserId",1))
 	set transaction=##class(SPD.Transactions).%OpenId(InvId)
-	set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_transaction.OutSum_":"_transaction.%Id()_":"_mrjpass2)
+	set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_transaction.OutSum_":"_transaction.%Id()_":"_mrjpass2_":shpjls="_jls_"shpsub="_sub)
 	set SignatureValue=##class(Auth.Session).Encode(SignatureValue)
 	w "SignatureValue="_SignatureValue,!
 	w "SignValue="_SignValue,!

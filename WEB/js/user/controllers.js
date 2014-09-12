@@ -134,7 +134,7 @@ function NavBarCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFacto
 
 
 //******************************************** MySchoolCtrl ***************************************************************//
-function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFactory,SchoolFactory,MyFuntcions){
+function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFactory,SchoolFactory,MyFunctions){
     $scope.initit=function() {
         $rootScope.MenuActive = {};
         $scope.startDate1=new Date();
@@ -165,7 +165,7 @@ function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFac
         })};
         $scope.GetLessontypes($scope.IdSchool);
         var datetime=new Date();
-        $scope.startDate=MyFuntcions.CheckTime(datetime.getDate())+"/"+(MyFuntcions.CheckTime(datetime.getMonth()+1))+"/"+MyFuntcions.CheckTime(datetime.getFullYear());
+        $scope.startDate=MyFunctions.CheckTime(datetime.getDate())+"/"+(MyFunctions.CheckTime(datetime.getMonth()+1))+"/"+MyFunctions.CheckTime(datetime.getFullYear());
     };
 
     $scope.GetPrice=function(){
@@ -177,12 +177,12 @@ function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFac
 
     $scope.AddPrice=function(price){
             $scope.Price={};
-                //MyFuntcions.CheckTime(datetime.getDate())+"/"+(MyFuntcions.CheckTime(datetime.getMonth()+1))+"/"+MyFuntcions.CheckTime(datetime.getFullYear());
+                //MyFunctions.CheckTime(datetime.getDate())+"/"+(MyFunctions.CheckTime(datetime.getMonth()+1))+"/"+MyFunctions.CheckTime(datetime.getFullYear());
             $scope.SetType=function(TypeLessonTypeID){
                 SchoolFactory.GetEndTimeLastPrice(TypeLessonTypeID).success(function(data){
                     var datetime=new Date(Date.parse(data.children));
-                    $scope.Price.TimeBegin=MyFuntcions.CheckTime(datetime.getHours())+":"+MyFuntcions.CheckTime(datetime.getMinutes())+":00";
-                    $scope.Price.DateBegin=MyFuntcions.CheckTime(datetime.getDate())+"/"+(MyFuntcions.CheckTime(datetime.getMonth()+1))+"/"+MyFuntcions.CheckTime(datetime.getFullYear());
+                    $scope.Price.TimeBegin=MyFunctions.CheckTime(datetime.getHours())+":"+MyFunctions.CheckTime(datetime.getMinutes())+":00";
+                    $scope.Price.DateBegin=MyFunctions.CheckTime(datetime.getDate())+"/"+(MyFunctions.CheckTime(datetime.getMonth()+1))+"/"+MyFunctions.CheckTime(datetime.getFullYear());
                     $scope.fromDate=new Date(Date.parse(data.children));
                     console.log($scope.fromDate);
                 });
@@ -201,8 +201,8 @@ function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFac
                 if (bl) {
                     $scope.Price.TypeLessonId = "";
                     var datetime=new Date();
-                    $scope.Price.TimeBegin=MyFuntcions.CheckTime(datetime.getHours())+":"+MyFuntcions.CheckTime(datetime.getMinutes())+":00";
-                    $scope.Price.DateBegin=MyFuntcions.CheckTime(datetime.getDate())+"/"+(MyFuntcions.CheckTime(datetime.getMonth()+1))+"/"+MyFuntcions.CheckTime(datetime.getFullYear());
+                    $scope.Price.TimeBegin=MyFunctions.CheckTime(datetime.getHours())+":"+MyFunctions.CheckTime(datetime.getMinutes())+":00";
+                    $scope.Price.DateBegin=MyFunctions.CheckTime(datetime.getDate())+"/"+(MyFunctions.CheckTime(datetime.getMonth()+1))+"/"+MyFunctions.CheckTime(datetime.getFullYear());
 
                 }
                 console.log($scope.Price.fromDate);
@@ -354,8 +354,8 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
             if((task.from-task.to)>0){
                 task.to.setDate(task.to.getDate()+1);
             }
-            task.est=new Date(Date.parse($scope.Date[LessonList[i].Day]+est));;
-            task.lct=new Date(Date.parse($scope.Date[LessonList[i].Day]+lct));;
+            task.est=new Date(Date.parse($scope.Date[LessonList[i].Day]+est));
+            task.lct=new Date(Date.parse($scope.Date[LessonList[i].Day]+lct));
             task.data={};
             task.data.Gender=LessonList[i].Gender;
             task.data.maxCountM=LessonList[i].maxCountM;
@@ -1224,7 +1224,8 @@ function CreateSchoolCtrl($rootScope,$scope,SettingFactory,LanguageFactory,FileF
     
 
 }
-function LeftInfoPanelCtrl($rootScope,$scope,$modal,SettingFactory,LanguageFactory,AuthenticationFactory,DancerFactory) {
+function LeftInfoPanelCtrl($rootScope,$scope,$modal,LanguageFactory,AuthenticationFactory,DancerFactory) {
+
     $scope.intit=function()
     {
         $rootScope.MenuActive={};
@@ -1234,17 +1235,6 @@ function LeftInfoPanelCtrl($rootScope,$scope,$modal,SettingFactory,LanguageFacto
         $scope.User=AuthenticationFactory.GetCurrentUser();
         $scope.IdSchool=$scope.User.IdSchool;
         $scope.lang=LanguageFactory.GetCurrentLanguage();
-        $rootScope.GetCurrentBalance=function(){
-            console.log($scope.User.Role);
-            if (($scope.User.Role!=1)&&($scope.User.Role!=0))
-            {
-                DancerFactory.GetCurrentBalance().success(function(data){
-                    $scope.Balance=data.children[0].Balance;
-                });
-            }
-        };
-
-        $rootScope.GetCurrentBalance();
 
     };
     $scope.reg_Dancer=function(){
@@ -1262,8 +1252,18 @@ function LeftInfoPanelCtrl($rootScope,$scope,$modal,SettingFactory,LanguageFacto
         var modal=$modal({scope: $scope, placement:"center", backdrop:false, template: 'partials/user/modal/register.html', show: true});
 
     };
-    $scope.intit();
+    $rootScope.GetCurrentBalance=function(){
 
+        if (($scope.User.Role!=1)&&($scope.User.Role!=0))
+        {
+
+            DancerFactory.GetCurrentBalance().success(function(data){
+                $scope.Balance=data.children[0].Balance;
+            });
+        }
+    };
+    $scope.intit();
+    $rootScope.GetCurrentBalance();
 
 }
 
@@ -1345,7 +1345,7 @@ function ViewSubscriptionsCtrl($rootScope,$routeParams,$modal,$scope,SettingFact
     };
     $scope.GetSubscriptions($routeParams.ID);
 }
-function CreateSubscriptionsCtrl($rootScope,$routeParams,$modal,$scope,SettingFactory,LanguageFactory,SchoolFactory,AuthenticationFactory,MyFuntcions){
+function CreateSubscriptionsCtrl($rootScope,$routeParams,$modal,$scope,SettingFactory,LanguageFactory,SchoolFactory,AuthenticationFactory,MyFunctions){
     $rootScope.User= AuthenticationFactory.GetCurrentUser();
     $scope.Subscr={};
     $scope.school={};
@@ -1354,8 +1354,8 @@ function CreateSubscriptionsCtrl($rootScope,$routeParams,$modal,$scope,SettingFa
     $scope.HASH = $scope.User.HASH;
     $scope.IdSchool = $scope.User.IdSchool;
     var datetime=new Date();
-    $scope.Subscr.DateBegin=MyFuntcions.CheckTime(datetime.getDate())+"/"+(MyFuntcions.CheckTime(datetime.getMonth()+1))+"/"+MyFuntcions.CheckTime(datetime.getFullYear());
-    $scope.Subscr.TimeBegin=MyFuntcions.CheckTime(datetime.getHours())+":"+MyFuntcions.CheckTime(datetime.getMinutes())+":00";
+    $scope.Subscr.DateBegin=MyFunctions.CheckTime(datetime.getDate())+"/"+(MyFunctions.CheckTime(datetime.getMonth()+1))+"/"+MyFunctions.CheckTime(datetime.getFullYear());
+    $scope.Subscr.TimeBegin=MyFunctions.CheckTime(datetime.getHours())+":"+MyFunctions.CheckTime(datetime.getMinutes())+":00";
     $scope.GetLessonWithoutSub=function(){
         SchoolFactory.GetLessonWithoutSub().success(function(data){
             $scope.LessonWithoutSub=data.children;
@@ -1439,11 +1439,12 @@ function CreateSubscriptionsCtrl($rootScope,$routeParams,$modal,$scope,SettingFa
     };
     $scope.GetLessonWithoutSub();
 };
-function ViewSubscriptionCtrl($rootScope,$routeParams,$scope,SchoolFactory,AuthenticationFactory,MyFuntcions,DancerFactory)
+function ViewSubscriptionCtrl($rootScope,$routeParams,$scope,SchoolFactory,AuthenticationFactory,MyFunctions,DancerFactory)
 {
     $rootScope.User= AuthenticationFactory.GetCurrentUser();
     $scope.User = AuthenticationFactory.GetCurrentUser();
     $scope.Name = $scope.User.UserName;
+    $scope.lang=LanguageFactory.GetCurrentLanguage();
     $scope.HASH = $scope.User.HASH;
     $scope.IdSchool = $scope.User.IdSchool;
     DancerFactory.GetSubscriptionFromList($routeParams.IDS).success(function(data){
@@ -1458,3 +1459,33 @@ function ViewSubscriptionCtrl($rootScope,$routeParams,$scope,SchoolFactory,Authe
     };
 };
 //******************************************** dance ***************************************************************//
+function UpdateSubscriptionsCtrl($rootScope,$routeParams,$scope,SchoolFactory,LanguageFactory,AuthenticationFactory,MyFunctions,DancerFactory)
+{
+    $rootScope.User= AuthenticationFactory.GetCurrentUser();
+    $scope.User = AuthenticationFactory.GetCurrentUser();
+    $scope.Name = $scope.User.UserName;
+    $scope.HASH = $scope.User.HASH;
+    $scope.IdSchool = $scope.User.IdSchool;
+    $scope.lang=LanguageFactory.GetCurrentLanguage();
+    $scope.GetSubscription=function(id){
+        DancerFactory.GetSubscriptionFromList(id).success(function(data){
+            $scope.Subscr=data.children[0];
+            $scope.LessonWithoutSub=$scope.Subscr.lis;
+            $scope.Subscr.DateBegin=MyFunctions.GetDateFromCacheTimeSptamp($scope.Subscr.DateActualStart);
+            $scope.Subscr.TimeBegin=MyFunctions.GetTimeFromCacheTimeSptamp($scope.Subscr.DateActualStart);
+            $scope.Subscr.sharedDate=MyFunctions.GetDateFromCacheTimeSptamp($scope.Subscr.DateActualEnd);
+            $scope.Subscr.sharedTime=MyFunctions.GetTimeFromCacheTimeSptamp($scope.Subscr.DateActualEnd);
+        });
+    };
+    $scope.GetSubscription($routeParams.ID);
+    $scope.Update=function(Subscr){
+        SchoolFactory.UpdateSubscription(Subscr).succsss(function(){
+            $scope.GetSubscription($routeParams.ID);
+        });
+    };
+    $scope.AddLessInSubscriptionId=function(lis,id){
+        SchoolFactory.AddLessInSubscriptionId(lis,id).success(function(data){
+            $scope.GetSubscription($routeParams.ID);
+        });
+    };
+}

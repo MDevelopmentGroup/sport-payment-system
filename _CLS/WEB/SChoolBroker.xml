@@ -48,6 +48,7 @@
 	<Route Url="/UpdateLessInSubscription/:ID"	Method="POST"		Call="SPD.Logic.LessonInSubscription:Update"/>
 	
 	<Route Url="/CreateSubscription/"			Method="POST"		Call="SPD.Logic.SubscriptionList:Create"/>
+	<Route Url="/UpdateSubscription/"			Method="POST"		Call="SPD.Logic.SubscriptionList:Update"/>
 	<!--Subscription-->
 	
 	<!---->

@@ -365,6 +365,9 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     SchoolFactory.AddLessInSubscription=function(data){
         return $http.post(schoolBroker+"/AddLessInSubscription/",data);
     };
+    SchoolFactory.AddLessInSubscriptionId=function(data,id){
+        return $http.post(schoolBroker+"/AddLessInSubscription/"+id,data);
+    };
     SchoolFactory.GetLessonWithoutSub=function(){
         return $http.get(schoolBroker+"/GetLessonWithoutSub/");
     };
@@ -376,6 +379,9 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     };
     SchoolFactory.CreateSubscription=function(data){
         return $http.post(schoolBroker+"/CreateSubscription/",data);
+    };
+    SchoolFactory.UpdateSubscription=function(data){
+        return $http.post(schoolBroker+"/UpdateSubscription/",data);
     };
     return SchoolFactory;
 }]);
@@ -455,9 +461,9 @@ app.factory('SettingFactory',['$http','$rootScope','ErrorLogFactory',function($h
 //***************************************** Setting ********************************************************************//
 
 
-app.factory('MyFuntcions',['$rootScope',function($rootScope){
-    var MyFuntcions={};
-    MyFuntcions.CheckTime=function(time) {
+app.factory('MyFunctions',['$rootScope',function($rootScope){
+    var MyFunctions={};
+    MyFunctions.CheckTime=function(time) {
         if(time==0){
             time="00"
         }
@@ -466,5 +472,27 @@ app.factory('MyFuntcions',['$rootScope',function($rootScope){
         }
         return time
     };
-    return MyFuntcions;
+    MyFunctions.GetDateFromCacheTimeSptamp=function(cachedate)
+    {
+        var datetime=new Date(Date.parse(cachedate));
+        date=MyFunctions.CheckTime(datetime.getDate())+"/"+(MyFunctions.CheckTime(datetime.getMonth()+1))+"/"+MyFunctions.CheckTime(datetime.getFullYear());
+        return date;
+    };
+    MyFunctions.GetTimeFromCacheTimeSptamp=function(cachedate)
+    {
+        var datetime=new Date(Date.parse(cachedate));
+        time=MyFunctions.CheckTime(datetime.getHours())+":"+MyFunctions.CheckTime(datetime.getMinutes())+":00";
+        return time;
+    };
+
+    MyFunctions.CheckTime=function(time){
+        if(time==0){
+            time="00"
+        }
+        if(time.toString().length==1){
+            time="0"+time.toString();
+        }
+        return time;
+    };
+    return MyFunctions;
 }]);

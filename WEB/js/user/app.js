@@ -42,6 +42,7 @@ angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute'
         when('/SubscriptionList/:ID',          {templateUrl: 'partials/user/view/view_Subscriptions.html', controller: ViewSubscriptionsCtrl}).
         when('/SubscriptionList/:ID/:IDS',      {templateUrl: 'partials/user/view/view_Subscription.html', controller: ViewSubscriptionCtrl}).
         when('/CreateSubscription/:ID',          {templateUrl: 'partials/user/Create/create_Subscription.html', controller: CreateSubscriptionsCtrl}).
+        when('/UpdateSubscription/:ID',          {templateUrl: 'partials/user/Update/Update_SubscriptionList.html', controller: UpdateSubscriptionsCtrl}).
         //***************************************** Schools **********************************************************//
 
         //***************************************** Invite **********************************************************//
@@ -80,4 +81,35 @@ angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute'
             length: 4
         });
     })
+    .directive("testsum",function(){
+
+        return {
+            restrict: 'AEC',
+            scope:{
+                ngModel:"=",
+                testsum:"="
+            },
+            link:function (scope, element, attrs){
+                scope.$watch("ngModel",function(){
+                        scope.temp? "адын,адын,адын":scope.temp="";
+                        var regEx=new RegExp(scope.testsum);
+                        if (!(regEx.test(scope.ngModel))){
+                            console.log(scope.ngModel);
+                            if (scope.ngModel) {
+                                scope.ngModel = scope.temp;
+                            }
+                            else{
+                                scope.temp="";
+                                scope.ngModel="";
+                            }
+                        }
+                        else{
+                            scope.temp=scope.ngModel;
+                        }
+
+                    }
+                )
+            }
+        };
+    });
 ;
