@@ -16,17 +16,31 @@
 	
 	<!--Instructor-->
 	<Route Url="/CreateInstructor/" 		Method="POST" 		Call="SPD.Logic.Instructor:CreateInstructor"/>	
+	<Route Url="/GetInstructor/:ID" 		Method="GET" 		Call="SPD.Logic.Instructor:GetInstructor"/>
+	<Route Url="/SetInstructorRate/" 		Method="POST" 		Call="SPD.Logic.Instructor:SetInstructorRate"/>
 	<!--Instructor-->
 	
 	<!--School-->
 	<Route Url="/CreateJurnall/" 				Method="POST" 		Call="SPD.Logic.School:CreateJurnall"/>
 	<Route Url="/CreateTimeTable/" 				Method="POST" 		Call="SPD.Logic.School:CreateTimeTable"/>
-	<Route Url="/AddPrice/"						Method="POST"		Call="SPD.Logic.School:AddPrice"/>
+	<Route Url="/AddTypeLesson/"				Method="POST"		Call="SPD.Logic.School:AddTypeLesson"/>
 	<Route Url="/GetPrice/:ID"					Method="GET"		Call="SPD.Logic.School:GetPrice"/>
 	<Route Url="/InviteInstructor/:Email"		Method="GET"		Call="SPD.Logic.School:InviteInstructor"/>
 	<Route Url="/RemoveFromSchool/:ID"			Method="GET"		Call="SPD.Logic.School:RemoveFromSchool"/>
 	
 	<!--School-->
+	
+	<!--
+		<<<semester
+	-->
+	<Route Url="/GetBeginSemester/"			Method="GET"		Call="SPD.Semester:GetBeginSemesterJSON"/>
+	<Route Url="/GetSemesterList/"			Method="GET"		Call="SPD.Semester:GetSemesterList"/>
+	<Route Url="/AddSemester/"				Method="POST"		Call="SPD.Semester:AddSemester"/>
+	
+	<!--
+		semester>>>
+	-->
+	
 	
 	
 	<Route Url="/AddLessonInTable/"				Method="POST"		Call="SPD.Logic.TimeTableLessons:Create"/>
@@ -45,10 +59,11 @@
 	<Route Url="/DeleteLessFromSubscription/:ID"	Method="DELETE"		Call="SPD.Logic.LessonInSubscription:Delete"/>
 	<Route Url="/GetLessonWithoutSub/"			Method="GET"		Call="SPD.Logic.LessonInSubscription:GetLessonWithoutSub"/>
 	<Route Url="/UpdateLessInSubscription/"		Method="POST"		Call="SPD.Logic.LessonInSubscription:Update"/>
-	<Route Url="/UpdateLessInSubscription/:ID"	Method="POST"		Call="SPD.Logic.LessonInSubscription:Update"/>
+	<Route Url="/UpdateLessInSubscriptionLIST/:ID"	Method="POST"	Call="SPD.Logic.LessonInSubscription:Update"/>
 	
 	<Route Url="/CreateSubscription/"			Method="POST"		Call="SPD.Logic.SubscriptionList:Create"/>
 	<Route Url="/UpdateSubscription/"			Method="POST"		Call="SPD.Logic.SubscriptionList:Update"/>
+	
 	<!--Subscription-->
 	
 	<!---->

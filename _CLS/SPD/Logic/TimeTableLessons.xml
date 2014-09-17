@@ -16,10 +16,9 @@
 		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
 		set lesson.Day=obj.DayID
 		set lesson.Instructor=##class(SPD.Instructor).%OpenId(obj.InstructorID)
-		if (obj.Gender'=""){
-			set lesson.Gender=$ZCONVERT(obj.Gender,"I","UTF8")
-			set lesson.maxCountM=$ZCONVERT(obj.maxCountM,"I","UTF8")
-			set lesson.maxCountW=$ZCONVERT(obj.maxCountW,"I","UTF8")
+		if (obj.Limit'=""){
+			set lesson.Limit=$ZCONVERT(obj.Limit,"I","UTF8")
+			set lesson.maxCount=$ZCONVERT(obj.maxCount,"I","UTF8")
 		}
 		set lesson.Room=##class(SPD.Room).%OpenId(obj.RoomId)
 		set lesson.School=##class(Auth.Session).GetCurrentSchool()
@@ -48,18 +47,15 @@
 		set lesson.Instructor=##class(SPD.Instructor).%OpenId(obj.InstructorID)
 		set lesson.Room=##class(SPD.Room).%OpenId(obj.RoomId)
 		set lesson.School=##class(Auth.Session).GetCurrentSchool()
-		if (obj.Gender'=""){
-			set lesson.Gender=$ZCONVERT(obj.Gender,"I","UTF8")
-			set lesson.maxCountM=$ZCONVERT(obj.maxCountM,"I","UTF8")
-			set lesson.maxCountW=$ZCONVERT(obj.maxCountW,"I","UTF8")
+		if (obj.Limit'=""){
+			set lesson.Limit=$ZCONVERT(obj.Limit,"I","UTF8")
+			set lesson.maxCount=$ZCONVERT(obj.maxCount,"I","UTF8")
 		}
 		set lesson.ShortDescription=$ZCONVERT(obj.ShortDescription,"I","UTF8")
 		set lesson.TypeLesson=##class(SPD.TypeLesson).%OpenId(obj.TypeLessonId)
 		set lesson.TimeBegin=$ztimeh(obj.TimeBegin)
 		set lesson.TimeEnd=$ztimeh(obj.TimeEnd)
 		set st=lesson.%Save()
-		zw st
-		
 	}
 	catch ex{	set st=ex.AsStatus()}
 	ret st
@@ -95,7 +91,7 @@
 		"Room->id as RoomId, Room->Name as RoomName ,"_
 		" ShortDescription, TimeBegin, TimeEnd, TypeLesson->id as TypeLessonId, "_
 		"TypeLesson->name as TypeLessonTypeName, "_
-		"Gender as Gender, maxCountM as maxCountM, maxCountW as maxCountW "_
+		"Limit As Limit, maxCount as maxCount "_
 		"FROM SPD.TimeTableLessons where School->id="_ID
 		//w SchoolQuery,!
 		set st=##class(SPD.School).GetJSONData(SchoolQuery)	

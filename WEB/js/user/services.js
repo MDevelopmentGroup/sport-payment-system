@@ -298,14 +298,23 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     SchoolFactory.GetLessonTypes=function(id){
         return $http.get(BaseUrl + "/GetLessonTypes/"+id);
     };
-    SchoolFactory.AddPrice=function(data){
-        return $http.post(schoolBroker+"/AddPrice/",data);
+    SchoolFactory.AddTypeLesson=function(data){
+        return $http.post(schoolBroker+"/AddTypeLesson/",data);
     };
     SchoolFactory.GetPrice=function(ID){
         return $http.get(schoolBroker + "/GetPrice/"+ID);
     };
     SchoolFactory.InviteInstructor=function(email){
         return $http.get(schoolBroker + "/InviteInstructor/"+email);
+    };
+    SchoolFactory.GetBeginSemester=function(){
+        return $http.get(schoolBroker + "/GetBeginSemester/");
+    };
+    SchoolFactory.GetSemesterList=function(){
+        return $http.get(schoolBroker + "/GetSemesterList/");
+    };
+    SchoolFactory.AddSemester=function(date){
+        return $http.post(schoolBroker + "/AddSemester/",date);
     };
     SchoolFactory.InviteAccept=function(hash){
         return $http.post(BaseUrl + "/InviteAccept/"+hash);
@@ -318,6 +327,12 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     };
     SchoolFactory.GetInstructorList=function(idschool){
         return $http.get(BaseUrl+"/GetInstructorList/"+idschool)
+    };
+    SchoolFactory.GetInstructor=function(id){
+        return $http.get(schoolBroker+"/GetInstructor/"+id)
+    };
+    SchoolFactory.UpdateInstructorRate=function(data) {
+        return $http.post(schoolBroker + "/SetInstructorRate/", data)
     };
     SchoolFactory.RemoveFromSchool=function(ID){
         return $http.get(schoolBroker+"/RemoveFromSchool/"+ID)
@@ -374,6 +389,9 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     SchoolFactory.UpdateLessInSubscription=function(data){
         return $http.post(schoolBroker+"/UpdateLessInSubscription/",data);
     };
+    SchoolFactory.UpdateLessInSubscriptionLIST=function(data,id){
+        return $http.post(schoolBroker+"/UpdateLessInSubscriptionLIST/"+id,data);
+    }
     SchoolFactory.DeleteLessInSubscription=function(id){
         return $http.delete(schoolBroker+"/DeleteLessFromSubscription/"+id);
     };

@@ -78,7 +78,7 @@
 	{
 		set transaction.email=obj.email
 	}
-	set sole=##class(SPD.Logic.Subscription).GenerateSole(sub.cost_""_sub.School_""_sub.ShorDescription)
+	set sole=##class(SPD.Logic.Subscription).GenerateSole(sub.cost_""_sub.School_""_sub.ShortDescription)
 	set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_MrchLogin_":"_outSum_":"_transaction.%Id()_":"_mrjpass_":shpjls="_jls_":shpsub="_sub.%Id())
 	set sole=##class(Auth.Session).Encode(sole)
 	set hex=##class(Auth.Session).Encode(SignatureValue)
@@ -92,7 +92,7 @@
     "&SignatureValue="_hex_
     "&sIncCurrLabel="_sIncCurrLabel_
     "&sCulture="_sCulture_
-    "&:shpjls=="_jls_
+    "&shpjls="_jls_
     "&shpsub="_sub.%Id()
     
     w "{""urlPay"":"""_url_"""}"
@@ -183,7 +183,7 @@
 		set transactionId=$Get(%request.Data("shpId",1))
 		set UserId=$Get(%request.Data("shpUserId",1))
 		set transaction=##class(SPD.Transactions).%OpenId(transactionId)
-		&sql(select id,sSignatureValue,count(id) into :id,:sSignatureValue ,:count from SPD.Transactions where (id=:transactionId & Dancer=:UserId))
+		&sql(select id,sSignatureValue,count(id) into :id,:sSignatureValue ,:count from SPD.Transactions where id=:transactionId)
 		w "sSignatureValue="_sSignatureValue,!
 		
 		set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_MrchLogin_":"_OutSum_":"_InvId_":"_mrjpass_":shpId="_transactionId_":shpUserId="_UserId)
@@ -215,7 +215,8 @@
 	//try {
 	set OutSum=$Get(%request.Data("OutSum",1))
 	set InvId=$Get(%request.Data("InvId",1))
-	set SignValue=$Get(%request.Data("SignatureValue",1))	
+	set SignValue=$Get(%request.Data("SignatureValue",1))
+	set jls=$Get(%request.Data("shpjls",1))
 	set sub=$Get(%request.Data("shpsub",1))
 	//set UserId=$Get(%request.Data("shpUserId",1))
 	set transaction=##class(SPD.Transactions).%OpenId(InvId)
@@ -227,8 +228,28 @@
 	{		
 		set transaction.success=1
 		set transaction.CompleteDate=$ZDT($H,3)		
+		//проверить статус кода для данной операции
+		set sub=##class(SPD.SubscriptionList).%OpenId(sub)
+		
 		///сгенерировать абонемент
-
+		set subd=##class(SPD.Subscription).%New()
+		set subd.DateGEnSub=$zdt($h,3)
+		set subd.DateEndSub=$zdt($h+sub.Duration,3)
+		set subd.School=sub.School
+		set subd.Sole=##class(SPD.Logic.Subscription).GenerateSole(sub.cost_""_sub.School_""_sub.ShortDescription_""_InvId)
+		set subd.Transaction=transaction
+		if (jls)
+		{
+			set jl=##class(SPD.JournalLesson).%OpenId(jls)
+			set temp=##class(SPD.TempGroup).%New()
+			set temp.JournallLesson=jl
+			set temp.UserSubscription=subd
+			set st=temp.%Save()
+			set subd.DateGEnSub=jl.DateBegin
+			set subd.DateEndSub=jl.DateEnd
+			set subd.SubList=sub
+		}
+		set st=subd.%Save()
 		set st=transaction.%Save()
 	}
 	quit $$$OK
@@ -274,6 +295,7 @@
 	do objhr.Get(str)
 	set resp=objhr.HttpResponse.Data.Read()
 	set objhr.Timeout=1
+	//qr код + создание абонемента
 	//w resp
 	//&sql(select sSignatureValue into :Signature from SPD.Transactions where UserId=:userId)
 	//w !,hex

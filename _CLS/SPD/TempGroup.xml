@@ -4,20 +4,6 @@
 <Super>%Persistent</Super>
 <TimeCreated>63431,43255.613236</TimeCreated>
 
-<Property name="TempGroup">
-<Type>SPD.GroupDancers</Type>
-<Cardinality>one</Cardinality>
-<Inverse>DancerGroup</Inverse>
-<Relationship>1</Relationship>
-</Property>
-
-<Property name="Dancer">
-<Type>SPD.Dancer</Type>
-<Cardinality>one</Cardinality>
-<Inverse>MyGroup</Inverse>
-<Relationship>1</Relationship>
-</Property>
-
 <Property name="UserSubscription">
 <Type>SPD.Subscription</Type>
 <Cardinality>one</Cardinality>
@@ -25,8 +11,25 @@
 <Relationship>1</Relationship>
 </Property>
 
+<Property name="JournallLesson">
+<Type>SPD.JournalLesson</Type>
+<Cardinality>one</Cardinality>
+<Inverse>Group</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="Visited">
+<Description>
+посетил ли занятие</Description>
+<Type>%Boolean</Type>
+</Property>
+
 <Index name="UserSubscriptionIndex">
 <Properties>UserSubscription</Properties>
+</Index>
+
+<Index name="JournallLessonIndex">
+<Properties>JournallLesson</Properties>
 </Index>
 
 <Storage name="Default">
@@ -54,6 +57,12 @@
 </Value>
 <Value name="6">
 <Value>UserSubscription</Value>
+</Value>
+<Value name="7">
+<Value>JournallLesson</Value>
+</Value>
+<Value name="8">
+<Value>Visited</Value>
 </Value>
 </Data>
 </Storage>

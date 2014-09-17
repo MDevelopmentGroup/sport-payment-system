@@ -13,6 +13,17 @@
 <Parameter name="MAXLEN" value="200"/>
 </Property>
 
+<Property name="School">
+<Type>SPD.School</Type>
+<Cardinality>one</Cardinality>
+<Inverse>LessonTypes</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Index name="SchoolIndex">
+<Properties>School</Properties>
+</Index>
+
 <Method name="Create">
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
@@ -114,13 +125,6 @@
 ]]></Implementation>
 </Method>
 
-<Property name="MatchTypeLesson">
-<Type>SPD.MatchPriceTypeLess</Type>
-<Cardinality>many</Cardinality>
-<Inverse>TypeLesson</Inverse>
-<Relationship>1</Relationship>
-</Property>
-
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^SPD.TypeLessonD</DataLocation>
@@ -144,6 +148,9 @@
 </Value>
 <Value name="5">
 <Value>MatchTypeLesson</Value>
+</Value>
+<Value name="6">
+<Value>School</Value>
 </Value>
 </Data>
 </Storage>

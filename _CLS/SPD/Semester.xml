@@ -4,31 +4,139 @@
 <Super>%Persistent</Super>
 <TimeCreated>63417,54557.231313</TimeCreated>
 
-<Property name="BeginSemester">
+<Property name="name">
+<Type>%String</Type>
+</Property>
+
+<Property name="DateBegin">
 <Type>%DateTime</Type>
 </Property>
 
-<Property name="EndSemester">
+<Property name="DateEnd">
 <Type>%DateTime</Type>
 </Property>
-
-<UDLText name="T">
-<Content><![CDATA[
-// Relationship TimeTable As SPD.TimeTableLessons [ Cardinality = one, Inverse = Semester ];
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// Relationship Price As SPD.Price [ Cardinality = one, Inverse = Semester ];
-
-]]></Content>
-</UDLText>
 
 <Property name="School">
 <Type>SPD.School</Type>
 </Property>
+
+<Property name="Actual">
+<Type>%Boolean</Type>
+<Calculated>1</Calculated>
+<SqlComputeCode>set {Actual}=##class(SPD.Semester).SetActual({DateEnd})</SqlComputeCode>
+<SqlComputed>1</SqlComputed>
+</Property>
+
+<Method name="SetActual">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>DateEnd</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	set bl=1
+	//w "now="_$zdt($h,3),!
+	//w "DateActualEnd="_DateActualEnd,!
+	set nowdate=$list($listfromstring($h,","),1)
+	set nowtime=$list($listfromstring($h,","),2)
+
+	set actdate=$list($listfromstring($zdatetimeh(DateEnd,3),","),1)
+	set acttime=$list($listfromstring($zdatetimeh(DateEnd,3),","),2)
+	//w "nowdate="_nowdate_"     nowtime="_nowtime,!
+	//w "actdate="_actdate_"     acttime="_acttime,!
+	if (nowdate>actdate)
+	{
+		set bl=0
+	}
+	elseif ((nowtime>acttime)&(nowdate>actdate) )
+	{
+		set bl=0
+	}
+	ret bl
+]]></Implementation>
+</Method>
+
+<Method name="AddSemester">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		set sm=##class(SPD.Semester).%New()
+		if (obj.DateBegin'=""){
+			set sm.DateBegin=$zdt($zdth(obj.DateBegin_" "_obj.TimeBegin,4),3)
+		}
+		else{
+			set sm.DateBegin=$zdt($h,3)
+		}
+		set sm.name=$zconvert(obj.name,"I","UTF8")
+		set sm.DateEnd=$zdt($zdth(obj.sharedDate_" "_obj.sharedTime,4),3)
+		set sm.School=##class(Auth.Session).GetCurrentSchool()
+		
+		set st=sm.%Save()
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetSemesterList">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set sqlquery="select name, DateBegin, DateEnd from SPD.Semester where School="_##class(Auth.Session).GetCurrentSchool().%Id()
+		set st=##class(SPD.School).GetJSONData(sqlquery)
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetBeginSemester">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set DateActualEnd=""
+	&sql(SELECT 
+		DateEnd into :DateActualEnd
+		FROM SPD.Semester
+		where School=:id
+	)
+	
+	ret DateActualEnd
+]]></Implementation>
+</Method>
+
+<Method name="GetBeginSemesterJSON">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set dt=##class(SPD.Semester).GetBeginSemester(##class(Auth.Session).GetCurrentSchool().%Id())
+		if (dt'=""){
+			w "{""children"":"""_dt_"""}"
+		}
+		else
+		{
+			w "{""children"":""""}"
+		}
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
 
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
@@ -55,6 +163,15 @@
 </Value>
 <Value name="6">
 <Value>School</Value>
+</Value>
+<Value name="7">
+<Value>DateBegin</Value>
+</Value>
+<Value name="8">
+<Value>DateEnd</Value>
+</Value>
+<Value name="9">
+<Value>name</Value>
 </Value>
 </Data>
 </Storage>

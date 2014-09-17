@@ -33,6 +33,58 @@
 
                         <div class="col-lg-12">
                             <div class="panel panel-default">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-lg-1">
+                                                <h5>{{Page.Common.TypeLesson}}</h5>
+                                            </div>
+                                            <div class="col-lg-1">
+                                                <h5>
+                                                    <a ng-click="AddTypeLesson()"><label class="label label-success"><span class="glyphicon glyphicon-plus"></span></label></a>
+                                                </h5>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <div class="col-lg-11" ng-repeat="TypeLesson in ListLessonTypes">
+                                                    <div class="col-lg-3">
+                                                        {{TypeLesson.TypeName}}
+                                                    </div>
+                                                    <div class="col-lg-5" ng-bind-html="TypeLesson.Shortdescription">
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                            <div class="panel panel-default">
+                                <div class="form-group">
+                                    <div class="panel-body">
+                                        <div class="row"><div class="col-lg-1"></div>
+                                            <div class="col-lg-11"><h5>Период на который будет генерироваться журнал занятий:</h5></div>
+                                        </div>
+                                        <a ng-click="AddSemester()"><label class="label label-success"><span class="glyphicon glyphicon-plus"></span></label></a>
+                                        <div class="row"  ng-repeat="Semester in SemesterList">
+                                            <div class="col-lg-1">
+
+                                            </div>
+                                            <div class="col-lg-1">
+
+                                            </div>
+                                            <div class="col-lg-10">
+                                                <div class="col-lg-3">
+                                                    {{Semester.name}}
+                                                </div>
+                                                <div class="col-lg-5">
+                                                    {{Semester.DateBegin}} &#x2012 {{Semester.DateEnd}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--
                                 <div class="panel-body">
                                     <div class="row">
                                         <div class="col-lg-1">
@@ -60,9 +112,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    </div>
                                 </div>
+                                -->
 
+                            </div>
 
                             <div class="form-group">
 
@@ -111,12 +164,18 @@
                                             <div class="col-lg-3">
                                                 {{Instructor.FirstName}}
                                                 {{Instructor.LastName}}
-                                                {{Instructor.Patronomic}}
+                                                {{Instructor.Patronomic}}. Платит дань
+                                                {{Instructor.Rate}}% от оплаты занятия
                                             </div>
-                                            <div class="col-lg-2">
+                                            <div class="col-lg-3">
                                                 <a class="btn btn-default ng-binding" ng-binding ng-click='RemoveFromSchool(Instructor.ID)'>{{Page.Create.Delete}}  <label class="label label-danger">
                                                     <span class="glyphicon glyphicon-minus"></span>
                                                 </label></a>
+                                                <a class="btn btn-default ng-binding" ng-binding ng-click='EditRateForInstructor(Instructor.ID)'>{{Page.Create.Update}}
+                                                    <label class="label label-primary">
+                                                        <span class="glyphicon glyphicon-refresh"></span>
+                                                    </label>
+                                                </a>
                                             </div>
                                             <div class="col-lg-1">
                                             </div>

@@ -53,6 +53,13 @@ todo целостность не обеспечена </Description>
 <Relationship>1</Relationship>
 </Property>
 
+<Property name="LessonTypes">
+<Type>SPD.TypeLesson</Type>
+<Cardinality>many</Cardinality>
+<Inverse>School</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^SPD.SchoolD</DataLocation>
@@ -154,6 +161,9 @@ todo целостность не обеспечена </Description>
 </Value>
 <Value name="31">
 <Value>SchoolRate</Value>
+</Value>
+<Value name="32">
+<Value>LessonTypes</Value>
 </Value>
 </Data>
 <Property name="%%CLASSNAME">

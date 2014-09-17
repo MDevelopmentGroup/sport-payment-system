@@ -26,10 +26,25 @@
 <Type>%TimeStamp</Type>
 </Property>
 
+<Property name="DateEndSub">
+<Type>%TimeStamp</Type>
+</Property>
+
+<Property name="SubList">
+<Type>SPD.SubscriptionList</Type>
+</Property>
+
 <Property name="TempGroup">
 <Type>SPD.TempGroup</Type>
 <Cardinality>many</Cardinality>
 <Inverse>UserSubscription</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="NumbAvialableLesson">
+<Type>SPD.AvialableLessons</Type>
+<Cardinality>many</Cardinality>
+<Inverse>SubscriptionUser</Inverse>
 <Relationship>1</Relationship>
 </Property>
 
@@ -68,6 +83,15 @@
 </Value>
 <Value name="9">
 <Value>DateGEnSub</Value>
+</Value>
+<Value name="10">
+<Value>DateEndSub</Value>
+</Value>
+<Value name="11">
+<Value>NumbAvialableLesson</Value>
+</Value>
+<Value name="12">
+<Value>SubList</Value>
 </Value>
 </Data>
 </Storage>

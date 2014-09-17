@@ -16,8 +16,8 @@
 <Type>%TimeStamp</Type>
 </Property>
 
-<Property name="Price">
-<Type>SPD.Price</Type>
+<Property name="Semestr">
+<Type>SPD.Semester</Type>
 </Property>
 
 <Property name="Instructor">
@@ -32,15 +32,31 @@
 <Type>%Integer</Type>
 </Property>
 
+<Property name="RoomDance">
+<Type>SPD.Room</Type>
+</Property>
+
+<Property name="Count">
+<Type>%Integer</Type>
+<Calculated>1</Calculated>
+<InitialExpression>0</InitialExpression>
+<SqlComputeCode>set {Count}=##class(SPD.Logic.JournalLesson).GetCount({ID})</SqlComputeCode>
+<SqlComputed>1</SqlComputed>
+</Property>
+
+<Property name="CompleteGroup">
+<Type>%Boolean</Type>
+<Calculated>1</Calculated>
+<InitialExpression>0</InitialExpression>
+<SqlComputeCode>set {CompleteGroup}=##class(SPD.Logic.GroupDancers).CheckComplite({ID})</SqlComputeCode>
+<SqlComputed>1</SqlComputed>
+</Property>
+
 <Property name="Group">
-<Type>SPD.GroupDancers</Type>
+<Type>SPD.TempGroup</Type>
 <Cardinality>many</Cardinality>
 <Inverse>JournallLesson</Inverse>
 <Relationship>1</Relationship>
-</Property>
-
-<Property name="RoomDance">
-<Type>SPD.Room</Type>
 </Property>
 
 <Storage name="Default">
@@ -105,6 +121,9 @@
 </Value>
 <Value name="18">
 <Value>Abonement</Value>
+</Value>
+<Value name="19">
+<Value>Semestr</Value>
 </Value>
 </Data>
 </Storage>

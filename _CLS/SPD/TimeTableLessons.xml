@@ -38,16 +38,13 @@ todo проверку на дни</Description>
 <Type>%String</Type>
 </Property>
 
-<Property name="maxCountW">
+<Property name="maxCount">
 <Type>%Integer</Type>
 </Property>
 
-<Property name="maxCountM">
-<Type>%Integer</Type>
-</Property>
-
-<Property name="Gender">
+<Property name="Limit">
 <Type>%Boolean</Type>
+<InitialExpression>0</InitialExpression>
 </Property>
 
 <UDLText name="T">
@@ -124,6 +121,12 @@ todo проверку на дни</Description>
 </Value>
 <Value name="20">
 <Value>maxCountW</Value>
+</Value>
+<Value name="21">
+<Value>maxCount</Value>
+</Value>
+<Value name="22">
+<Value>Limit</Value>
 </Value>
 </Data>
 </Storage>

@@ -39,7 +39,7 @@
 	try
 	{
 		if (IdSchool'="undefined"){
-			set sqlQuery="select Instructor->IdDancer->FirstName, Instructor->IdDancer->LastName, Instructor->IdDancer-> Patronymic, Instructor->id "_
+			set sqlQuery="select Instructor->IdDancer->FirstName, SchoolRate As Rate ,Instructor->IdDancer->LastName, Instructor->IdDancer-> Patronymic, Instructor->id "_
 			"FROM SPD.TempListOfInstructorsInSchools where School="_IdSchool			
 		}
 		else{
@@ -86,6 +86,52 @@
 		" from SPD.TempListOfInstructorsInSchools where Instructor="_id
 		do ##class(SPD.School).GetJSONData(sqlQuery)
 		
+	}
+	catch ex{
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="SetInstructorRate">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set idschool=##class(Auth.Session).GetCurrentSchool().%Id()
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		set InstructorId=obj.InstructorId
+		&sql(
+			select id into :id
+			from SPD.TempListOfInstructorsInSchools 
+			where Instructor->id=:InstructorId and School->id=:idschool
+		)
+		set table=##class(SPD.TempListOfInstructorsInSchools).%OpenId(id)
+		set table.SchoolRate=$zconvert(obj.Rate,"I","UTF8")
+		set st=table.%Save()
+		
+	}
+	catch ex{
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetInstructor">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ID</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set sqlquery="select School->id as IdSchool, School->Name as SchoolName, Instructor->id As InstructorId, "_
+		"Instructor->idDancer->FirstName as FirstName, Instructor->idDancer->LastName as LastName, "_
+		"Instructor->idDancer->Patronymic as Patronymic, Instructor->idDancer->Gender, SchoolRate As Rate"_
+		" from SPD.TempListOfInstructorsInSchools where Instructor="_ID_
+		" and School->id="_##class(Auth.Session).GetCurrentSchool().%Id()
+		
+		do ##class(SPD.School).GetJSONData(sqlquery)		
 	}
 	catch ex{
 	}

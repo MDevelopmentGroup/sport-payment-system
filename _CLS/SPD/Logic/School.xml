@@ -56,8 +56,8 @@
 	if (count){
 	//set sql="select id as TypeID,name as TypeName, ShortDescription as ShortDescription "_
 	//" from SPD.TypeLesson where Price->school->id="_ID_" group by id"
-	set sql="select TypeLesson->id as TypeID, TypeLesson->name As TypeName, TypeLesson->ShortDescription as Shortdescription"_
-	" from SPD.MatchPriceTypeLess where Price->school->id="_ID_" group by TypeLesson->id order by ID desc"
+	set sql="select id as TypeID, name As TypeName, ShortDescription as Shortdescription"_
+	" from SPD.TypeLEsson where school->id="_ID_" group by id order by ID desc"
 	
 	
 	set st=##class(SPD.School).GetJSONData(sql)
@@ -122,6 +122,27 @@
 	}
 	catch ex {
 		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="AddTypeLesson">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set school=##class(Auth.Session).GetCurrentSchool()
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		set tl=##class(SPD.TypeLesson).%New()
+		set tl.name=$zconvert(obj.name,"I","UTF8")
+		set tl.School=school
+		set tl.ShortDescription=$zconvert(obj.ShortDescription,"I","UTF8")
+		set st=tl.%Save()
+	}
+	catch er{
+		set st=er.AsStatus()
 	}
 	ret st
 ]]></Implementation>
