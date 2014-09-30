@@ -27,6 +27,13 @@
 <SqlComputed>1</SqlComputed>
 </Property>
 
+<Property name="LessonCost">
+<Type>SPD.Price</Type>
+<Cardinality>many</Cardinality>
+<Inverse>Semester</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
 <Method name="SetActual">
 <ClassMethod>1</ClassMethod>
 <FormalSpec>DateEnd</FormalSpec>
@@ -65,32 +72,29 @@
 		set sm=##class(SPD.Semester).%New()
 		if (obj.DateBegin'=""){
 			set sm.DateBegin=$zdt($zdth(obj.DateBegin_" "_obj.TimeBegin,4),3)
+			
 		}
-		else{
+		else
+		{
 			set sm.DateBegin=$zdt($h,3)
+			
 		}
 		set sm.name=$zconvert(obj.name,"I","UTF8")
 		set sm.DateEnd=$zdt($zdth(obj.sharedDate_" "_obj.sharedTime,4),3)
 		set sm.School=##class(Auth.Session).GetCurrentSchool()
-		
 		set st=sm.%Save()
-	}
-	catch er{
-		set st=er.AsStatus()
-	}
-	ret st
-]]></Implementation>
-</Method>
-
-<Method name="GetSemesterList">
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set st=$$$OK
-	try
-	{
-		set sqlquery="select name, DateBegin, DateEnd from SPD.Semester where School="_##class(Auth.Session).GetCurrentSchool().%Id()
-		set st=##class(SPD.School).GetJSONData(sqlquery)
+		
+		for i=1:1:obj.ListLessonTypes.Size
+		{
+			set proxy=obj.ListLessonTypes.Oref(i)
+			set price=##class(SPD.Price).%New()
+			set price.Cost=##class(REST.JSON).SetSum(($ZCONVERT(proxy.cost,"I","UTF8")))
+			set price.Semester=sm
+			set price.LessonType=##class(SPD.TypeLesson).%OpenId(proxy.TypeID)
+			set st=price.%Save()
+			
+		}
+		
 	}
 	catch er{
 		set st=er.AsStatus()
@@ -172,6 +176,9 @@
 </Value>
 <Value name="9">
 <Value>name</Value>
+</Value>
+<Value name="10">
+<Value>LessonCost</Value>
 </Value>
 </Data>
 </Storage>

@@ -12,6 +12,7 @@
 
 <Property name="QRString">
 <Type>%String</Type>
+<Parameter name="MAXLEN" value="200"/>
 </Property>
 
 <Property name="Sole">
@@ -45,6 +46,13 @@
 <Type>SPD.AvialableLessons</Type>
 <Cardinality>many</Cardinality>
 <Inverse>SubscriptionUser</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="TLIS">
+<Type>SPD.TableLessinSubscr</Type>
+<Cardinality>many</Cardinality>
+<Inverse>Subscription</Inverse>
 <Relationship>1</Relationship>
 </Property>
 
@@ -92,6 +100,9 @@
 </Value>
 <Value name="12">
 <Value>SubList</Value>
+</Value>
+<Value name="13">
+<Value>TLIS</Value>
 </Value>
 </Data>
 </Storage>

@@ -93,12 +93,14 @@ app.filter('VacancyTypeText',['$rootScope', function($rootScope) {
 }]);
 app.filter('isSite', ['$rootScope', function($rootScope) {
     return function(input) {
-        return input=="" ? "":$rootScope.Page.Common.WebSite;        }
+        return input=="" ? "":$rootScope.Page.Common.WebSite;
+    }
 
 }]);
 app.filter('isPhone', ['$rootScope', function($rootScope) {
     return function(input) {
-        return input==null ? "":$rootScope.Page.Common.Phone;        }
+        return input==null ? "":$rootScope.Page.Common.Phone;
+    }
 }]);
 
 
@@ -118,5 +120,10 @@ app.filter('actionLimit', function() {
 app.filter('alertSuccess', function() {
     return function(input) {
         return input ? 'alert-success':'alert-warning';
+    };
+});
+app.filter('NavDancer',function(){
+    return function(input){
+        return input ? 'active':'';
     };
 });

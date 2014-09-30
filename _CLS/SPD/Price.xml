@@ -4,46 +4,48 @@
 <Super>%Persistent</Super>
 <TimeCreated>63393,57121.285694</TimeCreated>
 
-<UDLText name="T">
-<Content><![CDATA[
-// Property TypeLesson As SPD.TypeLesson;
-
-]]></Content>
-</UDLText>
-
 <Property name="Cost">
-<Type>%Float</Type>
-</Property>
-
-<Property name="DateActualStart">
-<Type>%DateTime</Type>
-</Property>
-
-<Property name="DateActualEnd">
-<Type>%DateTime</Type>
+<Type>SPD.Balance</Type>
 </Property>
 
 <UDLText name="T">
 <Content><![CDATA[
-// Relationship Semester As SPD.Semester [ Cardinality = many, Inverse = Price ];??????????????
+// Property DateActualStart As %DateTime;
 
 ]]></Content>
 </UDLText>
 
-<Property name="school">
-<Type>SPD.School</Type>
+<UDLText name="T">
+<Content><![CDATA[
+// Property DateActualEnd As %DateTime;
+
+]]></Content>
+</UDLText>
+
+<Property name="Semester">
+<Type>SPD.Semester</Type>
+<Cardinality>one</Cardinality>
+<Inverse>LessonCost</Inverse>
+<Relationship>1</Relationship>
 </Property>
 
-<Property name="SubscriptionList">
-<Type>SPD.SubscriptionList</Type>
+<UDLText name="T">
+<Content><![CDATA[
+// Property school As SPD.School;
+
+]]></Content>
+</UDLText>
+
+<Property name="LessonType">
+<Type>SPD.TypeLesson</Type>
 </Property>
 
-<Property name="Actual">
-<Type>%Boolean</Type>
-<Calculated>1</Calculated>
-<SqlComputeCode>set {Actual}=##class(SPD.Price).SetActual({DateActualEnd})</SqlComputeCode>
-<SqlComputed>1</SqlComputed>
-</Property>
+<UDLText name="T">
+<Content><![CDATA[
+// Property Actual As %Boolean [ Calculated, SqlComputeCode = {set {Actual}=##class(SPD.Price).SetActual({DateActualEnd})}, SqlComputed ];
+
+]]></Content>
+</UDLText>
 
 <Method name="SetActual">
 <ClassMethod>1</ClassMethod>
@@ -74,7 +76,26 @@
 
 <Method name="Create">
 <ClassMethod>1</ClassMethod>
+<FormalSpec>IdLesson,cost,IdSemester</FormalSpec>
 <ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set sem=##class(SPD.Semester).%OpenId(IdSemester)
+		set typelesson=##class(SPD.TypeLesson).%OpenId(IdLesson)
+		set price=##class(SPD.Price).%New()
+		set price.Cost=##class(REST.JSON).SetSum(cost)
+		set price.Semester=sem
+		set price.TimeTableLesson=ttl
+		set st=price.%Save()
+	}
+	catch er
+	{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
 </Method>
 
 <Method name="Remove">
@@ -92,13 +113,6 @@
 	ret st
 ]]></Implementation>
 </Method>
-
-<Property name="MatchPrice">
-<Type>SPD.MatchPriceTypeLess</Type>
-<Cardinality>many</Cardinality>
-<Inverse>Price</Inverse>
-<Relationship>1</Relationship>
-</Property>
 
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
@@ -138,6 +152,12 @@
 </Value>
 <Value name="10">
 <Value>SubscriptionList</Value>
+</Value>
+<Value name="11">
+<Value>TimeTableLesson</Value>
+</Value>
+<Value name="12">
+<Value>LessonType</Value>
 </Value>
 </Data>
 </Storage>

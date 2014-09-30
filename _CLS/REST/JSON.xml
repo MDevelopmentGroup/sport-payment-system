@@ -42,9 +42,105 @@
 ]]></Implementation>
 </Method>
 
-<Method name="InitPayment">
+<Method name="SetRobokassaSettings">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>MrchLogin,sIncCurrLabel,sCulture,desc,mrjpass,mrjpass2,idschool</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+	//set MrchLogin="23g561sqw67uthg45"
+	//set sIncCurrLabel="W1R"
+	//set sCulture="ru"
+	//set desc="Dances"
+	//set mrjpass="adsfer920rne45"
+	//set mrjpass2="95093wqn4b23h6"
+	set ^Robokassa(""_idschool_"","MrchLogin")=MrchLogin
+	set ^Robokassa(""_idschool_"","sIncCurrLabel")=sIncCurrLabel
+	set ^Robokassa(""_idschool_"","sCulture")=sCulture
+	set ^Robokassa(""_idschool_"","desc")=desc
+	set ^Robokassa(""_idschool_"","mrjpass")=mrjpass
+	set ^Robokassa(""_idschool_"","mrjpass2")=mrjpass2
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="SetDefSettings">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[	do ##class(REST.JSON).SetRobokassaSettings("23g561sqw67uthg45","W1R","ru","Dances","adsfer920rne45","95093wqn4b23h6","55")
+]]></Implementation>
+</Method>
+
+<Method name="GetRobokassaSettings">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idschool</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set str="{""children"":["_
+			"{""MrchLogin"":"""_$GET(^Robokassa(idschool,"MrchLogin"),"")_""","_
+			  """sIncCurrLabel"":"""_$GET(^Robokassa(idschool,"sIncCurrLabel"),"")_""","_			  
+			  """sCulture"":"""_$GET(^Robokassa(idschool,"sCulture"),"")_""","_
+			  """desc"":"""_$GET(^Robokassa(idschool,"desc"),"")_""","_
+			  """mrjpass"":"""_$GET(^Robokassa(idschool,"mrjpass"),"")_""","_
+			  """mrjpass2"":"""_$GET(^Robokassa(idschool,"mrjpass2"),"")_"""}"_
+			  "]}"
+	ret str
+]]></Implementation>
+</Method>
+
+<Method name="BuyJL">
 <Description>
 инициализация оплаты</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
+		set jl=##class(SPD.JournalLesson).%OpenId(obj.idJL)
+		set sub=0
+		set MrchLogin=$GET(^Robokassa(idschool,"MrchLogin"),"")
+		set sIncCurrLabel=$GET(^Robokassa(idschool,"sIncCurrLabel"),"")
+		set sCulture=$GET(^Robokassa(idschool,"sCulture"),"")
+		set desc=$GET(^Robokassa(idschool,"desc"),"")
+		set mrjpass=$GET(^Robokassa(idschool,"mrjpass"),"")
+		set mrjpass2=$GET(^Robokassa(idschool,"mrjpass2"),"")
+		set sm=jl.Semestr
+		set lt=jl.LessonInTable.TypeLesson
+		&sql(select cost into :cost from SPD.Price where Semester=:sm and LessonType=:lt)
+		set outSum=cost
+		set sole=##class(SPD.Logic.Subscription).GenerateSole(sub.cost_""_sub.School_""_sub.ShortDescription)
+		set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_MrchLogin_":"_outSum_":"_transaction.%Id()_":"_mrjpass_":shpjls="_jls_":shpsub=0")
+		//set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_MrchLogin_":"_outSum_":"_transaction.%Id()_":"_mrjpass)
+		set sole=##class(Auth.Session).Encode(sole)
+		set hex=##class(Auth.Session).Encode(SignatureValue)
+		set transaction.sSignatureValue=$ZCONVERT(hex,"I","UTF8")
+		set transaction.School=jl.LessonInTable.School
+		do transaction.%Save()
+		set url="http://test.robokassa.ru/Index.aspx?MrchLogin="_MrchLogin_
+	    "&OutSum="_outSum_
+	    "&InvId="_transaction.%Id()_
+	    "&Desc="_desc_
+	    "&SignatureValue="_hex_
+	    "&sIncCurrLabel="_sIncCurrLabel_
+	    "&sCulture="_sCulture_
+	    "&shpjls="_jls_
+	    "&shpsub=0"
+	    
+    	w "{""urlPay"":"""_url_"""}"
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="InitPayment">
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -52,38 +148,47 @@
  	try {
 	$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
 	
-	set MrchLogin="23g561sqw67uthg45"
-	
-	//set outSum="400.00"
-	set sIncCurrLabel="W1R"
-	set sCulture="ru"
-	set desc="Dances"
-	set mrjpass="adsfer920rne45"
-	set mrjpass2="95093wqn4b23h6"
 	///test parameters
-	//set shpUserId=##class(Auth.Session).GetCurrentUser().%Id()
+	set idschool=55
+	set MrchLogin=$GET(^Robokassa(idschool,"MrchLogin"),"")
+	set sIncCurrLabel=$GET(^Robokassa(idschool,"sIncCurrLabel"),"")
+	set sCulture=$GET(^Robokassa(idschool,"sCulture"),"")
+	set desc=$GET(^Robokassa(idschool,"desc"),"")
+	set mrjpass=$GET(^Robokassa(idschool,"mrjpass"),"")
+	set mrjpass2=$GET(^Robokassa(idschool,"mrjpass2"),"")
 	set transaction=##class(SPD.Transactions).%New()
-	set sub=##class(SPD.SubscriptionList).%OpenId(obj.idSL)
-	set transaction.Subscription=sub
-	set outSum=sub.cost
-	set transaction.OutSum=##class(REST.JSON).SetSum(outSum)
-	if (obj.JournallLesson=""){
+	if (obj.idJL=""){
+		set sub=##class(SPD.SubscriptionList).%OpenId(obj.idSL)
+		set subID=sub.%Id()
+		set transaction.Subscription=sub
+		set transaction.School=sub.School
+		set outSum=sub.cost
+		set transaction.OutSum=##class(REST.JSON).SetSum(outSum)
 		set jls=0
 	}
 	else {
-		set jls=obj.JournallLesson
+		set jlso=##class(SPD.JournalLesson).%OpenId(obj.idJL)
+		
+		set subID=0
+		set jls=jlso.%Id()
+		set transaction.School=jlso.LessonInTable.School
+		set sm=jlso.Semestr.%Id()
+		set lt=jlso.LessonInTable.TypeLesson.%Id()
+		&sql(select cost into :cost from SPD.Price where Semester=:sm and LessonType=:lt)
+		set outSum=cost
+		set transaction.OutSum=##class(REST.JSON).SetSum(outSum)
+		
  	}
 	do transaction.%Save()
 	if (obj.email'="")
 	{
 		set transaction.email=obj.email
 	}
-	set sole=##class(SPD.Logic.Subscription).GenerateSole(sub.cost_""_sub.School_""_sub.ShortDescription)
-	set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_MrchLogin_":"_outSum_":"_transaction.%Id()_":"_mrjpass_":shpjls="_jls_":shpsub="_sub.%Id())
+	set sole=##class(SPD.Logic.Subscription).GenerateSole(outSum_""_transaction.School)
+	set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_MrchLogin_":"_outSum_":"_transaction.%Id()_":"_mrjpass_":shpjls="_jls_":shpsub="_subID)
 	set sole=##class(Auth.Session).Encode(sole)
 	set hex=##class(Auth.Session).Encode(SignatureValue)
 	set transaction.sSignatureValue=$ZCONVERT(hex,"I","UTF8")
-	
 	do transaction.%Save()
 	set url="http://test.robokassa.ru/Index.aspx?MrchLogin="_MrchLogin_
     "&OutSum="_outSum_
@@ -93,12 +198,12 @@
     "&sIncCurrLabel="_sIncCurrLabel_
     "&sCulture="_sCulture_
     "&shpjls="_jls_
-    "&shpsub="_sub.%Id()
+    "&shpsub="_subID
     
     w "{""urlPay"":"""_url_"""}"
  	}
     catch ex {
-  	set st=ex.AsStatus()
+  		set st=ex.AsStatus()
  	}
 	ret st
 ]]></Implementation>
@@ -116,6 +221,7 @@
 <FormalSpec>sum</FormalSpec>
 <Implementation><![CDATA[
 	set arr=$listfromstring(sum,".")
+	
 	if ($LISTLENGTH(arr)'=2){		
 		set sum=sum_".00"
 	}
@@ -125,6 +231,14 @@
 		{
 			set sum=sum_"0"
 		}
+		elseif(($LENGTH($list(arr,2))=0))
+		{
+			set sum=sum_"00"
+		}
+	}
+	if (($LENGTH($list(arr,1))=0))
+	{
+		set sum="0"_sum
 	}
 	ret sum
 ]]></Implementation>
@@ -209,9 +323,8 @@
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	
 	set mrjpass="adsfer920rne45"
-	set mrjpass2="95093wqn4b23h6"
+	set url="91.247.68.36"
 	//try {
 	set OutSum=$Get(%request.Data("OutSum",1))
 	set InvId=$Get(%request.Data("InvId",1))
@@ -220,36 +333,54 @@
 	set sub=$Get(%request.Data("shpsub",1))
 	//set UserId=$Get(%request.Data("shpUserId",1))
 	set transaction=##class(SPD.Transactions).%OpenId(InvId)
-	set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_transaction.OutSum_":"_transaction.%Id()_":"_mrjpass2_":shpjls="_jls_"shpsub="_sub)
+	set idschool=transaction.School.%Id()
+	set mrjpass2=$GET(^Robokassa(idschool,"mrjpass2"),"")
+	set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_transaction.OutSum_":"_transaction.%Id()_":"_mrjpass2_":shpjls="_jls_":shpsub="_sub)
 	set SignatureValue=##class(Auth.Session).Encode(SignatureValue)
-	w "SignatureValue="_SignatureValue,!
-	w "SignValue="_SignValue,!
+	s cost=""
 	if (SignatureValue=$ZCVT(SignValue,"l"))
 	{		
-		set transaction.success=1
-		set transaction.CompleteDate=$ZDT($H,3)		
-		//проверить статус кода для данной операции
-		set sub=##class(SPD.SubscriptionList).%OpenId(sub)
 		
-		///сгенерировать абонемент
+		set transaction.success=1
+		set transaction.CompleteDate=$ZDT($H,3)
 		set subd=##class(SPD.Subscription).%New()
-		set subd.DateGEnSub=$zdt($h,3)
-		set subd.DateEndSub=$zdt($h+sub.Duration,3)
-		set subd.School=sub.School
-		set subd.Sole=##class(SPD.Logic.Subscription).GenerateSole(sub.cost_""_sub.School_""_sub.ShortDescription_""_InvId)
-		set subd.Transaction=transaction
-		if (jls)
-		{
-			set jl=##class(SPD.JournalLesson).%OpenId(jls)
-			set temp=##class(SPD.TempGroup).%New()
-			set temp.JournallLesson=jl
-			set temp.UserSubscription=subd
-			set st=temp.%Save()
-			set subd.DateGEnSub=jl.DateBegin
-			set subd.DateEndSub=jl.DateEnd
+		//проверить статус кода для данной операции
+		if (jls=0){
+			set sub=##class(SPD.SubscriptionList).%OpenId(sub)
+			 
+			///сгенерировать абонемент
+			set subd.DateGEnSub=$zdt($h,3)
+			set subd.DateEndSub=$zdt($h+sub.Duration,3)
+			set subd.School=transaction.School
 			set subd.SubList=sub
+			s cost=sub.cost s sd=sub.ShortDescription			
+			set subd.Transaction=transaction
+				
+			set subd.Sole=##class(Auth.Session).Encode(##class(SPD.Logic.Subscription).GenerateSole(cost_""_idschool_""_InvId))
+			set subd.QRString="http://"_url_"/dances/index.html#/Subscription/"_subd.Sole
+			set st=subd.%Save()
+			set st=##class(SPD.TableLessinSubscr).CreateTLISFromSL(subd.%Id())
 		}
-		set st=subd.%Save()
+		else
+		{
+			set jlso=##class(SPD.JournalLesson).%OpenId(jls)
+			set subd.DateGEnSub=jlso.DateBegin
+			set subd.DateEndSub=jlso.DateEnd
+			set subd.School=transaction.School
+			set sm=jlso.Semestr.%Id()
+			set lt=jlso.LessonInTable.TypeLesson.%Id()
+			&sql(select cost into :jlcost from SPD.Price where Semester=:sm and LessonType=:lt)
+			
+			set subd.Transaction=transaction
+			s cost=jlcost s sd=jlso.LessonInTable.ShortDescription
+					
+			set subd.Sole=##class(Auth.Session).Encode(##class(SPD.Logic.Subscription).GenerateSole(cost_""_idschool_""_InvId))
+			set subd.QRString="http://"_url_"/dances/index.html#/Subscription/"_subd.Sole
+			set st=subd.%Save()
+			s st=##class(SPD.TableLessinSubscr).CreateTLISFORJL(jls,subd.%Id())
+			
+		}
+		set st=##class(WEB.Util.Mail).NewMail(transaction.email,"SendQRCode",,subd.Sole)
 		set st=transaction.%Save()
 	}
 	quit $$$OK
@@ -310,6 +441,45 @@
 		//set st=ex.AsStatus()
 	//}
 	ret st
+]]></Implementation>
+</Method>
+
+<Method name="FLUSHSCHOOL">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+</Method>
+
+<Method name="FLUSHALL">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	do ##class(SPD.SPD.GroupDancers).%DeleteExtent()
+	do ##class(SPD.JournalLesson).%DeleteExtent()
+	do ##class(SPD.TimeTableLessons).%DeleteExtent()
+	do ##class(SPD.TypeLesson).%DeleteExtent()
+	do ##class(SPD.SubscriptionList).%DeleteExtent()
+	do ##class(SPD.Subscription).%DeleteExtent()
+]]></Implementation>
+</Method>
+
+<Method name="sendResRob">
+<Description>
+для тнеста. удалить.</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set stt=""
+	try 
+	{
+		
+		
+		
+	}
+	catch er
+	{
+		
+	}
+	ret str
 ]]></Implementation>
 </Method>
 </Class>

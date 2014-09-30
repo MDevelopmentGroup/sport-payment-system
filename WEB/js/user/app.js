@@ -1,5 +1,5 @@
 angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute','ngSanitize','ngAnimate','infinite-scroll',
-        'VACANCY.services','VACANCY.Filters','mgcrea.ngStrap','VACANCY.directive'
+        'VACANCY.services','VACANCY.Filters','mgcrea.ngStrap','VACANCY.directive','googleApi'
       ])
     .config(['$routeProvider',  function($routeProvider) { $routeProvider.
 
@@ -25,6 +25,7 @@ angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute'
         //***************************************** Trainer **********************************************************//
         when('/Trainers',                   {templateUrl: 'partials/user/view/view_Trainers.html', controller: ViewTrainersCtrl}).
         when('/Trainer/:ID',                {templateUrl: 'partials/user/view/view_Trainer.html', controller: ViewTrainerCtrl}).
+        when('/UpddateTrainer/',            {templateUrl: 'partials/user/Update/UpdateInstructor.html', controller: UpdateInstructorCtrl}).
         //***************************************** Trainer **********************************************************//
 
         when('/LK/:ID',                         {templateUrl: 'partials/user/view/LK.html', controller: ViewLKCtrl}).
@@ -32,7 +33,7 @@ angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute'
         //***************************************** Schools **********************************************************//
 
         when('/schools',                      {templateUrl: 'partials/user/view/view_Schools.html', controller: ViewSchoolsCtrl}).
-        when('/school/:ID',             {templateUrl: 'partials/user/view/view_School.html', controller: ViewSchoolCtrl}).
+        when('/school/:ID',                     {templateUrl: 'partials/user/view/view_School.html', controller: ViewSchoolCtrl}).
         when('/CreateSchool/',                {templateUrl: 'partials/user/Create/Create_School.html', controller: CreateSchoolCtrl}).
         when('/UpdateMySchool/',              {templateUrl: 'partials/user/Update/Update_School.html', controller: UpdateSchoolCtrl}).
 
@@ -41,8 +42,12 @@ angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute'
         when('/JournallLessons/:ID',          {templateUrl: 'partials/user/view/JournallLessons.html', controller: JournallLessonsCtrl}).
         when('/SubscriptionList/:ID',          {templateUrl: 'partials/user/view/view_Subscriptions.html', controller: ViewSubscriptionsCtrl}).
         when('/SubscriptionList/:ID/:IDS',      {templateUrl: 'partials/user/view/view_Subscription.html', controller: ViewSubscriptionCtrl}).
+        when('/SubscriptionList/:ID/:IDS/:IDJL',      {templateUrl: 'partials/user/view/view_Subscription.html', controller: ViewSubscriptionCtrl}).
         when('/CreateSubscription/:ID',          {templateUrl: 'partials/user/Create/create_Subscription.html', controller: CreateSubscriptionsCtrl}).
         when('/UpdateSubscription/:ID',          {templateUrl: 'partials/user/Update/Update_SubscriptionList.html', controller: UpdateSubscriptionsCtrl}).
+        when('/schedule/:ID',                   {templateUrl: 'partials/user/view/View_Schedule.html', controller: ScheduleCtrl}).
+        when('/Subscription/:Sole',      {templateUrl: 'partials/user/view/view_UserSubscription.html', controller: ViewUserSubscriptionCtrl}).
+
         //***************************************** Schools **********************************************************//
 
         //***************************************** Invite **********************************************************//
@@ -94,7 +99,7 @@ angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute'
                         scope.temp? "адын,адын,адын":scope.temp="";
                         var regEx=new RegExp(scope.testsum);
                         if (!(regEx.test(scope.ngModel))){
-                            console.log(scope.ngModel);
+                            console.log(scope.testsum);
                             if (scope.ngModel) {
                                 scope.ngModel = scope.temp;
                             }
@@ -111,5 +116,13 @@ angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute'
                 )
             }
         };
-    });
+    })
+
+
+    .config(function(googleLoginProvider) {
+        googleLoginProvider.configure({
+            clientId: '86505345915-njjhdgp192t707kgm74pumc02vg8a0fq.apps.googleusercontent.com',
+            scopes: ["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/calendar"]
+        });
+    })
 ;

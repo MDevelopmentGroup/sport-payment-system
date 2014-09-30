@@ -29,12 +29,9 @@
 <Type>%String</Type>
 </Property>
 
-<UDLText name="T">
-<Content><![CDATA[
-// Property Image As LIB.FileBase;
-
-]]></Content>
-</UDLText>
+<Property name="Image">
+<Type>LIB.FileBase</Type>
+</Property>
 
 <Property name="Email">
 <Description>

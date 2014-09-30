@@ -47,5 +47,63 @@
 	Quit st
 ]]></Implementation>
 </Method>
+
+<Method name="UploadInstructorFoto">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>hash</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		&sql(select count(id) into :countid from SPD.TempInvite where md=:hash)
+		if (countid)
+		{
+			
+			set FileName="foto0"	// 
+			
+			
+			set st=$$$OK set Str="" set str="" 
+ 			while(FileName'=""){
+	 			///ToDo проверку фзагружаемых файлов
+				//************************ Блок операций **************************************
+				//set Location=$GET(^VacancySettings("ImgDirURL"),"")
+				zn "%sys"
+				set t=##class(Security.Applications).Get("/dances",.PropAppl)
+				zn "mdg-dances"
+				set Location=PropAppl("Path")_"\img\upload\"
+				set Stream =%request.GetMimeData(FileName,1)
+				set fileUpload = ##class(LIB.FileBase).%New()
+				set fileUpload.FileType=Stream.ContentType
+				set fileUpload.DefaultName=Stream.FileName
+				set st=fileUpload.%Save()
+				set fileUpload2=##class(LIB.FileBase).%OpenId(fileUpload.%Id())
+				set ext=$PIECE(Stream.FileName,".",$LISTLENGTH($LISTFROMSTRING(Stream.FileName,"."))) //расширение файла
+				set Name="foto_"_fileUpload.%Id()_"."_ext
+				w Name,!
+				set fileUpload2.FileName=Name
+				do fileUpload2.%Save()
+			
+				set file=##class(%Stream.FileBinary).%New()
+				set file.Filename=Location_Name
+				set st=file.CopyFromAndSave(Stream)
+			
+				set str=str_fileUpload.%Id()_","
+				//do file.OutputToDevice()
+				//************************ Блок операций **************************************
+				// Переходим к следующему файлу
+				set FileName=%request.NextMimeData(FileName)
+			}
+			w $E(str,1,*-1)
+
+		}
+		
+	}
+	catch er
+	{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
 </Class>
 </Export>

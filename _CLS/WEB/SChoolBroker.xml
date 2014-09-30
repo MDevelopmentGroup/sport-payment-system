@@ -34,7 +34,7 @@
 		<<<semester
 	-->
 	<Route Url="/GetBeginSemester/"			Method="GET"		Call="SPD.Semester:GetBeginSemesterJSON"/>
-	<Route Url="/GetSemesterList/"			Method="GET"		Call="SPD.Semester:GetSemesterList"/>
+	<Route Url="/GetSemesterList/"			Method="GET"		Call="SPD.Logic.Semester:GetSemesterList"/>
 	<Route Url="/AddSemester/"				Method="POST"		Call="SPD.Semester:AddSemester"/>
 	
 	<!--

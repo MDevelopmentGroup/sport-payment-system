@@ -39,12 +39,16 @@
 	try
 	{
 		if (IdSchool'="undefined"){
-			set sqlQuery="select Instructor->IdDancer->FirstName, SchoolRate As Rate ,Instructor->IdDancer->LastName, Instructor->IdDancer-> Patronymic, Instructor->id "_
+			set sqlQuery="select Instructor->IdDancer->FirstName, Instructor->IdDancer->Image->FileName As fotoImg, "_
+			"Instructor->IdDancer->Image->id as foto, SchoolRate As Rate ,Instructor->IdDancer->LastName, "_
+			"Instructor->IdDancer-> Patronymic, Instructor->id "_
 			"FROM SPD.TempListOfInstructorsInSchools where School="_IdSchool			
 		}
 		else{
-			set sqlQuery="select IdDancer->FirstName, IdDancer->LastName, IdDancer->Patronymic, id from "_
-			"SPD.Instructor"
+			set sqlQuery="select id As ID, IdDancer->FirstName,idDancer->Image->FileName As fotoImg, "_
+			"IdDancer->Image->id as foto, IdDancer->Image As foto, IdDancer->LastName, "_
+			"IdDancer-> Patronymic "_
+			"from SPD.Instructor"
 		}
 		do ##class(SPD.School).GetJSONData(sqlQuery)
 	}
@@ -64,8 +68,8 @@
 	set st=$$$OK
 	try
 	{
-		set sqlQuery="select idDancer->FirstName as FirstName, idDancer->LastName as LastName, "_
-		"idDancer->Patronymic as Patronymic, idDancer->Gender from SPD.Instructor where id="_id
+		set sqlQuery="select idDancer->FirstName as FirstName,idDancer->Image->FileName As fotoImg,idDancer->Image->id as foto, idDancer->LastName as LastName, "_
+		"idDancer->Patronymic as Patronymic,idDancer->Phone as Phone ,idDancer->Gender from SPD.Instructor where id="_id
 		do ##class(SPD.School).GetJSONData(sqlQuery)
 	}
 	catch ex{
@@ -136,6 +140,98 @@
 	catch ex{
 	}
 	ret st
+]]></Implementation>
+</Method>
+
+<Method name="CheckUserJL">
+<Description>
+чекалка для инструктора</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idsub,sole</FormalSpec>
+<Implementation><![CDATA[
+	set instructor=##class(Auth.Session).GetCurrentInstructor()
+	set idcjl=##class(SPD.Instructor).GetCurrentJL(instructor)
+	set cjl=##class(SPD.JournalLesson).%OpenId(idcjl)
+	&sql(select id into :idsb from SPD.Subscription where id=:idsub and Sole=:sole)
+	set sub=##class(SPD.Subscription).%OpenId(idsb)
+	set nowdate=$h
+	if (nowdate>sub.DateEndSub){
+		//абонемент просрочен в html5 уведомления
+	}
+	else {
+		set tl=cjl.LessonInTable.TypeLesson.%Id()
+		&sql(select numb into :numbl from SPD.TableLessinSubscr where Subscription=:idsub and TypeLesson=:tl)
+		if (numb=0){
+			//закончились занятия в html5 уведомления	
+		}
+		else{
+			set tg=##class(SPD.TempGroup).%New()
+			set tg.JournallLesson=cjl
+			set tg.UserSubscription=sub
+			set tg.Visited=1
+		}
+	}
+]]></Implementation>
+</Method>
+
+<Method name="GetCurrentJL">
+<Description>
+получить текущий JL</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idinstr</FormalSpec>
+<ReturnType>%Integer</ReturnType>
+<Implementation><![CDATA[
+	set nowdate=$zdt($h,3)
+	&sql(select id into :idjl
+		from SPD.JournalLesson 
+		where Instructor->id=:idinstr and DateBegin<:nowdate and DateEnd>:nowdate
+	)
+	ret idjl
+]]></Implementation>
+</Method>
+
+<Method name="Update">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		set instructor=##class(Auth.Session).GetCurrentInstructor()
+		
+		
+		set instructor.IdDancer.FirstName=$zconvert(obj.FirstName,"I","UTF8")
+		
+		set instructor.IdDancer.Gender=obj.Gender
+		
+		set instructor.IdDancer.Image=##class(LIB.FileBase).%OpenId(obj.foto)
+		set instructor.IdDancer.LastName=$zconvert(obj.LastName,"I","UTF8")
+		if (obj.password'=""){
+			set instructor.IdDancer.Password=obj.password
+		}
+		set instructor.IdDancer.Patronymic=$zconvert(obj.Patronymic,"I","UTF8")
+		set instructor.IdDancer.Phone=..GetPhone(obj.Phone)
+		set st=instructor.IdDancer.%Save()
+		set st=instructor.%Save()
+		
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetPhone">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>str</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set str=$replace(str,"(","")
+	set str=$replace(str,")","")
+	set str=$replace(str," ","")
+	set str=$replace(str,"-","")
+	ret str
 ]]></Implementation>
 </Method>
 </Class>

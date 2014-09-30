@@ -4,27 +4,35 @@
 
 <script language="Cache" runat="Server">
 	
-	set idtrans=%request.Data("InvId",1)
-	&sql(select CompleteDate,DateTransactionInit,OutSum into :CompleteDate,
-	:DateTransactionInit,:OutSum
-	from SPD.Transactions where id=:idtrans)
-	if (OutSum){
-		zn "%sys"
+	s tr=##class(SPD.Transactions).%OpenId(%request.Data("InvId",1))
+	
+	s sole="" s type=""
+	
+	w tr.CompleteDate
+	&sql(declare tre cursor for
+	select id into :idsub from SPD.Subscription where "Transaction"->id=:tr)
+	
+	if (idsub){
+		set sole=##class(SPD.Subscription).%OpenId(idsub).Sole
+		/*zn "%sys"
 		set t=##class(Security.Applications).Get("/dances",.PropAppl)
 		zn "mdg-dances"
 		set loc=%request.CgiEnvs("HTTP_HOST")_"/dances/"
 		
 		set Location=PropAppl("Path")_"\img\upload\"
-		
+		*/
+		set loc="91.247.68.36/dances"
 		w "<script language='javascript'>"
-		w "location.href='http://"_loc_"index.html#/success/"_
-		CompleteDate_"/"_DateTransactionInit_"/"_OutSum_"';"
-		w ""
+		w "location.href='http://"_loc_"index.html#//Subscription/"_
+		sole_"';"
+		//w ""
 	}
 	else{
-		//w "<script language='javascript'>"
-		//w "location.href='index.html#/success/"_%request.Data("SignatureValue",1)_"/"_%request.Data("Culture",1)_"';"
-		//w ""
+		set outSum=tr.OutSum
+		set email=tr.email
+		w "<script language='javascript'>"
+		w "location.href='index.html#/success/"_outSum_"/"_email_"';"
+		w ""
 	}
 	
 </script>

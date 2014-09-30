@@ -221,11 +221,11 @@
 ]]></Implementation>
 </Method>
 
-<Method name="GetLastActualPrice">
-<ClassMethod>1</ClassMethod>
-<FormalSpec>IDTypeLesson</FormalSpec>
-<ReturnType>%String</ReturnType>
-<Implementation><![CDATA[
+<UDLText name="T">
+<Content><![CDATA[
+/*
+ClassMethod GetLastActualPrice(IDTypeLesson) As %String
+{
 		///todo
 		/*
 		&sql(declare price cursor for select TypeLesson->id as id,DateActualEnd,Actual into :id,:DateActualEnd,:Actual from SPD.Price order by DateActualEnd desc)
@@ -237,7 +237,7 @@
 			}
 			quit:(SQLCODE '= 0)
 		}
-		&sql(close price)*/
+		&sql(close price)
 		
 		&sql(SELECT 
 		Price->DateActualEnd into :DateActualEnd
@@ -245,8 +245,10 @@
 		where TypeLesson->id=:IDTypeLesson
 		order by Price->DateActualEnd desc)
 	ret DateActualEnd
-]]></Implementation>
-</Method>
+}
+*/
+]]></Content>
+</UDLText>
 
 <Method name="GetJournalLesson">
 <ClassMethod>1</ClassMethod>
@@ -324,7 +326,7 @@
 		
 		for i=1:1:obj.Size
 		{			
-			set proxy=obj.Oref(i)			
+			set proxy=obj.Oref(i)
 			set journalllesson=##class(SPD.JournalLesson).%OpenId(proxy.ID)
 			if (proxy.DateBegin'="" ){
 				set journalllesson.DateBegin=$zdt($zdth(proxy.DateBegin,3),3)
@@ -378,6 +380,85 @@
 	catch er{
 		set st=er.AsStatus()
 	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetNextJournalLessons">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set str=""
+		set stdatet=$zdt($h,3)
+		set eddatet=$zdt($h+14,3)
+		set eddatet=eddatet_" 00:00:00"
+		//w stdatet,!
+		//w eddatet,!
+		&sql(
+		declare ref cursor for
+		select ID, CompleteGroup, DateBegin, DateEnd, 
+		
+		Instructor->IdDancer->FirstName ,Instructor->IdDancer->LastName,
+		 Instructor->IdDancer->Patronymic,Instructor->id,
+		 
+		 LessonInTable, 
+		 
+		RoomDance->Address->City, RoomDance->Address->Country, RoomDance->Address->Street,
+		RoomDance->Address->Building,RoomDance->Address->RoomNumber,
+		School, Semestr, countDancer into 
+		:idJL, :CompleteGroup, :DateBegin, :DateEnd, 
+		:InstructorName,:InstructorLast, 
+		:InstructorPat,:InstructorID, 
+		:LessonInTableID,
+		
+		:City, :Country,:Street,
+		:Building,:RoomNumber,
+		
+		:SchoolID, :SemestrID, :countDancer
+		from SPD.JournalLesson 
+		where DateBegin>:stdatet and DateBegin<:eddatet and School->id=:id
+		)
+		
+		&sql(open ref)
+		for {
+		&sql(fetch ref)
+				quit:(SQLCODE '=0)
+				set str=str_"{""idJL"":"""_idJL_""","_
+				"""CompleteGroup"":"""_CompleteGroup_""","_
+				"""DateBegin"":"""_DateBegin_""","_
+				"""DateEnd"":"""_DateEnd_""","_
+				"""InstructorName"":"""_InstructorName_""","_
+				"""InstructorLast"":"""_InstructorLast_""","_
+				"""InstructorPat"":"""_InstructorPat_""","_
+				"""InstructorID"":"""_InstructorID_""","_
+				"""LessonInTableID"":"""_LessonInTableID_""","_
+				"""City"":"""_City_""","_
+				"""Country"":"""_Country_""","_
+				"""Street"":"""_Street_""","_
+				"""Building"":"""_Building_""","_
+				"""RoomNumber"":"""_RoomNumber_""","_
+				"""SchoolID"":"""_SchoolID_""","_
+				"""SemestrID"":"""_SemestrID_""","_
+				"""countDancer"":"""_countDancer_"""},"
+		}
+		if ($LENGTH(str)>3){
+			set str=$extract(str,1,$LENGTH(str)-1)
+		}
+		set str="{""children"":["_str
+		set str=str_"]}"
+		w str
+		&sql(close ref)
+		
+	}
+	catch er
+	{
+		set st=er.AsStatus()
+	}
+	
 	ret st
 ]]></Implementation>
 </Method>

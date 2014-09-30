@@ -23,6 +23,17 @@
 ]]></Implementation>
 </Method>
 
+<Method name="GetCurrentInstructor">
+<ClassMethod>1</ClassMethod>
+<ReturnType>SPD.Instructor</ReturnType>
+<Implementation><![CDATA[
+	set prs=%request.GetCookie("userId")
+	&sql(select id into :idinst from SPD.Instructor where IdDancer->id=:prs)
+	set instructor=##class(SPD.Instructor).%OpenId(idinst)
+	ret instructor
+]]></Implementation>
+</Method>
+
 <Method name="AddData">
 <ClassMethod>1</ClassMethod>
 <FormalSpec>Data:%String</FormalSpec>
@@ -140,6 +151,7 @@
 			set hash=$SYSTEM.Encryption.AESCBCEncrypt(UserID_":"_session1.RoleUser.Description,Key)
 			set hash=##class(Auth.Session).Encode(hash)
 			&sql(select id into :idschool from SPD.School where Person->Id=:UserID)
+			&sql(select id into :idInstructor from SPD.Instructor where idDancer->Id=:UserID)
 			set t=+$H+1
 			set t=$ZD(t,11) _", " _$ZD(t,2) _ " 00:00:00 GMT"
 			set jsonCook="{"_
@@ -156,6 +168,7 @@
 			do %response.SetCookie("Email",Email,t,"/")
 			do %response.SetCookie("Role",session1.RoleUser.Access,t,"/")
 			do %response.SetCookie("IdSchool",idschool,t,"/")
+			do %response.SetCookie("IdInstructor",idInstructor,t,"/")
 			w jsonCook
 		}
 	}

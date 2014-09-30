@@ -3,63 +3,18 @@
 <Class name="SPD.Logic.School">
 <TimeCreated>63418,51393.737219</TimeCreated>
 
-<Method name="ActualGetPrice">
-<ClassMethod>1</ClassMethod>
-<FormalSpec>idSchool</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set st=$$$OK
-	try{
-		set dt=$zdt($h,3)
-		set sqlquery="select Price->Cost, Name as name, "_
-		"ShortDescription as ShortDescription "_
-		"from SPD.TypeLesson "_
-		"where Price->DateActualEnd>'"_dt_"' and Price->DateActualStart<'"_dt_"' and Price->school->id="_idSchool
-		
-		set st=##class(SPD.School).GetJSONData(sqlquery)
-	}
-	catch ex{
-		set st=ex.AsStatus()
-	}
-	ret st
-]]></Implementation>
-</Method>
-
-<Method name="GetPrice">
-<ClassMethod>1</ClassMethod>
-<FormalSpec>ID</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set st=$$$OK
-	Try
-	{
-		set sqlquery="select Price->ID, Price->Actual, Price->Cost, Price->DateActualEnd, Price->DateActualStart, name As name, id as TypeLessonID, Price->school "_
-		"from SPD.TypeLesson where Price->school->id="_ID
-		set sqlquery="select Price->ID, Price->Actual, Price->Cost, Price->DateActualEnd, Price->DateActualStart, TypeLesson->name As name, TypeLesson->id as TypeLessonID, Price->school "_
-		"from SPD.MatchPriceTypeLess where Price->school->id="_ID
-		set st=##class(SPD.School).GetJSONData(sqlquery)
-	}
-	catch ex{
-	set st=ex.AsStatus()
-	}
-	ret st
-]]></Implementation>
-</Method>
-
 <Method name="GetLessonTypes">
 <ClassMethod>1</ClassMethod>
 <FormalSpec>ID</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	
-	&sql(select count(id) into :count from SPD.Price where school->id=:ID)
+	&sql(select count(id) into :count from SPD.TypeLesson where school->id=:ID)
 	if (count){
 	//set sql="select id as TypeID,name as TypeName, ShortDescription as ShortDescription "_
 	//" from SPD.TypeLesson where Price->school->id="_ID_" group by id"
 	set sql="select id as TypeID, name As TypeName, ShortDescription as Shortdescription"_
 	" from SPD.TypeLEsson where school->id="_ID_" group by id order by ID desc"
-	
-	
 	set st=##class(SPD.School).GetJSONData(sql)
 	}
 	else {
@@ -67,63 +22,6 @@
     	THROW mygenex
 	}
 	quit $$$OK
-]]></Implementation>
-</Method>
-
-<Method name="AddPrice">
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set st=$$$OK
-	Try
-	{
-		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
-		if (obj.TypeLessonId'="")
-		{
-			set TypeLesson=##class(SPD.TypeLesson).%OpenId(obj.TypeLessonId)
-		} 
-		else {
-			set TypeLesson=##class(SPD.Logic.TypeLesson).Create(obj.TypeLesson,obj.ShortDescription)
-		}		
-		set school=##class(Auth.Session).GetCurrentSchool() 
-		set price=##class(SPD.Price).%New()		
-		set price.Cost=obj.Cost
-		set price.DateActualEnd=$zdt($zdth(obj.dateActual,4),3)
-		if ((obj.DateBegin)'="" && (obj.TimeBegin'="")) {
-			//w obj.DateBegin_" "_obj.TimeBegin			
-			set price.DateActualStart=$zdt($zdth(obj.DateBegin_" "_obj.TimeBegin,4),3)
-		}
-		else {
-			set price.DateActualStart=$zdt($h,3)
-		}
-		set price.school=school		
-		
-		set match=##class(SPD.MatchPriceTypeLess).%New()
-		set sl=##class(SPD.SubscriptionList).%New()
-		set sl.cost=##class(REST.JSON).SetSum($ZCONVERT(price.Cost,"I","UTF8"))
-		set sl.DateActualEnd=price.DateActualEnd
-		set sl.DateActualStart=price.DateActualStart
-		set sl.Duration=0
-		set sl.School=price.school
-		set sl.Show=0
-		set sl.ShortDescription="Абонемент на 1 занятие "_TypeLesson.name_"."
-		set st=sl.%Save()
-
-		set lis=##class(SPD.LessonsInSubscription).%New()
-		set lis.Subscription=sl
-		set lis.LessonType=TypeLesson
-		set st=lis.%Save()
-		set match.Price=price
-		set match.TypeLesson=TypeLesson
-		
-		set st=match.%Save()
-		set st=price.%Save()		
-		set st=TypeLesson.%Save()
-	}
-	catch ex {
-		set st=ex.AsStatus()
-	}
-	ret st
 ]]></Implementation>
 </Method>
 
@@ -339,7 +237,7 @@
 		//проверка на повторую отправку приглашения
 		&sql(select count(id) into :countEmail from SPD.TempInvite where Email=:Email)
 		if (countEmail){
-			SET mygenex = ##class(%Exception.General).%New("Exception","999",,"adsfdfadf")
+			SET mygenex = ##class(%Exception.General).%New("Exception","999",,"На данный адрес электронной почты был выслан инвайт.")
     		THROW mygenex
 		}
 		set school=##class(Auth.Session).GetCurrentSchool()
@@ -376,9 +274,15 @@
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	try{
-		&sql(select id,Dancer->id,School->id into :id,:DancerId,SchoolId from SPD.TempInvite where md=:hash)
+		&sql(select id,Dancer->id,School->id into :id,:DancerId,:SchoolId from SPD.TempInvite where md=:hash)
 		set Dancer=##class(LIB.Person).%OpenId(DancerId)
-		set instructor=##class(SPD.Instructor).%New()
+		&sql(select id into :idInstr from SPD.Instructor where idDancer=:DancerId)
+		if (idInstr){
+			set instructor=##class(SPD.Instructor).%OpenId(idInstr)
+		}
+		else{
+			set instructor=##class(SPD.Instructor).%New()
+		}
 		set instructor.IdDancer=Dancer
 		set instructor.InstructorPower=20
 		///todo InstructorPower
@@ -392,22 +296,6 @@
 		set st=tempIS.%Save()
 
 		set st=##class(SPD.TempInvite).%DeleteId(id)
-	}
-	catch ex{
-		set st=ex.AsStatus()
-	}
-	ret st
-]]></Implementation>
-</Method>
-
-<Method name="CreateInstructor">
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	try{
-		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
-		
-		
 	}
 	catch ex{
 		set st=ex.AsStatus()
@@ -449,7 +337,7 @@
 			set dancer.LastName=$ZCONVERT(obj.LastName,"I","UTF8")
 			set dancer.Patronymic=$ZCONVERT(obj.Patronymic,"I","UTF8")
 			set dancer.Email=$ZCONVERT(email,"I","UTF8")
-			//set dancer.Image=##class(LIB.FileBase).%OpenId(obj.ImageId)		
+			set dancer.Image=##class(LIB.FileBase).%OpenId(obj.foto)
 			set dancer.Gender=obj.gender
 			set dancer.Password=obj.Password
 			set dancer.Key=##class(Auth.Session).CreateSSN()
@@ -480,15 +368,16 @@
 			set instructor=##class(SPD.Instructor).%New()
 			set instructor.IdDancer=dancer
 			set instructor.InstructorPower=20
+			set st=instructor.%Save()
 			///todo InstructorPower
 			set temp=##class(SPD.TempListOfInstructorsInSchools).%New()
 			set school=##class(SPD.School).%OpenId(SchoolId)
 			set temp.Instructor=instructor
 			set temp.School=school
-			
+			set temp.SchoolRate="10"
 			set st=temp.%Save()
-
-			//set st=##class(SPD.TempInvite).%DeleteId(id)
+			set st=##class(SPD.Logic.SocialLinks).SetInstructor(obj.hash,instructor.%Id())
+			set st=##class(SPD.TempInvite).%DeleteId(id)
 		}
 	}
 	catch ex{
@@ -505,13 +394,26 @@
 <Implementation><![CDATA[
 	set st=$$$OK
 	try{
-		&sql(select count(id) into :count from SPD.Instructor)
+		set schoolid=##class(Auth.Session).GetCurrentSchool().%Id()
+		&sql(SELECT 
+			count(ID) into :count
+			FROM SPD.TempListOfInstructorsInSchools
+			where Instructor->id=:ID)
 		set instructor=##class(SPD.Instructor).%OpenId(ID)
+		set st=instructor.%Save()
+		&sql(SELECT 
+			ID into :idtemp
+			FROM SPD.TempListOfInstructorsInSchools
+			where Instructor->id=:ID and School->id=:schoolid
+			)
+		if (idtemp)
+		{
+			set st=##class(SPD.TempListOfInstructorsInSchools).%DeleteId(idtemp)
+		}
 		if (count=1){
 			set instructor.IdDancer.Access=##class(LIB.Role).%OpenId(4)
+			do ##class(SPD.Instructor).%DeleteId(ID)
 		}
-		set st=instructor.%Save()
-		do ##class(SPD.Instructor).%DeleteId(ID)
 	}
 	catch ex{
 		set st=ex.AsStatus()

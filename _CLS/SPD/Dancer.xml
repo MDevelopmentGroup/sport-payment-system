@@ -10,13 +10,6 @@
 <Type>%Boolean</Type>
 </Property>
 
-<Property name="MyGroup">
-<Type>SPD.TempGroup</Type>
-<Cardinality>many</Cardinality>
-<Inverse>Dancer</Inverse>
-<Relationship>1</Relationship>
-</Property>
-
 <Property name="Balance">
 <Type>SPD.Balance</Type>
 </Property>

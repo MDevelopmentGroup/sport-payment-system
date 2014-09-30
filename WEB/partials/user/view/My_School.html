@@ -74,11 +74,31 @@
 
                                             </div>
                                             <div class="col-lg-10">
-                                                <div class="col-lg-3">
-                                                    {{Semester.name}}
+                                                <div class="row">
+                                                <div class="col-lg-2">
+                                                    {{Semester.Semester}}
                                                 </div>
-                                                <div class="col-lg-5">
+                                                <div class="col-lg-6">
                                                     {{Semester.DateBegin}} &#x2012 {{Semester.DateEnd}}
+                                                </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-2">
+                                                        Тип занятия:
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        Стоимость занятия:
+                                                    </div>
+                                                </div>
+                                                <div class="row" ng-repeat="tl in Semester.tl">
+                                                    <div class="col-lg-1"></div>
+                                                    <div class="col-lg-2">
+                                                        {{tl.TypeLesson}}
+                                                    </div>
+                                                    <div class="col-lg-1"></div>
+                                                    <div class="col-lg-5">
+                                                        {{tl.Cost}}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -164,8 +184,8 @@
                                             <div class="col-lg-3">
                                                 {{Instructor.FirstName}}
                                                 {{Instructor.LastName}}
-                                                {{Instructor.Patronomic}}. Платит дань
-                                                {{Instructor.Rate}}% от оплаты занятия
+                                                {{Instructor.Patronomic}}. Платит комиссию в виде
+                                                {{Instructor.Rate}}% с оплаты занятия
                                             </div>
                                             <div class="col-lg-3">
                                                 <a class="btn btn-default ng-binding" ng-binding ng-click='RemoveFromSchool(Instructor.ID)'>{{Page.Create.Delete}}  <label class="label label-danger">

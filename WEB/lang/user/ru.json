@@ -135,7 +135,7 @@
         "TypeLesson":"Тип занятия",
         "MaxCountDancers":"Вместимость помещения",
         "SchoolRate":"Комиссия школы",
-        "InterestRate":"Дань!!!"
+        "InterestRate":"Комиссия"
     },
     "Price":{
         "DateActual":"Актуальность цены",
@@ -157,6 +157,39 @@
         "Delete":"Удалить",
         "Close":"Закрыть",
         "Login":"Войти"
+    },
+    "Social":{
+        "Icon":{
+            "0":{
+                "Name":"Другое",
+                "Img":""
+            },
+            "1":{
+                "Name":"FaceBook",
+                "Img":"Facebook.png"
+            },
+            "2":{
+                "Name":"Vkontakte",
+                "Img":"VK.png"
+            },
+            "3":{
+                "Name":"Google",
+                "Img":"Google.png"
+            },
+            "4":{
+                "Name":"Mail",
+                "Img":"Mail.png"
+            },
+            "5":{
+                "Name":"OK",
+                "Img":"OK.png"
+            },
+            "5":{
+                "Name":"Twitter",
+                "Img":"Twitter.png"
+            }
+        }
+
     },
     "Map":{
         "Hint":"Используйте двойной клик левой/правой клавиши мыши для изменения масштаба карты"
@@ -186,9 +219,12 @@
         "maxCountW":"Женщины",
         "Begin":"Начало занятия",
         "End":"Окончание занятия",
-        "Limit":"Лимит"
+        "Limit":"Лимит",
+        "NextLessons":"Ближайшие занятия"
     },
     "Subscription": {
+        "Subscription":"Абоненемент",
+        "Subscriptions":"Абоненементы",
         "in": "В абонемент входит:",
         "Cost":"Стоимость абонемента",
         "Numb":"Количество",

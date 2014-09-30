@@ -4,6 +4,13 @@
 <Super>%Persistent</Super>
 <TimeCreated>63393,57359.158794</TimeCreated>
 
+<Property name="lis">
+<Type>SPD.LessonsInSubscription</Type>
+<Cardinality>many</Cardinality>
+<Inverse>LessonType</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
 <Property name="name">
 <Type>%String</Type>
 </Property>
@@ -151,6 +158,9 @@
 </Value>
 <Value name="6">
 <Value>School</Value>
+</Value>
+<Value name="7">
+<Value>lis</Value>
 </Value>
 </Data>
 </Storage>

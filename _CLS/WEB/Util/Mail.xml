@@ -59,6 +59,12 @@ TODO: Возможно сделать TextParam коллекцией для ук
     {
 	    
     }
+    elseif (Type="SendQRCode")
+    {
+	    set MailSubject=" Подтверждение электронной почты "
+	    set MailBody="Доброго времени суток! <br> "_
+        "<a href='http://localhost:57772/dances/index.html#/Subscription/"_md_"'>QR код находится по ссылке:</a>"
+    }
     /*
     ElseIf (Type="TaskSetted")
     {

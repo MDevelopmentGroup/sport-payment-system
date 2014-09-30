@@ -155,6 +155,7 @@ app.service('AuthenticationFactory',['$http','ErrorLogFactory','$rootScope',func
         AuthenticationFactory.CurrentUser.Hash=AuthenticationFactory.GetCookie('uh');
         AuthenticationFactory.CurrentUser.Role=AuthenticationFactory.GetCookie('Role');
         AuthenticationFactory.CurrentUser.IdSchool=AuthenticationFactory.GetCookie('IdSchool');
+        AuthenticationFactory.CurrentUser.IdInstructor=AuthenticationFactory.GetCookie('IdInstructor');
         return AuthenticationFactory.CurrentUser;
     };
     AuthenticationFactory.CleanCurrentUser=function(){
@@ -240,6 +241,39 @@ app.factory('FileFactory',['$http','$rootScope','ErrorLogFactory',function($http
         var xhr = new XMLHttpRequest();
         // Отправим данные на сервер
         xhr.open("POST", "/rest/upload/", true);
+        /*
+         xhr.upload.onprogress = function(e) { // <<<
+         if (e.lengthComputable) {
+         progressBar.value = (e.loaded / e.total) * 100;
+         }
+         };
+         */
+        xhr.onreadystatechange=function(e){
+            $rootScope.$apply(function(){
+                if (xhr.readyState == 4) {
+                    call(xhr.responseText);
+                }
+            });
+        };
+        xhr.send(formData);
+    };
+    FileFactory.FileUpload2=function(InputName, call, hash){
+        var formData = new FormData();
+        for(var i=0;i<document.getElementById(InputName).files.length;i++){
+            formData.append("foto"+i, document.getElementById(InputName).files[i]);
+        }
+        var reader = new FileReader;
+        reader.readAsDataURL(document.getElementById(InputName).files[0]);
+        var place = document.getElementById("Img");
+
+        // Как только картинка загрузится
+        reader.onload = function(e) {
+            place.src = e.target.result;
+            //console.log('nenene');
+        };
+        var xhr = new XMLHttpRequest();
+        // Отправим данные на сервер
+        xhr.open("POST", "/rest/uploadinstructorfoto/"+hash, true);
         /*
         xhr.upload.onprogress = function(e) { // <<<
             if (e.lengthComputable) {
@@ -407,11 +441,15 @@ app.factory('DancerFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     var DancerFactory={};
     var addr="http://91.247.68.36:8090/dances/";
     var BaseUrl="/rest";
+
     DancerFactory.Init=function(data){
         return $http.post(BaseUrl+'/InitPayment/',data);
     };
     DancerFactory.GetSubscriptions=function(id){
         return $http.get(BaseUrl+"/GetSubscriptions/"+id);
+    };
+    DancerFactory.GetSubscriptionFromJL=function(id){
+        return $http.get(BaseUrl+"/GetSubscriptionFromJL/"+id);
     };
     DancerFactory.Subscribe=function(idLesson){
         return $http.post(BaseUrl+"/Subscribe/"+idLesson);
@@ -443,7 +481,39 @@ app.factory('DancerFactory',['$http','$rootScope','ErrorLogFactory',function($ht
         '&details=' +details+
         '&sf=true&output=xml';
     };
+    DancerFactory.GetNextJournalLessons=function(id){
+        return $http.get(BaseUrl + "/GetNextJournalLessons/"+id);
+    };
+    DancerFactory.GetInstructorLinks=function(id){
+        return $http.get(BaseUrl + "/GetInstructorLinks/" + id)
+    };
+    DancerFactory.GetUserSub=function(sol){
+        return $http.get(BaseUrl + "/GetUserSub/" +sol)
+    };
     return DancerFactory;
+}]);
+app.factory('InstructorFactory',['$http','$rootScope','ErrorLogFactory',function($http,$rootScope,ErrorLogFactory) {
+    var InstructorFactory={};
+    var brokURL="/dances-instructor";
+    InstructorFactory.Update=function(data){
+        return $http.post(brokURL+"/UpdateInstructor/",data);
+    };
+    InstructorFactory.AddSocialIcon=function(data){
+        return $http.post(brokURL+"/AddSocialIcon/",data);
+    };
+    InstructorFactory.AddSocialIconID=function(data,id){
+        return $http.post(brokURL+"/AddSocialIcon/"+id,data);
+    };
+    InstructorFactory.RemoveSocialIcon=function(id){
+        return $http.delete(brokURL+"/RemoveSocialIcon/"+id);
+    };
+    InstructorFactory.GetTrainerInfo=function(id){
+        return $http.get(brokURL+"/GetTrainerInfo/"+id);
+    };
+    InstructorFactory.DeleteSL=function(id){
+        return $http.delete(brokURL+"/RemoveSocialIcon/"+id);
+    };
+    return InstructorFactory;
 }]);
 
 //***************************************** Setting ********************************************************************//

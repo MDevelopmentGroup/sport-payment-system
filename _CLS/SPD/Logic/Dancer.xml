@@ -3,11 +3,11 @@
 <Class name="SPD.Logic.Dancer">
 <TimeCreated>63417,52469.610053</TimeCreated>
 
-<Method name="SubscribeJL">
-<ClassMethod>1</ClassMethod>
-<FormalSpec>idJL</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
+<UDLText name="T">
+<Content><![CDATA[
+/*
+ClassMethod SubscribeJL(idJL) As %Status
+{
 	set st=$$$OK
 	try{
 		set dancer=##class(SPD.Dancer).%New()
@@ -83,14 +83,16 @@
 		set st=er.AsStatus()
 	}
 	ret st
-]]></Implementation>
-</Method>
+}
+*/
+]]></Content>
+</UDLText>
 
-<Method name="WithDraw">
-<ClassMethod>1</ClassMethod>
-<FormalSpec>idJL</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
+<UDLText name="T">
+<Content><![CDATA[
+/*
+ClassMethod WithDraw(idJL) As %Status
+{
 	set st=$$$OK
 	try{
 		
@@ -105,26 +107,19 @@
 		set st=er.AsStatus()
 	}
 	ret st
-]]></Implementation>
-</Method>
+}
 
-<Method name="CheckBalance">
-<ClassMethod>1</ClassMethod>
-<FormalSpec>Balance</FormalSpec>
-<ReturnType>%Boolean</ReturnType>
-<Implementation><![CDATA[
+ClassMethod CheckBalance(Balance) As %Boolean
+{
 	set bl=1
 	if ($LISTLENGTH($listfromstring(Balance,"."))>1){
 		set bl=0
 	}
 	ret bl
-]]></Implementation>
-</Method>
+}
 
-<Method name="GetCurrentBalance">
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
+ClassMethod GetCurrentBalance() As %Status
+{
 	set st=$$$OK
 	try{
 		set userid=##class(Auth.Session).GetCurrentUser().%Id()
@@ -136,12 +131,10 @@
 		set st=er.AsStatus()
 	}
 	ret st
-]]></Implementation>
-</Method>
+}
 
-<Method name="GetMyLessons">
-<ClassMethod>1</ClassMethod>
-<Implementation><![CDATA[
+ClassMethod GetMyLessons()
+{
 	set st=$$$OK
 	try{
 	set DancerId=##class(Auth.Session).GetCurrentUser().%Id()
@@ -163,13 +156,10 @@
 		set st=er.AsStatus()
 	}
 	ret st
-]]></Implementation>
-</Method>
+}
 
-<Method name="getTransactions1">
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
+ClassMethod getTransactions1() As %Status
+{
 	set st=$$$OK
 	try {
 		set dancer=##class(Auth.Session).GetCurrentUser()
@@ -184,7 +174,9 @@
 		set st=er.AsStatus()
 	}
 	ret st
-]]></Implementation>
-</Method>
+}
+*/
+]]></Content>
+</UDLText>
 </Class>
 </Export>
