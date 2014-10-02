@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="lib/redactor-js-master/redactor/redactor.css" />
     <link href="css/mycss/css.css" rel="stylesheet" media="screen">
     <link rel="stylesheet" href="lib/gantt/assets/gantt.css"/>
+    <script src="https://apis.google.com/js/client.js?onload=init"></script>
 </head>
 <style>
     body {
@@ -35,14 +36,15 @@
     .content{
         margin-top: 70px;
         width: 100%;
-
-
         position: absolute;
         background: url("") no-repeat center center fixed ;
         background-size: cover;
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;
+    }
+    .wrapped0{
+        padding-right:0px !important;
     }
     .full{
         height: 1080px;
@@ -53,12 +55,14 @@
 
 </style>
 <body>
-<div id="wrapper">
+<div id="wrapper" class="wrapped0">
     <div>
         <div ng-include="'partials/user/dancer_nav.html'" ng-controller="NavBarCtrl"></div>
     </div>
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+            <div clas="row">
             <div class="col-lg-2">
 
             </div>
@@ -68,7 +72,9 @@
                         <div ng-view></div>
                 <!--    </div>-->
             </div>
+            </div>
         </div>
+        <div class="col-lg-1"></div>
         </div>
     </div>
 </body>
@@ -92,7 +98,10 @@
 <script language="javascript" src="lib/fullcalendar/lib/moment.min.js"></script>
 <script language="javascript" src="lib/fullcalendar/fullcalendar.min.js"></script>
 <script language="javascript" src="lib/angular-googleapi/src/angular-googleapi.js"></script>
-<script src="https://apis.google.com/js/client.js"></script>
+<script type="text/javascript" src="lib/angular-qr-master/lib/qrcode.js"></script>
+<script type="text/javascript" src="lib/angular-qr-master/src/angular-qr.js"></script>
+
+
 <!--Библиотеки-->
 
 <!---->

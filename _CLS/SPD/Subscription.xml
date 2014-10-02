@@ -56,6 +56,13 @@
 <Relationship>1</Relationship>
 </Property>
 
+<Property name="JournallLesson">
+<Type>SPD.JournalLesson</Type>
+<Cardinality>one</Cardinality>
+<Inverse>Subscription</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^SPD.SubscriptionD</DataLocation>
@@ -103,6 +110,9 @@
 </Value>
 <Value name="13">
 <Value>TLIS</Value>
+</Value>
+<Value name="14">
+<Value>JournallLesson</Value>
 </Value>
 </Data>
 </Storage>

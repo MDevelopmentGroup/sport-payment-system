@@ -56,86 +56,6 @@ function ViewLKCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFacto
 //******************************************** ViewLKCtrl ***************************************************************//
 
 
-//******************************************** NavBarCtrl ***************************************************************//
-function NavBarCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFactory){
-    $scope.init=function(){
-        $rootScope.MenuActive={};
-        $rootScope.MenuActive.Page='partials/user/navbar_tabmenu.html';
-        $scope.Type=0;
-        $rootScope.MenuActive.Controller='NavBarCtrl';
-        //$rootScope.MenuActive.SettingsView='active';
-        $scope.lang=LanguageFactory.GetCurrentLanguage();
-        $scope.GetUser();
-        $scope.Visible();
-        $rootScope.filterLang=LanguageFactory.GetLanguage();
-        $scope.User=AuthenticationFactory.GetCurrentUser();
-        $scope.Name=$scope.User.UserName;
-        $scope.HASH=$scope.User.HASH;
-        $scope.IdSchool=$scope.User.IdSchool;
-        if($scope.IdSchool){
-            $rootScope.User=$scope.User;
-            $scope.Type=1;
-        }
-        $scope.Items.Menu=0;
-    };
-
-    $scope.Auth=function(){
-
-    };
-
-    $scope.SetLanguage=function(lang){
-        $scope.lang=lang;
-        $rootScope.siteLang=lang;
-        //console.log( $rootScope.filterLang);
-        LanguageFactory.SetDefaultLanguage(lang);
-        LanguageFactory.Init();
-        $rootScope.filterLang=LanguageFactory.GetLanguage();
-    };
-    $scope.GetUser=function(){
-        $scope.User={};
-        $scope.User.UserName=AuthenticationFactory.GetCurrentUser().UserName;
-        $scope.User.UserImage=AuthenticationFactory.GetCurrentUser().UserImage;
-        $scope.User.ID=AuthenticationFactory.GetCurrentUser().ID;
-
-    };
-    $scope.Visible=function(){
-        $scope.Items={};
-        // $rootScope.Items.Menu=false;
-        if(AuthenticationFactory.GetCurrentUser().UserName!=null){
-            $scope.Items.Menu=true;
-        }
-        else{
-            $scope.Items.Menu=false;
-        }
-    };
-    $scope.Login=function(){
-        $scope.data={};
-        $scope.data.ok=function(data){
-            AuthenticationFactory.Login(data).success(function(data){
-                $scope.success=data.User;
-                if($scope.success){
-                    Modal.hide();
-                    //$scope.init();
-                    //location.reload();
-                    $scope.User.ID=data.userId;
-                    location.reload();
-                }
-                else {
-                    $scope.data.status='<div class="alert alert-danger">'+$rootScope.Page.Modal.Success+'</div>';
-                }
-            });
-        };
-        var Modal = $modal({scope:$scope,show:true,backdrop:false,template:'partials/user/modal/modal_login.html'});
-    };
-    $scope.Logout=function(){
-        AuthenticationFactory.Logout().success(function(){
-            location.reload();
-        });
-    };
-    $scope.init();
-}
-//******************************************** NavBarCtrl ***************************************************************//
-
 
 //******************************************** MySchoolCtrl ***************************************************************//
 function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFactory,SchoolFactory,MyFunctions){
@@ -1100,7 +1020,8 @@ function ViewGroupsCtrl($rootScope,$scope,SettingFactory,LanguageFactory)
 function ViewTrainerCtrl($rootScope,$routeParams,$scope,SettingFactory,LanguageFactory,SchoolFactory,DancerFactory)
 {
 
-    $scope.lang=LanguageFactory.GetCurrentLanguage()
+    $scope.lang=LanguageFactory.GetCurrentLanguage();
+    $rootScope.nav=2;
     $scope.ListSocialLink=$scope.Page.Social.Icon;
     $scope.IdInstructor=$routeParams.ID;
     $rootScope.MenuActive.Page = 'partials/user/view/view_about.html';
@@ -1210,9 +1131,11 @@ function ViewSchoolsCtrl($rootScope,$scope,SettingFactory,LanguageFactory,Authen
     };
     $scope.intit();
 }
-function ViewSchoolCtrl($rootScope,$routeParams,$scope,SettingFactory,LanguageFactory,AuthenticationFactory,SchoolFactory)
+function ViewSchoolCtrl($rootScope,$routeParams,$scope,SettingFactory,LanguageFactory,
+                        AuthenticationFactory,SchoolFactory,DancerFactory)
 {
     $scope.ngshow=1;
+    $rootScope.nav=1;
     $rootScope.MenuActive={};
     $rootScope.MenuActive.Page='partials/user/view/view_about.html';
     $rootScope.MenuActive.Controller='ViewAboutCtrl';
@@ -1226,6 +1149,7 @@ function ViewSchoolCtrl($rootScope,$routeParams,$scope,SettingFactory,LanguageFa
     $scope.school={};
     $scope.school.id=$routeParams.ID;
     $scope.GetSchool=function(ID) {
+        ///todo DancerFactory вместо SchoolFactory
         SchoolFactory.GetSchool(ID).success(function(data){
             $scope.school=data.children[0];
         });
@@ -1243,10 +1167,11 @@ function ViewSchoolCtrl($rootScope,$routeParams,$scope,SettingFactory,LanguageFa
     //$scope.GetLessonTable=function(){}
 
 
-    //$scope.GetPrice=function(){}
-
-
-
+    $scope.GetPrice=function(ID){
+        DancerFactory.GetPrice(ID).success(function(data){
+            $scope.priceList=data.children;
+        })};
+    $scope.GetPrice($routeParams.ID);
     if($routeParams.ID) {$scope.GetSchool($routeParams.ID)};
 }
 
@@ -1295,10 +1220,7 @@ function LeftInfoPanelCtrl($rootScope,$scope,$modal,LanguageFactory,Authenticati
         $scope.lang=LanguageFactory.GetCurrentLanguage();
 
     };
-    $scope.reg_Dancer=function(){
-        $scope.FileLoad=function(){
-
-        };
+    /*$scope.reg_Dancer=function(){
         $scope.CreateSystemUser=function(user)
         {
             console.log(user);
@@ -1309,7 +1231,7 @@ function LeftInfoPanelCtrl($rootScope,$scope,$modal,LanguageFactory,Authenticati
         $scope.y=1;
         var modal=$modal({scope: $scope, placement:"center", backdrop:false, template: 'partials/user/modal/register.html', show: true});
 
-    };
+    };*/
     $rootScope.GetCurrentBalance=function(){
 
         if (($scope.User.Role!=1)&&($scope.User.Role!=0))
@@ -1329,6 +1251,7 @@ function ViewTrainersCtrl($rootScope,$scope,SettingFactory,LanguageFactory,Schoo
 {
     $scope.intit=function()
     {
+        $rootScope.nav=2;
         //$rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
         $scope.lang=LanguageFactory.GetCurrentLanguage();
         //SettingFactory.GetSettings();
@@ -1582,43 +1505,155 @@ function UpdateSubscriptionsCtrl($rootScope,$routeParams,$scope,SchoolFactory,La
         var modal=$modal({scope: $scope, placement:"center", backdrop:false, template: 'partials/user/modal/modal_updateLessInSubscription.html', show: true});
     };
 }
-function ScheduleCtrl($rootScope,$routeParams,$scope,SchoolFactory,LanguageFactory,AuthenticationFactory,MyFunctions,DancerFactory,$modal,
-                      googleCalendar)
+function ScheduleCtrl($rootScope,$routeParams,$scope,SchoolFactory,LanguageFactory,AuthenticationFactory,MyFunctions,DancerFactory,$modal)
 {
+    $scope.Duration=14;
     $scope.lang=LanguageFactory.GetCurrentLanguage();
     $scope.idschool=$routeParams.ID;
+    $rootScope.nav=0;
+    console.log($rootScope.nav);
     $scope.eventSources = [];
     $scope.GetNextJournalLessons=function(){
-        DancerFactory.GetNextJournalLessons($routeParams.ID).success(function(data){
+        DancerFactory.GetNextJournalLessons($routeParams.ID,$scope.Duration).success(function(data){
             $scope.NextJL=data.children;
     })};
     $scope.GetNextJournalLessons();
-    $scope.loadCalendars = function() {
-        $scope.calendars = googleCalendar.listCalendars();
-    };
+
     $scope.GetSubscriptionLIST=function(id){
         DancerFactory.GetSubscriptions(id).success(function(data){
             $scope.SubLIST=data.children;
         });
     };
+    $scope.ChangeDuration=function(lt){
+        DancerFactory.GetNextJournalLessons($routeParams.ID,lt).success(function(data){
+            $scope.NextJL=data.children;
+    })};
+
     $scope.GetSubscriptionLIST($routeParams.ID);
 }
-function ViewUserSubscriptionCtrl($rootScope,$routeParams,$scope,LanguageFactory,DancerFactory)
+function ViewUserSubscriptionCtrl($rootScope,$routeParams,$scope,LanguageFactory,DancerFactory,InstructorFactory,AuthenticationFactory)
 {
+    $scope.gapi=gapi;
     $scope.lang=LanguageFactory.GetCurrentLanguage();
+    $scope.User = AuthenticationFactory.GetCurrentUser();
+    $scope.IdInstructor=$scope.User.IdInstructor;
+    console.log($scope.IdInstructor);
     $scope.Sole=$routeParams.Sole;
     $scope.GetUserSubscription=function(sole){
 
         DancerFactory.GetUserSub(sole).success(function(data)
         {
             $scope.Subscr=data.children;
-        })
-    };
-    $scope.Check=function(subid){
-        DancerFactory.CheakUser(subid).success(function(data){
-            ///todo обработка чека через html5 уведомления
+            console.log($scope.Subscr.QRString);
+            $scope.Listtlis=$scope.Subscr.Listtlis;
+            console.log($scope.Subscr.JLID===undefined);
+            console.log($scope.Subscr.SubLIST===undefined);
+            console.log($scope.Subscr.subId);
+            DancerFactory.GetJLDays($scope.Subscr.subId).success(function(data){
+              $scope.EventsArray=data.children;
+            })
+        });
 
+    };
+    $scope.CheckSub=function(idsub){
+        InstructorFactory.CheсkUser(idsub).success(function(data){
+            ///todo обработка чека через html5 уведомления
         });
     };
+    $scope.ImportInGCal=function()
+    {
+        var config = {
+            'client_id': '86505345915-8tii7mbgjc3ohns72lf8nng7hm81b4uu.apps.googleusercontent.com',
+            'scope': 'https://www.googleapis.com/auth/urlshortener'
+        };
+        //$scope.auth=
+        console.log($scope.gapi["auth"]);
+        var a=$scope.gapi.auth.authorize(config, function() {
+            console.log('login complete');
+            console.log($scope.gapi.auth.getToken());
+        });
+    };
+    $scope.ImportInGCal();
     $scope.GetUserSubscription($scope.Sole);
 }
+
+//******************************************** NavBarCtrl ***************************************************************//
+function NavBarCtrl($scope,$routeParams,$rootScope,$modal,LanguageFactory,AuthenticationFactory){
+    $scope.init=function(){
+        $rootScope.MenuActive={};
+        $rootScope.MenuActive.Page='partials/user/navbar_tabmenu.html';
+        $scope.Type=0;
+        $rootScope.MenuActive.Controller='NavBarCtrl';
+        //$rootScope.MenuActive.SettingsView='active';
+        $scope.lang=LanguageFactory.GetCurrentLanguage();
+        $scope.GetUser();
+        $scope.Visible();
+        $rootScope.filterLang=LanguageFactory.GetLanguage();
+        $scope.User=AuthenticationFactory.GetCurrentUser();
+        $scope.Name=$scope.User.UserName;
+        $scope.HASH=$scope.User.HASH;
+        $scope.IdSchool=$scope.User.IdSchool;
+        if($scope.IdSchool){
+            $rootScope.User=$scope.User;
+            $scope.Type=1;
+        }
+        $scope.Items.Menu=0;
+    };
+    $scope.Auth=function(){
+
+    };
+
+    $scope.SetLanguage=function(lang){
+        $scope.lang=lang;
+        $rootScope.siteLang=lang;
+        //console.log( $rootScope.filterLang);
+        LanguageFactory.SetDefaultLanguage(lang);
+        LanguageFactory.Init();
+        $rootScope.filterLang=LanguageFactory.GetLanguage();
+    };
+    $scope.GetUser=function(){
+        $scope.User={};
+        $scope.User.UserName=AuthenticationFactory.GetCurrentUser().UserName;
+        $scope.User.UserImage=AuthenticationFactory.GetCurrentUser().UserImage;
+        $scope.User.ID=AuthenticationFactory.GetCurrentUser().ID;
+
+    };
+    $scope.Visible=function(){
+        $scope.Items={};
+        // $rootScope.Items.Menu=false;
+        if(AuthenticationFactory.GetCurrentUser().UserName!=null){
+            $scope.Items.Menu=true;
+        }
+        else{
+            $scope.Items.Menu=false;
+        }
+    };
+    $scope.Login=function(){
+        $scope.data={};
+        $scope.data.ok=function(data){
+            AuthenticationFactory.Login(data).success(function(data){
+                $scope.success=data.User;
+                if($scope.success){
+                    Modal.hide();
+                    //$scope.init();
+                    //location.reload();
+                    $scope.User.ID=data.userId;
+                    location.reload();
+                }
+                else {
+                    $scope.data.status='<div class="alert alert-danger">'+$rootScope.Page.Modal.Success+'</div>';
+                }
+            });
+        };
+        var Modal = $modal({scope:$scope,show:true,backdrop:false,template:'partials/user/modal/modal_login.html'});
+    };
+    $scope.Logout=function(){
+        AuthenticationFactory.Logout().success(function(){
+            location.reload();
+        });
+    };
+    $scope.init();
+    //$scope.nav=$rootScope.Getnav();
+    console.log($rootScope.nav);
+}
+//******************************************** NavBarCtrl ***************************************************************//

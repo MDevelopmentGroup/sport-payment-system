@@ -3,15 +3,14 @@
 <div>
 
 <script language="Cache" runat="Server">
-	
 	s tr=##class(SPD.Transactions).%OpenId(%request.Data("InvId",1))
-	
+	w "invid="_tr.%Id(),!
+	s trid=tr.%Id()
 	s sole="" s type=""
-	
-	w tr.CompleteDate
-	&sql(declare tre cursor for
-	select id into :idsub from SPD.Subscription where "Transaction"->id=:tr)
-	
+	&sql(
+	select id into :idsub from SPD.Subscription where "Transaction"->id=:trid)
+	w "idsub="_idsub,!
+	set loc="91.247.68.36/dances/"
 	if (idsub){
 		set sole=##class(SPD.Subscription).%OpenId(idsub).Sole
 		/*zn "%sys"
@@ -21,17 +20,14 @@
 		
 		set Location=PropAppl("Path")_"\img\upload\"
 		*/
-		set loc="91.247.68.36/dances"
 		w "<script language='javascript'>"
-		w "location.href='http://"_loc_"index.html#//Subscription/"_
+		w "location.href='http://"_loc_"index.html#/Subscription/"_
 		sole_"';"
 		//w ""
 	}
 	else{
-		set outSum=tr.OutSum
-		set email=tr.email
 		w "<script language='javascript'>"
-		w "location.href='index.html#/success/"_outSum_"/"_email_"';"
+		w "location.href='/index.html#/success/"_tr.DateTransactionInit_"/"_tr.OutSum_"/"_tr.email_"';"
 		w ""
 	}
 	

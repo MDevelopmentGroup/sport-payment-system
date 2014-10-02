@@ -16,6 +16,21 @@
                         <li ng-if="User" >
                             <a ng-if="!IdSchool" href="#/PrivateLessons">{{Page.navbar.PrivateLessons}}</a>
                         </li>
+                        <li>
+                            <a href="#/LessonTypes">Типы занятий</a>
+                        </li>
+                        <li>
+                            <a href="#/T">Период</a>
+                        </li>
+                        <li>
+                            <a href="#/LessonInTimeTable/{{IdSchool}}">Расписание</a>
+                        </li>
+                        <li>
+                            <a href="#/JournallLessons/{{IdSchool}}">Журнал занятий</a>
+                        </li>
+                        <li>
+                            <a href="#/IIS">Инструкторы</a>
+                        </li>
                         <li ng-if="User">
                             <a href="#/LK">{{Page.navbar.LK}}</a>
                         </li>

@@ -14,6 +14,9 @@
 		<Route Url="/success/"						Method="POST"		Call="REST.JSON:RobokassaSuccess"/>
 		<Route Url="/fail/url/"						Method="POST"		Call="REST.JSON:RobokassaFailUrl"/>
 		<!-- перенести в другой брокер-->
+		
+		<Route Url="/GetPrice/:ID"					Method="GET"		Call="SPD.Logic.School:GetPrice"/>
+		
 		<Route Url="/GetInstructorLinks/:ID"		Method="GET"		Call="SPD.Logic.SocialLinks:GetSocialLinks"/>
 	   <Route Url="/test/" 							Method="POST" 		Call="WEB.UserBroker:Test"/>
 	   <Route Url="/news/Get/:ID"		   			Method="GET" 		Call="WEB.UserBroker:NewMethod2"/>
@@ -58,7 +61,7 @@
 	   <Route Url="/GetLesson/:ID"					Method="GET"		Call="SPD.Logic.TimeTableLessons:GetLesson"/>
 	   
 	   
-	   <Route Url="/GetNextJournalLessons/:ID"		Method="GET"		Call="SPD.Logic.JournalLesson:GetNextJournalLessons"/>
+	   <Route Url="/GetNextJournalLessons/:ID/:lt"	Method="GET"		Call="SPD.Logic.JournalLesson:GetNextJournalLessons1"/>
 	   <Route Url="/GetJournalLessons/:ID"			Method="GET"		Call="SPD.Logic.JournalLesson:GetJournalLessons"/>
 	   <Route Url="/GetJournallLesson/:ID"			Method="GET"		Call="SPD.Logic.JournalLesson:GetJournalLesson"/>
 	   
@@ -74,7 +77,9 @@
 		<Route Url="/GetLessFromSubscription/:ID"	Method="GET"		Call="SPD.Logic.LessonInSubscription:GetLessFromSubscription"/>
 		<Route Url="/GetSubscriptionFromList/:ID"	Method="GET"		Call="SPD.Logic.SubscriptionList:GetSubscriptionFromList"/>
 		<Route Url="/GetSubscriptionFromJL/:ID"		Method="GET"		Call="SPD.Logic.SubscriptionList:GetSubscriptionFromJL"/>
-		<Route Url="/GetUserSub/:sole"				Method="GET"		Call="SPD.Logic.Subscription:Get"/>
+		<Route Url="/GetUserSub/:sol"				Method="GET"		Call="SPD.Logic.Subscription:Get"/>
+		<Route Url="/GetJLDays/:isub"				Method="GET"		Call="SPD.Logic.Subscription:GetJLDays"/>
+		
 		<Route Url="/BuyJL/"						Method="GET"		Call="SPD.Logic.SubscriptionList:BuyJL"/>
 		<!--Subscription-->
 	   

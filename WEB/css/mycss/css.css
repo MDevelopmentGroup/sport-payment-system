@@ -13,6 +13,30 @@
     max-width: 150px;
     min-width: 150px;
 }
+div.SchoolImg{
+    text-align: center;
+    max-width: 100%;
+    min-width: 100%;
+}
+.width50{
+    width: 50%;
+}
+div.SchoolImg>div{
+    background-color: white;
+    padding: 5px 5px 5px 5px;
+    display: inline-block;
+    border: 2px solid #EDF;
+    max-width: none !important;
+    min-width: none !important;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+div.SchoolImg>div>img{
+    max-width: 450px;
+    min-width: 450px;
+}
 div.action{
     background-color: rgb(241, 194, 50) !important;
 }
@@ -72,4 +96,43 @@ div.action{
 .viewTrainerImg{
     max-width: 300px;
     min-width: 300px;
+}
+.whitebackgr{
+    background-color: white;
+    border:2px solid #edf;
+}
+.subscriptionJLBOTTOM{
+    border-bottom: 2px solid #EDF;
+    border-left: 2px solid #EDF;
+    border-right: 2px solid #EDF;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    background-color: white;
+
+    border-top: 2px solid #EDF;
+}
+.filters{
+    padding: 10px 0px 10px 0px;
+}
+.subscriptionJLTOP{
+    border-top: 2px solid #EDF;
+    border-left: 2px solid #EDF;
+    border-right: 2px solid #EDF;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    background-color: white;
+}
+.leftborder{
+    border-left: 2px solid #EDF;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+.trNomarginTopBottom{
+    margin-top: 0px;
+    margin-bottom: 0px;
+    border-color: darkgray;
+}
+.modal-dialog{
+    width: 60%;
+    padding:10px 10px 10px 10px;
 }

@@ -1,5 +1,5 @@
 angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute','ngSanitize','ngAnimate','infinite-scroll',
-        'VACANCY.services','VACANCY.Filters','mgcrea.ngStrap','VACANCY.directive','googleApi'
+        'VACANCY.services','VACANCY.Filters','mgcrea.ngStrap','VACANCY.directive','googleApi','ja.qr'
       ])
     .config(['$routeProvider',  function($routeProvider) { $routeProvider.
 
@@ -54,8 +54,7 @@ angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute'
         when('/Invite/:hash',                        {templateUrl: 'partials/user/view/InviteInstructor.html', controller: InviteCtrl}).
         when('/registryNewInstructor/:hash',         {templateUrl: 'partials/user/Create/registryNewInstructor.html', controller: registryNewInstructorCtrl}).
         //***************************************** Invite **********************************************************//
-        when('/success/:CompleteDate/:FirstName/:LastName/:Patronymic/:DateTransactionInit/:OutSum',   {templateUrl: 'partials/user/view/Success.html', controller: successCtrl}).
-        when('/success/:FirstName/:LastName/:Patronymic/:DateTransactionInit/:OutSum',   {templateUrl: 'partials/user/view/Wait.html', controller: successCtrl}).
+        when('/success/:DateTransactionInit/:outSum/:email',                {templateUrl: 'partials/user/view/Wait.html', controller: successCtrl}).
         when('/success/:FirstName/:LastName/:Patronymic/:DateTransactionInit/:OutSum',   {templateUrl: 'partials/user/view/FailUrl.html', controller: FailUrlCtrl}).
 
         //***************************************** PrivateLessons **********************************************************//
@@ -67,7 +66,7 @@ angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute'
 
         when('/main',             {templateUrl: 'partials/user/about.html' ,   controller: ViewAboutCtrl}).
 
-        otherwise({redirectTo: '/main'});
+        otherwise({redirectTo: '/schedule/55'});
     }])
     .run(['LanguageFactory',function(LanguageFactory) {
         LanguageFactory.Init();
@@ -118,11 +117,23 @@ angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute'
         };
     })
 
-
+/*
     .config(function(googleLoginProvider) {
         googleLoginProvider.configure({
             clientId: '86505345915-njjhdgp192t707kgm74pumc02vg8a0fq.apps.googleusercontent.com',
             scopes: ["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/calendar"]
         });
+    })
+    */
+    .value('GoogleApp', {
+        apiKey: 'AIzaSyBBcA_ertE9wwJeLhgYXSsYFGfioRFBb-A',
+        clientId: '86505345915-tona9tmk5psjo12mofogm730dnu2jeaa.apps.googleusercontent.com',
+        scopes: [
+            // whatever scopes you need for your app, for example:
+            //'https://www.googleapis.com/auth/drive',
+            //'https://www.googleapis.com/auth/youtube',
+            'https://www.googleapis.com/auth/calendar'
+            // ...
+        ]
     })
 ;

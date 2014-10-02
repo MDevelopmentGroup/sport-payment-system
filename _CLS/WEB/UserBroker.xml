@@ -10,12 +10,15 @@
 <Routes>
 <!--	   <Route Url="/test" 							Method="POST" Call="WEB.UserBroker:Test"/>	   
 	   <Route Url="/news/Get/:ID"		   			Method="GET" Call="WEB.UserBroker:NewMethod2"/>-->
-	   <Route Url="/UpdateInstructor/"	   			Method="POST" Call="SPD.Logic.Instructor:Update"/>
-	   <Route Url="/AddSocialIcon/"	   				Method="POST" Call="SPD.Logic.SocialLinks:Create"/>
-	   <Route Url="/AddSocialIcon/:ID"	   			Method="POST" Call="SPD.Logic.SocialLinks:Create"/>
-	   <Route Url="/RemoveSocialIcon/:ID"	   		Method="DELETE" Call="SPD.Logic.SocialLinks:Delete"/>
-	  <Route Url="/GetTrainerInfo/:ID"				Method="GET" Call="SPD.Logic.Instructor:GetTrainerInfo"/>
-	   
+		<Route Url="/UpdateInstructor/"	   				Method="POST" Call="SPD.Logic.Instructor:Update"/>
+		<Route Url="/AddSocialIcon/"	   				Method="POST" Call="SPD.Logic.SocialLinks:Create"/>
+		<Route Url="/AddSocialIcon/:ID"	   				Method="POST" Call="SPD.Logic.SocialLinks:Create"/>
+		<Route Url="/RemoveSocialIcon/:ID"	   			Method="DELETE" Call="SPD.Logic.SocialLinks:Delete"/>
+
+		<Route Url="/InstructorCheck/:sol" 				Method="POST" Call="SPD.Logic.Instructor:InstructorCheck"/>
+		<Route Url="/GetTrainerInfo/:ID"				Method="GET" Call="SPD.Logic.Instructor:GetTrainerInfo"/>
+		
+		
 </Routes>
 ]]></Data>
 </XData>

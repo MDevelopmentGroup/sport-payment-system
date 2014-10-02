@@ -421,5 +421,45 @@
 	ret st
 ]]></Implementation>
 </Method>
+
+<Method name="GetPrice">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ID</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set sem=##class(SPD.Logic.Semester).GetActualSemester(ID)
+		&sql(
+		declare gp cursor for
+		select id into :idp from SPD.Price where Semester->id=:sem and
+		Semester->School->id=:ID
+		)
+		set childrenProxyObject=##class(%ZEN.proxyObject).%New()
+		
+		set childrenProxyObject.children=##class(%ListOfDataTypes).%New()
+		&sql(open gp)
+		for
+		{
+			&sql(fetch gp)
+			quit:(SQLCODE'=0)
+			set price=##class(SPD.Price).%OpenId(idp)
+			set PriceProxyObject=##class(%ZEN.proxyObject).%New()
+			set PriceProxyObject.TypeLesson=price.LessonType.name
+			set PriceProxyObject.Cost=price.Cost
+			set PriceProxyObject.EndActualDate=price.Semester.DateEnd
+			set st=childrenProxyObject.children.Insert(PriceProxyObject)
+		}
+		&sql(close gp)
+		set st=childrenProxyObject.%ToJSON()
+	}
+	catch er
+	{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
 </Class>
 </Export>

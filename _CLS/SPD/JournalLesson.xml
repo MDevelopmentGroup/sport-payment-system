@@ -55,6 +55,13 @@
 <Relationship>1</Relationship>
 </Property>
 
+<Property name="Subscription">
+<Type>SPD.Subscription</Type>
+<Cardinality>many</Cardinality>
+<Inverse>JournallLesson</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^SPD.JournalLessonD</DataLocation>
@@ -120,6 +127,9 @@
 </Value>
 <Value name="19">
 <Value>Semestr</Value>
+</Value>
+<Value name="20">
+<Value>Subscription</Value>
 </Value>
 </Data>
 </Storage>

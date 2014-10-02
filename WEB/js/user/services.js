@@ -165,6 +165,9 @@ app.service('AuthenticationFactory',['$http','ErrorLogFactory','$rootScope',func
         AuthenticationFactory.SetCookie('Email',   null,'/',-1);
         AuthenticationFactory.SetCookie('Login',   null,'/',-1);
         AuthenticationFactory.SetCookie('success',   null,'/',-1);
+        AuthenticationFactory.SetCookie('IdInstructor',   null,'/',-1);
+        AuthenticationFactory.SetCookie('IdSchool',   null,'/',-1);
+        AuthenticationFactory.SetCookie('uh',   null,'/',-1);
 
     };
     AuthenticationFactory.GetAccessLevels=function(value){
@@ -335,9 +338,6 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     SchoolFactory.AddTypeLesson=function(data){
         return $http.post(schoolBroker+"/AddTypeLesson/",data);
     };
-    SchoolFactory.GetPrice=function(ID){
-        return $http.get(schoolBroker + "/GetPrice/"+ID);
-    };
     SchoolFactory.InviteInstructor=function(email){
         return $http.get(schoolBroker + "/InviteInstructor/"+email);
     };
@@ -472,6 +472,9 @@ app.factory('DancerFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     DancerFactory.GetSubscriptionFromList=function(id){
         return $http.get(BaseUrl + "/GetSubscriptionFromList/"+id);
     };
+    DancerFactory.GetPrice=function(ID){
+        return $http.get(BaseUrl + "/GetPrice/"+ID);
+    };
     DancerFactory.getUrlForCreateGoogleCalendarEvent=function(text, dates, location, details){
 
         return 'https://www.google.com/calendar/render?action=TEMPLATE&hl=ru' +
@@ -481,11 +484,14 @@ app.factory('DancerFactory',['$http','$rootScope','ErrorLogFactory',function($ht
         '&details=' +details+
         '&sf=true&output=xml';
     };
-    DancerFactory.GetNextJournalLessons=function(id){
-        return $http.get(BaseUrl + "/GetNextJournalLessons/"+id);
+    DancerFactory.GetNextJournalLessons=function(id,lt){
+        return $http.get(BaseUrl + "/GetNextJournalLessons/"+id+"/"+lt);
     };
     DancerFactory.GetInstructorLinks=function(id){
         return $http.get(BaseUrl + "/GetInstructorLinks/" + id)
+    };
+    DancerFactory.GetJLDays=function(id){
+        return $http.get(BaseUrl + "/GetJLDays/" + id)
     };
     DancerFactory.GetUserSub=function(sol){
         return $http.get(BaseUrl + "/GetUserSub/" +sol)
@@ -512,6 +518,9 @@ app.factory('InstructorFactory',['$http','$rootScope','ErrorLogFactory',function
     };
     InstructorFactory.DeleteSL=function(id){
         return $http.delete(brokURL+"/RemoveSocialIcon/"+id);
+    };
+    InstructorFactory.CheсkUser=function(idsub){
+        return $http.post(brokURL+"/InstructorCheck/"+idsub);
     };
     return InstructorFactory;
 }]);

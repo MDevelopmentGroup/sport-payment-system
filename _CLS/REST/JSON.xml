@@ -350,7 +350,7 @@
 			 
 			///сгенерировать абонемент
 			set subd.DateGEnSub=$zdt($h,3)
-			set subd.DateEndSub=$zdt($h+sub.Duration,3)
+			set subd.DateEndSub=$zdt(##class(REST.JSON).SumDT($h,sub.Duration),3)
 			set subd.School=transaction.School
 			set subd.SubList=sub
 			s cost=sub.cost s sd=sub.ShortDescription			
@@ -376,6 +376,7 @@
 					
 			set subd.Sole=##class(Auth.Session).Encode(##class(SPD.Logic.Subscription).GenerateSole(cost_""_idschool_""_InvId))
 			set subd.QRString="http://"_url_"/dances/index.html#/Subscription/"_subd.Sole
+			set subd.JournallLesson=jlso
 			set st=subd.%Save()
 			s st=##class(SPD.TableLessinSubscr).CreateTLISFORJL(jls,subd.%Id())
 			
@@ -405,6 +406,20 @@
 		set st=ex.AsStatus()
 	}
 	quit st
+]]></Implementation>
+</Method>
+
+<Method name="SumDT">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>dt,s</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set str=""
+		set arrdt=$LISTFROMSTRING(dt,",")
+		set t=$list(arrdt,2)
+		set dt=dt+s
+		set str=dt_","_t
+	ret str
 ]]></Implementation>
 </Method>
 

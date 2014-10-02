@@ -143,16 +143,16 @@
 ]]></Implementation>
 </Method>
 
-<Method name="CheckUserJL">
-<Description>
-чекалка для инструктора</Description>
+<Method name="InstructorCheck">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>idsub,sole</FormalSpec>
+<FormalSpec>sol</FormalSpec>
 <Implementation><![CDATA[
+	set st=$$$OK
+	try{
 	set instructor=##class(Auth.Session).GetCurrentInstructor()
 	set idcjl=##class(SPD.Instructor).GetCurrentJL(instructor)
 	set cjl=##class(SPD.JournalLesson).%OpenId(idcjl)
-	&sql(select id into :idsb from SPD.Subscription where id=:idsub and Sole=:sole)
+	&sql(select id into :idsb from SPD.Subscription where Sole=:sol)
 	set sub=##class(SPD.Subscription).%OpenId(idsb)
 	set nowdate=$h
 	if (nowdate>sub.DateEndSub){
@@ -171,17 +171,23 @@
 			set tg.Visited=1
 		}
 	}
+	}
+	catch ex{
+	}
+	ret st
 ]]></Implementation>
 </Method>
 
 <Method name="GetCurrentJL">
 <Description>
+чекалка для инструктора
 получить текущий JL</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>idinstr</FormalSpec>
 <ReturnType>%Integer</ReturnType>
 <Implementation><![CDATA[
 	set nowdate=$zdt($h,3)
+	w nowdate
 	&sql(select id into :idjl
 		from SPD.JournalLesson 
 		where Instructor->id=:idinstr and DateBegin<:nowdate and DateEnd>:nowdate

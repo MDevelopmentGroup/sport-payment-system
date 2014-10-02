@@ -24,7 +24,6 @@
 	<Route Url="/CreateJurnall/" 				Method="POST" 		Call="SPD.Logic.School:CreateJurnall"/>
 	<Route Url="/CreateTimeTable/" 				Method="POST" 		Call="SPD.Logic.School:CreateTimeTable"/>
 	<Route Url="/AddTypeLesson/"				Method="POST"		Call="SPD.Logic.School:AddTypeLesson"/>
-	<Route Url="/GetPrice/:ID"					Method="GET"		Call="SPD.Logic.School:GetPrice"/>
 	<Route Url="/InviteInstructor/:Email"		Method="GET"		Call="SPD.Logic.School:InviteInstructor"/>
 	<Route Url="/RemoveFromSchool/:ID"			Method="GET"		Call="SPD.Logic.School:RemoveFromSchool"/>
 	
