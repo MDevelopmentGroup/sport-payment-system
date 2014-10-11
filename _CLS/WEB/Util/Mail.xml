@@ -25,7 +25,7 @@ TODO: Возможно сделать TextParam коллекцией для ук
  /*
     #dim file ="C:\##mdg\MDG_SCRUMBLER_v2\scrumbler2\invite.html"
         //TODO: сделать домен параметром
-    #dim server = "http://91.247.68.36:8090/"
+    #dim server = "http://http://mdg777.zapto.org/"
     #dim mdgserver =server_"csp/mdg-scrumbler-2/index.html"
     #dim filelink =server_"csp/mdg-scrumbler-2/invite.html"
  */
@@ -34,6 +34,8 @@ TODO: Возможно сделать TextParam коллекцией для ук
     #dim server = "http://akvant.pro/"
     #dim mdgserver =server_"scrumbler/index.html"
     #dim filelink =server_"scrumbler/invite.html"
+    
+    #dim locref="http://mdg777.zapto.org"
 
     #dim tasklist = "#/Tasks"
     #dim personalroom = "#/Room"
@@ -45,7 +47,7 @@ TODO: Возможно сделать TextParam коллекцией для ук
 	    set MailSubject="{MDG} Подтверждение электронной почты "
 	    set MailBody="Доброго времени суток! <br> "_
         "по данной ссылке Вы сможете зарегистрироваться на портале Скрамблер, подробное описание возможностей приведено ниже <br>"_
-        "<a href='http://localhost:57772/dances/index.html#/Invite/"_md_"'>Приглашение в школу</a>"
+        "<a href='"_locref_"/dances/index.html#/Invite/"_md_"'>Приглашение в школу</a>"
     }
     
     elseif (Type="NewInstructorInviteToSchool")
@@ -53,7 +55,7 @@ TODO: Возможно сделать TextParam коллекцией для ук
 	    set MailSubject="{MDG} Подтверждение электронной почты "
 	    set MailBody="Доброго времени суток! <br> "_
         "по данной ссылке Вы сможете зарегистрироваться на портале Скрамблер, подробное описание возможностей приведено ниже <br>"_
-        "<a href='http://localhost:57772/dances/index.html#/registryNewInstructor/"_md_"'>Приглашение в школу</a>"
+        "<a href='"_locref_"/dances/index.html#/registryNewInstructor/"_md_"'>Приглашение в школу</a>"
     }
     elseif (Type="InviteSchool")
     {
@@ -63,7 +65,7 @@ TODO: Возможно сделать TextParam коллекцией для ук
     {
 	    set MailSubject=" Подтверждение электронной почты "
 	    set MailBody="Доброго времени суток! <br> "_
-        "<a href='http://localhost:57772/dances/index.html#/Subscription/"_md_"'>QR код находится по ссылке:</a>"
+        "<a href='"_locref_"/dances/index.html#/Subscription/"_md_"'>QR код находится по ссылке:</a>"
     }
     /*
     ElseIf (Type="TaskSetted")

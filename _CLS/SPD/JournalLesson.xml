@@ -62,6 +62,11 @@
 <Relationship>1</Relationship>
 </Property>
 
+<Property name="Show">
+<Type>%Boolean</Type>
+<InitialExpression>1</InitialExpression>
+</Property>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^SPD.JournalLessonD</DataLocation>
@@ -130,6 +135,9 @@
 </Value>
 <Value name="20">
 <Value>Subscription</Value>
+</Value>
+<Value name="21">
+<Value>Show</Value>
 </Value>
 </Data>
 </Storage>

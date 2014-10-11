@@ -45,6 +45,9 @@
 	   	   
 	   <Route Url="/InviteAccept/:hash"				Method="POST" 		Call="SPD.Logic.School:InviteAccept"/>
 	   <Route Url="/InviteReject/:hash"				Method="POST" 		Call="SPD.Logic.School:InviteReject"/>
+	   
+	   <Route Url="/checkInvite/:hash"				Method="GET" 		Call="SPD.Logic.School:checkInvite"/>
+	   
 	   <Route Url="/ActualGetPrice/:ID"				Method="GET"		Call="SPD.Logic.School:ActualGetPrice"/>
 	   <Route Url="/CreateNewInstructor/"			Method="POST" 		Call="SPD.Logic.School:CreateNewInstructor"/>
 	   <Route Url="/GetLessonTypes/:ID"				Method="GET"		Call="SPD.Logic.School:GetLessonTypes"/>
@@ -82,6 +85,7 @@
 		
 		<Route Url="/BuyJL/"						Method="GET"		Call="SPD.Logic.SubscriptionList:BuyJL"/>
 		<!--Subscription-->
+		<Route Url="/GetTokenGAPI/" 				Method="GET"		Call="SPD.Logic.Gapi:GetToken"/>
 	   
 </Routes>
 ]]></Data>

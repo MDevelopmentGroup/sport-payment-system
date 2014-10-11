@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Logic.SubscriptionList">
+<TimeCreated>63439,48364.750359</TimeCreated>
+
+<Method name="Delete">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		&sql(select count(id) into :count FROM SPD.Subscription where SubList=:id)
+		if (count=0)
+		{
+			set st=##class(SPD.SubscriptionList).%DeleteId(id)
+		}
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="Create">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set idschool=##class(Auth.Session).GetCurrentSchool().%Id()
+		&sql(select count(id) into :count FROM SPD.LessonsInSubscription where Subscription is null and School->id=:idschool)
+		if (count){
+			set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+			set sl=##class(SPD.SubscriptionList).%New()
+			set sl.DateActualStart=$zdt($zdth(obj.DateBegin_" "_obj.TimeBegin,4),3)
+			set sl.DateActualEnd=$zdt($zdth(obj.sharedDate_" "_obj.sharedTime,4),3)
+			set sl.cost=##class(REST.JSON).SetSum($ZCONVERT(obj.cost,"I","UTF8"))
+			set sl.School=##class(Auth.Session).GetCurrentSchool()
+			set sl.Show=0
+			set sl.ShortDescription=$ZCONVERT(obj.ShortDescription,"I","UTF8")
+			set sl.Duration=$ZCONVERT(obj.Duration,"I","UTF8")
+			set st=sl.%Save()
+			set st=##class(SPD.Logic.SubscriptionList).SetLIS(sl.%Id())
+		}
+		else {
+			SET mygenex = ##class(%Exception.General).%New("Exception","998",,"Необходимо добавить занятия в абонемент.")
+    		THROW mygenex
+		}
+	}
+	catch err{
+		set st=err.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetSubscriptionFromJL">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set jl=##class(SPD.JournalLesson).%OpenId(id)
+		set sm=jl.Semestr.%Id()
+		set ls=jl.LessonInTable.TypeLesson.%Id()
+		set sd=jl.LessonInTable.ShortDescription
+		set schoolid=jl.School.%Id()
+		set Duration=0
+		&sql(select cost into :cost from SPD.Price where LessonType=:ls and Semester=:sm)
+		set pObject=##class(%ZEN.proxyObject).%New()
+		set pObjectM=##class(%ZEN.proxyObject).%New()
+		set pObjectI=##class(%ZEN.proxyObject).%New()
+		s pObjectI.id=jl.Instructor.%Id()
+		
+		s pObjectI.FirstName=jl.Instructor.IdDancer.FirstName
+		s pObjectI.LastName=jl.Instructor.IdDancer.LastName
+		s pObjectI.Patronymic=jl.Instructor.IdDancer.Patronymic
+		s pObject.idSL=0
+		s pObject.cost=cost
+		s pObject.ShorDescription=sd
+		s pObject.schoolid=schoolid
+		s pObject.idJL=jl.%Id()
+		s pObject.TypeLesson=jl.LessonInTable.TypeLesson.name
+		s pObject.Duration=Duration
+		s pObject.DateBegin=jl.DateBegin
+		s pObject.DateEnd=jl.DateEnd
+		s pObject.Instructor=pObjectI
+		s pObjectM.children=pObject
+		do pObjectM.%ToJSON()
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="Update">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		
+		set idschool=##class(Auth.Session).GetCurrentSchool().%Id()
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		&sql(select id into :idSL from SPD.SubscriptionList where id=:obj.idSL and School->id=:idschool)
+		set sl=##class(SPD.SubscriptionList).%OpenId(idSL)
+		set sl.DateActualStart=$zdt($zdth(obj.DateBegin_" "_obj.TimeBegin,4),3)
+		set sl.DateActualEnd=$zdt($zdth(obj.sharedDate_" "_obj.sharedTime,4),3)
+		set sl.cost=##class(REST.JSON).SetSum($ZCONVERT(obj.cost,"I","UTF8"))
+		set sl.School=##class(Auth.Session).GetCurrentSchool()
+		set sl.Show=obj.Show
+		
+		set sl.ShortDescription=$ZCONVERT(obj.ShortDescription,"I","UTF8")
+		set sl.Duration=$ZCONVERT(obj.Duration,"I","UTF8")
+		set st=sl.%Save()
+		set st=##class(SPD.Logic.SubscriptionList).SetLIS(sl.%Id())
+	}
+	catch err{
+		set st=err.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="SetLIS">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>sl</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+	&sql(declare sl cursor for
+		select id into :id from SPD.LessonsInSubscription where Subscription is null
+		)
+		&sql(open sl)
+		for {
+			&sql(fetch sl)
+			quit:(SQLCODE '= 0)
+			set lis=##class(SPD.LessonsInSubscription).%OpenId(id)
+			set lis.Subscription=##class(SPD.SubscriptionList).%OpenId(sl)
+			set st=lis.%Save()
+		}
+		&sql(close sl)
+		}
+	catch er{
+		set st=et.AsStatus()
+	}
+		ret st
+]]></Implementation>
+</Method>
+
+<Method name="Get">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		
+		
+	}
+	catch err{
+		set st=err.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetAll">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		
+		set str=""
+		set strl=""
+		&sql(declare cursorSubGetAll1 cursor for 
+			select id,cost,ShortDescription,School->id,Duration into :idSL,:cost,:sd,:schoolid,:Duration from SPD.SubscriptionList
+			where School=:id
+		)
+		&sql(open cursorSubGetAll1)
+		for{
+			&sql(fetch cursorSubGetAll1)
+			quit:(SQLCODE '= 0)
+			set str=str_"{""idSL"":"""_idSL_""","_
+			"""cost"":"""_cost_""","_
+			"""ShorDescription"":"""_##class(SPD.Logic.SubscriptionList).Screening(sd)_""","_
+			"""schoolid"":"""_schoolid_""","_
+			"""Duration"":"""_Duration_""","_
+			"""lis"":["
+			
+			&sql(declare cursorlisGetAll cursor for 
+				SELECT 
+				ID, LessonType->id as TypeLessonId,LessonType->Name As TypeLesson , Subscription, numb
+				into :idlis, :TypeLessonId, :TypeLesson, :Subscription, :numb
+				FROM SPD.LessonsInSubscription
+				where Subscription=:idSL
+			)
+			
+			&sql(open cursorlisGetAll)
+			for{
+				&sql(fetch cursorlisGetAll)
+				quit:(SQLCODE '=0)				
+				set strl=strl_"{""idlis"":"""_idlis_""","_
+				"""TypeLessonId"":"""_TypeLessonId_""","_
+				"""TypeLesson"":"""_TypeLesson_""","_
+				"""numb"":"""_numb_""","_
+				"""Subscription"":"""_Subscription_"""},"
+			}
+			if ($LENGTH(strl)>3){
+				set strl=$extract(strl,1,$LENGTH(strl)-1)
+			}
+			set str=str_strl_"]"
+			set str=str_"},"
+			set strl=""
+			&sql(close cursorlisGetAll)
+		}
+		set str=$extract(str,1,$LENGTH(str)-1)
+		&sql(close cursorSubGetAll1)
+		set sub="{""children"":["_str
+		set sub=sub_"]}"
+		w sub
+	}
+	catch err{
+		set st=err.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetSubscriptionFromList">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set str=""
+		set strl=""
+		&sql(declare cursorSub cursor for 
+			select id,cost,ShortDescription,School->id ,DateActualEnd,DateActualStart,ShortDescription,
+			Show,Duration
+			into :idSL,:cost,:sd,:schoolid,:DateActualEnd,:DateActualStart,:ShortDescription,
+			:Show,:Duration 
+			from SPD.SubscriptionList
+			where id=:id
+		)
+		&sql(open cursorSub)
+		for{
+			&sql(fetch cursorSub)
+			quit:(SQLCODE '= 0)
+			set str=str_"{""idSL"":"""_idSL_""","_
+			"""cost"":"""_cost_""","_
+			"""ShortDescription"":"""_##class(SPD.Logic.SubscriptionList).Screening(sd)_""","_
+			"""schoolid"":"""_schoolid_""","_
+			"""DateActualEnd"":"""_DateActualEnd_""","_
+			"""DateActualStart"":"""_DateActualStart_""","_
+			"""Duration"":"""_Duration_""","_
+			"""Show"":"""_Show_""","_
+			"""lis"":["
+			
+			&sql(declare cursorlis cursor for 
+				SELECT 
+				ID, LessonType->id as TypeLessonId,LessonType->Name As TypeLesson , Subscription, numb
+				into :idlis, :TypeLessonId, :TypeLesson, :Subscription, :numb
+				FROM SPD.LessonsInSubscription
+				where Subscription=:idSL
+			)
+			&sql(open cursorlis)
+			for{
+				&sql(fetch cursorlis)
+				quit:(SQLCODE '=0)
+				set strl=strl_"{""idlis"":"""_idlis_""","_
+				"""TypeLessonId"":"""_TypeLessonId_""","_
+				"""TypeLesson"":"""_TypeLesson_""","_
+				"""numb"":"""_numb_""","_
+				
+				"""Subscription"":"""_Subscription_"""},"
+			}
+			
+			if ($LENGTH(strl)>3){
+				set strl=$extract(strl,1,$LENGTH(strl)-1)
+			}
+			set str=str_strl_"]"
+			set str=str_"},"
+			&sql(close cursorlis)
+		}
+		set str=$extract(str,1,$LENGTH(str)-1)
+		&sql(close cursorSub)
+		set sub="{""children"":["_str
+		set sub=sub_"]}"
+		w sub
+	}
+	catch err
+	{
+		set st=err.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="SetShow">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set subl=##class(SPD.SubscriptionList).%OpenId(id)
+		set subl.Show=1		
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="SetHide">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set subl=##class(SPD.SubscriptionList).%OpenId(id)
+		set subl.Show=0
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="Screening">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>str:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set tstr=""
+	for i=1:1:$LENGTH(str){
+		if ($CHAR($a(str,i))="""")
+		{
+			set tstr=tstr_"\"_$CHAR($a(str,i))
+		}
+		else{
+			set tstr=tstr_$CHAR($a(str,i))
+		}
+	}
+	ret tstr
+]]></Implementation>
+</Method>
+</Class>
+</Export>

@@ -1,0 +1,58 @@
+<div class="well well-lg ng-scope">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-2"></div>
+                            <div class="col-lg-1">
+                                <h5>{{Page.Common.Instructors}}</h5>
+                            </div>
+                            <div class="col-lg-4">
+                                <h4>
+                                    <a class="successbtn" ng-click="InviteInstructor()">
+                                        <label class="label label-success">
+                                            Инвайт инструктору
+                                            <span class="glyphicon glyphicon-plus">
+
+                                            </span></label></a>
+                                </h4>
+                            </div>
+                        </div>
+                        <hr>
+                        <div ng-repeat="Instructor in InstructorList">
+                            <div class="row">
+                                <div class="col-lg-3 center">
+                                    <a ng-href="#/Trainer/{{Instructor.ID}}">
+                                    <img ng-src="img/upload/{{Instructor.fotoImg}}" class="minyTrainerImg">
+                                        </a>
+                                </div>
+                                <div class="col-lg-6">
+                                    <a ng-href="#/Trainer/{{Instructor.ID}}">
+                                    {{Instructor.FirstName}}
+                                    {{Instructor.LastName}}
+                                    {{Instructor.Patronomic}}</a>. Платит комиссию в виде
+                                    {{Instructor.Rate}}% с оплаты занятия
+                                </div>
+                                <div class="col-lg-3">
+                                    <a class="btn btn-default ng-binding" ng-binding ng-click='RemoveFromSchool(Instructor.ID)'>{{Page.Create.Delete}}  <label class="label label-danger">
+                                        <span class="glyphicon glyphicon-minus"></span>
+                                    </label></a>
+                                    <a class="btn btn-default ng-binding" ng-binding ng-click='EditRateForInstructor(Instructor.ID)'>{{Page.Create.Update}}
+                                        <label class="label label-primary">
+                                            <span class="glyphicon glyphicon-refresh"></span>
+                                        </label>
+                                    </a>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

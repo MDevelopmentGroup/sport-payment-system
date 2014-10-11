@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Logic.Dancer">
+<TimeCreated>63417,52469.610053</TimeCreated>
+
+<Method name="SubscribeJL">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idJL</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		//set dancer=##class(LIB.Person).%New()
+		set dancer=##class(Auth.Session).GetCurrentUser()
+		set myfroup=##class(SPD.TempGroup).%New()
+		set myfroup.DancerGroup=##class(SPD.Group).%OpenId(groupid)		
+		set myfroup.TempGroup=##class(SPD.JournalLesson).%OpenId(idJL).Group
+		set st=myfroup.%Save()
+		set st=WithDraw(idJL)
+		///todo снятие денег
+		
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="WithDraw">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idJL</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		
+		set userid=##class(Auth.Session).GetCurrentUser().%Id()
+		&sql(select count(id) into :count 
+		from SPD.TempGroup 
+		where TempGroup->JournallLesson=:idJL and Dancer->id=:userid)
+		///todo сделать проверку на переполнение группы
+		if (count){
+			set dancer=##class(SPD.Dancer).%OpenId(userid)
+			set jl=##class(SPD.JournalLesson).%OpenId(idJL)
+			set dancer.Balance=dancer.Balance-jl.Price.Cost
+			
+		}
+		else{
+			///повторная оплата
+			
+		}
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+</Class>
+</Export>

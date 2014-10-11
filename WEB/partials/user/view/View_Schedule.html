@@ -1,0 +1,154 @@
+<div class="WELL ">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="well well-lg width75">
+                <form ng-submit="CreateSubscription(Subscr)">
+                    <div class="row filters">
+                        <div class="col-lg-2">
+
+                        </div>
+                        <div class="col-lg-4">
+
+                        </div>
+                        <div class="col-lg-3">
+
+                        </div>
+                        <div class="col-lg-2">
+
+                        </div>
+                    </div>
+                    <div class="row filters subscriptionJLTOP subscriptionJLBOTTOM">
+                        <div class="col-lg-2">
+                            <input class="width100" type="text" ng-model="Duration" ng-init="Duration=14" ng-change="ChangeDuration(Duration)" placeholder="количество дней">
+                        </div>
+                        <div class="col-lg-4">
+                            <input type="text" class="width100" ng-model="filters.Instructor"  placeholder="Тренер">
+                        </div>
+                        <div class="col-lg-3">
+                            <input type="text" class="width50" ng-model="filters.cost"  placeholder="Стоимость">
+                        </div>
+                        <div class="col-lg-2">
+
+                        </div>
+                    </div>
+                    <br>
+                <div class="row">
+                    <div class="col-lg-12 nopadding">
+                        <div class="col-lg-3 subscription">
+                            <h4>{{Page.Lesson.NextLessons}}:</h4>
+                            <hr class="trNomarginTopBottom">
+                        </div>
+                        <div class="col-lg-9 bordersubbottom">
+                            <h4>&nbsp</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="row headshedule">
+                    <div class="col-lg-2">
+                        Начало в:
+                    </div>
+                    <div class="col-lg-3">
+                        Тренер:
+                    </div>
+                    <div class="col-lg-3">
+                        Адрес:
+                    </div>
+                    <div class="col-lg-2">
+                        Стоимость занятия:
+                    </div>
+                    <div class="col-lg-2">
+
+                    </div>
+                </div>
+                <div class="row borderRighLeftBottomtsub" ng-repeat="JL in NextJL | filter:filters">
+                    <div class="col-lg-2">
+                        {{JL.DateBegin}}
+                    </div>
+                    <div class="col-lg-3">
+                        <a ng-href="#/Trainer/{{JL.Instructor.InstructorID}}">{{JL.Instructor.InstructorLast}}
+                            {{JL.Instructor.InstructorName}} {{JL.Instructor.InstructorPat}}</a>
+                    </div>
+                    <div class="col-lg-3">
+                        {{JL.City}}, {{JL.Street}}, {{JL.Building}}, {{JL.RoomNumber}}
+                    </div>
+                    <div class="col-lg-2">
+                        {{JL.cost}}
+                    </div>
+                    <div class="col-lg-2">
+                        <a class="btn btn-primary" ng-href="#/SubscriptionList/{{JL.SchoolID}}/0/{{JL.idJL}}">Записаться</a>
+                    </div>
+
+                </div><br>
+                <div class="row">
+                    <div class="col-lg-3 subscription">
+                        <h4>{{Page.Subscription.Subscriptions}}:</h4>
+                    </div>
+                    <div class="col-lg-9 bordersubbottom">
+                        <h4>&nbsp</h4>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-2">
+
+                    </div>
+
+                </div>
+                <div class="row borderRighLeftBottomtsub" ng-repeat="sub in SubLIST">
+                    <div class="col-lg-11 panel panel-primary marginsub">
+                        <div class="row panel-heading">
+                            <div class="col-lg-5 panel-title">
+                                <h4><span ng-bind-html="sub.ShorDescription"></span></h4>
+                            </div>
+                            <div class="col-lg-4">
+                                <h4>В абонемент входит:</h4>
+                            </div>
+                            <dic class="col-lg-2">
+                            </dic>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-9">
+                                    <div ng-repeat="lis in sub.lis">
+                                        <div class="row">
+                                            <div class="col-lg-8">
+                                                {{lis.TypeLesson}} занятия
+                                            </div>
+                                            <div class="col-lg-4">
+                                                Количество посещений:{{lis.numb}}
+                                            </div>
+                                        </div>
+                                        <hr class="px3margin">
+                                    </div>
+                                </div>
+                                <dic class="col-lg-2">
+
+                                </dic>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-2"></div>
+                                <div class="col-lg-8">Время действия абонемента {{sub.Duration}} дней со дня покупки.</div>
+                                <div class="col-lg-2"></div>
+                            </div>
+                            <hr class="trNomarginTopBottom">
+                            <div class="row">
+                                <div class="col-lg-1"> <h4>Цена:</h4></div>
+                                <div class="col-lg-5"><h4>{{sub.cost}}</h4></div>
+                                <div class="col-lg-2"></div>
+                            </div>
+                            <hr class="px3margin">
+                            <div class="row">
+                                <div class="col-lg-5"></div>
+                                <div class="col-lg-3 buybutton"><a class="btn btn-primary" ng-href="#SubscriptionList/{{idschool}}/{{sub.idSL}}">
+                                    Приобрести абонемент
+                                </a></div>
+                                <div class="col-lg-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>

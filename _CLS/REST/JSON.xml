@@ -3,9 +3,18 @@
 <Class name="REST.JSON">
 <TimeCreated>63313,43933.858721</TimeCreated>
 
-<Method name="SuccessURL">
+<Method name="Settings">
 <Description>
 метод для получения данных при успешном проведении платежа(чек)</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idschool,url</FormalSpec>
+<Implementation><![CDATA[
+	
+	set ^Settings(""_idschool_"","url")="mdg777.zapto.org"
+]]></Implementation>
+</Method>
+
+<Method name="SuccessURL">
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -247,6 +256,7 @@
 <Method name="XMLParse">
 <ClassMethod>1</ClassMethod>
 <Implementation><![CDATA[
+	/*
 	#dim resp As %String=""
 	set objhr=##class(%Net.HttpRequest).%New()
 	set objhr.Server="test.robokassa.ru"
@@ -254,12 +264,12 @@
 	set objhr.Https=1
 	set objhr.Port=443
 	set objhr.Timeout=1
-	set objhr.SSLConfiguration="robokassa"	
+	set objhr.SSLConfiguration="robokassa"
 	//do objhr.Get("/Webservice/Service.asmx/GetCurrencies?MerchantLogin=testRobokassaTest&Language=ru")
 	do objhr.Get("/ru/Doc/Ru/Interface.aspx")
 	set resp=objhr.HttpResponse.Data.Read()
-	zw resp
-	/*
+	w resp
+	
 	s sc = ##class(%XML.TextReader).ParseString($ZCONVERT(resp,"O","UTF8"),.reader)
 	while(reader.Read()){
 		w !,"Nodetype="_reader.NodeType_"---- Name="_reader.Name_"----- Value=",!
@@ -270,8 +280,23 @@
 		zw a
 		}
 		w "}",!
-	}	*/
+	}
 	q $$$OK
+	*/
+]]></Implementation>
+</Method>
+
+<Method name="GetToken">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set ghr=##class(%Net.HttpRequest).%New()
+	set ghr.Server="www.googleapis.com"
+	set ghr.Https=1
+	set ghr.SSLConfiguration="GoogleApi"
+	set ghr.Location="mdg777.zapto.org"
+	set ghr.Port=80
+	set ghr.Timeout=2
 ]]></Implementation>
 </Method>
 
@@ -324,7 +349,6 @@
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set mrjpass="adsfer920rne45"
-	set url="91.247.68.36"
 	//try {
 	set OutSum=$Get(%request.Data("OutSum",1))
 	set InvId=$Get(%request.Data("InvId",1))
@@ -334,6 +358,7 @@
 	//set UserId=$Get(%request.Data("shpUserId",1))
 	set transaction=##class(SPD.Transactions).%OpenId(InvId)
 	set idschool=transaction.School.%Id()
+	set url=$GET(^Settings(""_idschool_"","url"),"")
 	set mrjpass2=$GET(^Robokassa(idschool,"mrjpass2"),"")
 	set SignatureValue=##class(%SYSTEM.Encryption).MD5Hash(""_transaction.OutSum_":"_transaction.%Id()_":"_mrjpass2_":shpjls="_jls_":shpsub="_sub)
 	set SignatureValue=##class(Auth.Session).Encode(SignatureValue)

@@ -10,7 +10,7 @@
 	&sql(
 	select id into :idsub from SPD.Subscription where "Transaction"->id=:trid)
 	w "idsub="_idsub,!
-	set loc="91.247.68.36/dances/"
+	set loc="mdg777.zapto.org/dances/"
 	if (idsub){
 		set sole=##class(SPD.Subscription).%OpenId(idsub).Sole
 		/*zn "%sys"

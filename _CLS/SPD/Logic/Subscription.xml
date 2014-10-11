@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Logic.Subscription">
+<TimeCreated>63438,43946.827847</TimeCreated>
+
+<Method name="GenerateSole">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>str</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	
+	set st=""
+	try{
+		set sole=##class(%SYSTEM.Encryption).MD5Hash(str_""_$zdt($h,3))
+
+	}
+	catch err{
+		set st=err.AsStatus()
+	}
+	ret sole
+]]></Implementation>
+</Method>
+
+<Method name="GetJLDays">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>isub</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+	set sub=##class(SPD.Subscription).%OpenId(isub)
+	set beg=sub.DateGEnSub
+	set end=sub.DateEndSub
+	&sql(declare ert cursor for 
+		SELECT 
+		ID into :idjl
+		FROM SPD.JournalLesson
+		where LessonInTable->TypeLesson->id in (
+		select TypeLesson->id 
+		FROM SPD.TableLessinSubscr where Subscription->id=:isub) and DateBegin<:end and DateBegin>:beg)
+	set objectJson=##class(%ZEN.proxyObject).%New()
+	set objectJson.children=##class(%ListOfDataTypes).%New()
+	&sql(open ert)
+	for
+	{
+		&sql(fetch ert)
+		quit:(SQLCODE'=0)
+		set objectJL=##class(%ZEN.proxyObject).%New()
+		set objectInstructor=##class(%ZEN.proxyObject).%New()
+		set objectSchool=##class(%ZEN.proxyObject).%New()
+		set jl=##class(SPD.JournalLesson).%OpenId(idjl)
+		set objectJL.DateBegin=jl.DateBegin
+		set objectJL.DateEnd=jl.DateEnd
+		set objectJL.TypeLesson=jl.LessonInTable.TypeLesson.name
+		set objectInstructor.FirstName=jl.Instructor.IdDancer.FirstName
+		set objectInstructor.LastName=jl.Instructor.IdDancer.LastName
+		set objectInstructor.Patronymic=jl.Instructor.IdDancer.Patronymic
+		set objectJL.Instructor=objectInstructor
+		set objectJL.Subscription=jl.Subscription
+		set objectSchool.Name=jl.School.Name
+		set objectSchool.id=jl.School.%Id()
+		set objectJL.School=objectSchool		
+		set st=objectJson.children.Insert(objectJL)
+	}
+	&sql(close ert)
+	set st=objectJson.%ToJSON()
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="Create">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		
+	}
+	catch err{
+		set st=err.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="Update">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		
+	}
+	catch err{
+		set st=err.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="Get">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>sol</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		
+		&sql(select id into :idsub from SPD.Subscription where sole=:sol)
+		set sub=##class(SPD.Subscription).%OpenId(idsub)
+		set subObject=##class(%ZEN.proxyObject).%New()
+		set tlisObject=##class(%ZEN.proxyObject).%New()
+		set childObject=##class(%ZEN.proxyObject).%New()
+		set subObject.DateEndSub=sub.DateEndSub
+		set subObject.DateGEnSub=sub.DateGEnSub
+		set subObject.subId=idsub
+		set subObject.SchoolId=sub.School.%Id()
+		set subObject.SchoolName=sub.School.Name
+		if (sub.SubList){
+			set subObject.SubLIST=sub.SubList.%Id()
+		}
+		set subObject.TransactionId=sub.Transaction.%Id()
+		
+		set subObject.QRString=sub.QRString
+		if (sub.JournallLesson){
+			set subObject.JLID=sub.JournallLesson.%Id()
+			set subObject.TypeLesson=sub.JournallLesson.LessonInTable.TypeLesson.name
+			set subObject.IdInstructor=sub.JournallLesson.Instructor.%Id()
+			set subObject.FirstName=sub.JournallLesson.Instructor.IdDancer.FirstName
+			set subObject.LastName=sub.JournallLesson.Instructor.IdDancer.LastName
+			set subObject.Patronymic=sub.JournallLesson.Instructor.IdDancer.Patronymic
+			set subObject.Country=sub.JournallLesson.LessonInTable.Room.Address.Country
+			set subObject.City=sub.JournallLesson.LessonInTable.Room.Address.City
+			set subObject.Building=sub.JournallLesson.LessonInTable.Room.Address.Building
+			set subObject.RoomNumber=sub.JournallLesson.LessonInTable.Room.Address.RoomNumber
+			set subObject.Street=sub.JournallLesson.LessonInTable.Room.Address.Street
+		}
+		set subObject.Listtlis=##class(%ListOfDataTypes).%New()
+		&sql(declare listsub cursor for 
+		select id into :idtlis
+		from SPD.TableLessinSubscr
+		where Subscription->id=:idsub
+		)
+		&sql(open listsub)
+		for
+		{
+			&sql(fetch listsub)
+			quit:(SQLCODE '= 0)
+			set tlis=##class(SPD.TableLessinSubscr).%OpenId(idtlis)
+			set tlisObject=##class(%ZEN.proxyObject).%New()
+			set tlisObject.numb=tlis.numb
+			set tlisObject.TypeLesson=tlis.TypeLesson.name
+			set tlisObject.Type=tlis.Type
+			set st=subObject.Listtlis.Insert(tlisObject)
+		}
+		&sql(close listsub)
+		set childObject.children=subObject
+		do childObject.%ToJSON()
+	}
+	catch err{
+		set st=err.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+</Class>
+</Export>

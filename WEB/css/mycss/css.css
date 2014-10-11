@@ -7,8 +7,16 @@
     //margin-top: 150px;
 }
 .center{
-    align: center !important;
+    text-align: center !important;
 }
+.successbtn{
+    text-decoration: none;
+    cursor: hand;
+}
+.successbtn :hover{
+     text-decoration: none;
+
+ }
 .SchoolImg{
     max-width: 150px;
     min-width: 150px;
@@ -135,4 +143,8 @@ div.action{
 .modal-dialog{
     width: 60%;
     padding:10px 10px 10px 10px;
+}
+.minyTrainerImg{
+    max-width: 100px;
+    min-width: 100px;
 }

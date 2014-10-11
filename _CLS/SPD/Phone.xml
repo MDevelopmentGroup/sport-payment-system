@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Phone">
+<Super>%String</Super>
+<TimeCreated>63453,55918.784197</TimeCreated>
+
+<Parameter name="PATTERN">
+<Default>1n1"("3n1")"2n1"-"2n1"-"3n</Default>
+</Parameter>
+</Class>
+</Export>

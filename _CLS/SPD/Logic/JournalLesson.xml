@@ -148,13 +148,15 @@
 		set school=##class(SPD.School).%OpenId(lft.School.%Id())
 		set schoolid=school.%Id()
 		set idlessontype=lft.TypeLesson.%Id()
+		
 		&sql(declare JL cursor for select id into :idJournalLesson from SPD.JournalLesson where LessonInTable->id=:idlessontable and Semestr->Actual=1)
 		&sql(open JL)
 		for {
 			&sql(fetch JL)
 			quit:(SQLCODE '= 0)
 			set jl=##class(SPD.JournalLesson).%OpenId(idJournalLesson)
-			set datebegin=7			
+			
+			set datebegin=7
 		}
 		&sql(close JL)
 	}
@@ -176,7 +178,7 @@
 		//&sql(select )
 		set sqlquery="select "_
 		"ID, DateBegin, DateEnd, "_
-		"Instructor->id As InstructorId, "_
+		"Instructor->id As InstructorId, Show as Show,"_
 		"Instructor->IdDancer->FirstName As IFirstName, Instructor->IdDancer->LastName As ILastName, Instructor->IdDancer->Patronymic As IPatrnymic, "_
 		"LessonInTable->id as LessonInTableId, RoomDance->id As RoomId, RoomDance->Name as RoomName, "_ 
 		"LessonInTable->ShortDescription As LessonDescr, LessonInTable->TypeLesson->id As TypeLessonId, "_
@@ -284,6 +286,7 @@ ClassMethod GetLastActualPrice(IDTypeLesson) As %String
 	set st=$$$OK
 	try{
 		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		zw obj
 		set journalllesson=##class(SPD.JournalLesson).%OpenId(obj.ID)
 		if (obj.DateBegin'="" && obj.TimeBegin'=""){
 			set journalllesson.DateBegin=$zdt($zdth(obj.DateBegin_" "_obj.TimeBegin,4),3)
@@ -310,6 +313,9 @@ ClassMethod GetLastActualPrice(IDTypeLesson) As %String
 		
 		if (obj.RoomId'=""){
 			set journalllesson.RoomDance=##class(SPD.Room).%OpenId(obj.RoomId)	}
+		if (obj.Show'=""){
+			w "obj.Show="_obj.Show,!
+			set journalllesson.Show=$zconvert(obj.Show,"I","UTF8")}
 		set st=journalllesson.%Save()
 	}
 	catch err{
@@ -346,8 +352,13 @@ ClassMethod GetLastActualPrice(IDTypeLesson) As %String
 				set journalllesson.LessonInTable=##class(SPD.TimeTableLessons).%OpenId(proxy.LessonInTableId)}
 			
 			if (proxy.RoomId'=""){
-				set journalllesson.RoomDance=##class(SPD.Room).%OpenId(proxy.RoomId)	}
+				set journalllesson.RoomDance=##class(SPD.Room).%OpenId(proxy.RoomId)	
+			}
 			set st=journalllesson.%Save()
+			if (proxy.Show'=""){
+				set journalllesson.Show=##class(SPD.Room).%OpenId(proxy.Show)
+				set st=journalllesson.%Save()
+			}
 		}
 	}
 	catch er{
@@ -511,7 +522,7 @@ ClassMethod GetLastActualPrice(IDTypeLesson) As %String
 		:SchoolID, :SemestrID, :countDancer
 		,:idtypelesson
 		from SPD.JournalLesson 
-		where DateBegin>:stdatet and DateBegin<:eddatet and School->id=:id
+		where DateBegin>:stdatet and DateBegin<:eddatet and School->id=:id and Show=1
 		order by DateBegin
 		)
 		set json=##class(%ZEN.proxyObject).%New()

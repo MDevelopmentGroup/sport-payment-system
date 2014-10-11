@@ -53,9 +53,7 @@
                         <div class="form-group">
                             <label for="DayID" class="col-lg-2 control-label ">{{Page.Lesson.Begin}}</label>
                             <div class="col-lg-6 col-md-8">
-
-                                    <input type="text" size="10" class="form-control" ng-model="Lesson.DateBegin" data-autoclose="1" data-date-type="string" placeholder="Date" bs-datepicker>
-
+                                <input type="text" size="10" class="form-control" ng-model="Lesson.DateBegin" data-autoclose="1" data-date-type="string" placeholder="Date" bs-datepicker>
                             </div>
                             <div class="col-lg-3">
                                 <input type="text" size="8" class="form-control" ng-model="Lesson.TimeBegin" data-autoclose="1" data-time-type="string" placeholder="Time" bs-timepicker required>
@@ -69,11 +67,19 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label  class="col-lg-2 col-md-5 control-label">Отображение занятия в расписании:</label>
+                            <div class="col-lg-1">
+                                <input type="checkbox" ng-bind="Lesson.Show" ng-model="Lesson.Show"
+                                       ng-true-value="1" ng-false-value="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label  class="col-lg-2 col-md-5 control-label"></label>
                             <div class="col-lg-5">
                                 <button type="submit"  class="btn btn-success {{ButtonDisabled}}" >Update{{Page.SystemUser.TitleFirstName}}</button>
                             </div>
                         </div>
+
                     </form>
                     <br>
                 </div>

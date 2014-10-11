@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Logic.Semester">
+<TimeCreated>63453,47283.258466</TimeCreated>
+
+<Method name="GetSemesterList">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set idschool=##class(Auth.Session).GetCurrentSchool().%Id()
+		set str=""
+		set strl=""
+		&sql(declare t1 cursor for
+			select id, name, DateBegin, DateEnd into :idsem,:Semester, :DateBegin, :DateEnd 
+			from SPD.Semester where School=:idschool
+		)
+		&sql(open t1)
+		for 
+		{
+			&sql(fetch t1)
+			quit:(SQLCODE'=0)
+			set str=str_
+			"{""Semester"":"""_Semester_""","_
+			"""DateBegin"":"""_DateBegin_""","_
+			"""DateEnd"":"""_DateEnd_""","_
+			"""tl"":["
+			
+			&sql(declare t2 cursor for
+				select LessonType->id, Cost, LessonType->name, LessonType->ShortDescription 
+				into :TypeID,:Cost, :TypeLesson, :ShortDescription
+				from SPD.Price
+				where Semester->id=:idsem
+			)
+			&sql(open t2)
+			for
+			{
+				&sql(fetch t2)
+				quit:(SQLCODE'=0)
+				set strl=strl_
+				"{""TypeID"":"""_TypeID_""","_
+				"""TypeLesson"":"""_TypeLesson_""","_
+				"""Cost"":"""_Cost_""","_
+				"""ShortDescription"":"""_ShortDescription_"""},"
+			}
+			&sql(close t2)
+			if ($LENGTH(strl)>3){
+				set strl=$extract(strl,1,$LENGTH(strl)-1)
+			}
+			set str=str_strl_"]"
+			set str=str_"},"
+			set strl=""
+		}
+		&sql(close t1)
+		set str=$extract(str,1,$LENGTH(str)-1)
+		set sr="{""children"":["_str
+		set sr=sr_"]}"
+		w sr
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetActualSemester">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ID</FormalSpec>
+<ReturnType>SPD.Semester</ReturnType>
+<Implementation><![CDATA[
+	set dt=$zdt($h,3)
+	&sql(select id into :id from SPD.Semester 
+	where DateEnd>:dt and DateBegin<:dt and School->id=:ID)
+	ret id
+]]></Implementation>
+</Method>
+</Class>
+</Export>

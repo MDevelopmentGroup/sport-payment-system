@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.LessonsInSubscription">
+<Super>%Persistent</Super>
+<TimeCreated>63439,43343.858808</TimeCreated>
+
+<Property name="School">
+<Description>
+Тип занятия в абонементе</Description>
+<Type>SPD.School</Type>
+</Property>
+
+<Property name="numb">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="Subscription">
+<Description>
+Id абонемента</Description>
+<Type>SPD.SubscriptionList</Type>
+<Cardinality>one</Cardinality>
+<Inverse>LessInSub</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="NumbAvialebleLessons">
+<Type>SPD.AvialableLessons</Type>
+<Cardinality>many</Cardinality>
+<Inverse>LessonInSub</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="LessonType">
+<Type>SPD.TypeLesson</Type>
+<Cardinality>one</Cardinality>
+<Inverse>lis</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.LessonsInSubscriptionD</DataLocation>
+<DefaultData>LessonsInSubscriptionDefaultData</DefaultData>
+<IdLocation>^SPD.LessonsInSubscriptionD</IdLocation>
+<IndexLocation>^SPD.LessonsInSubscriptionI</IndexLocation>
+<StreamLocation>^SPD.LessonsInSubscriptionS</StreamLocation>
+<Data name="LessonsInSubscriptionDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>School</Value>
+</Value>
+<Value name="3">
+<Value>numb</Value>
+</Value>
+<Value name="4">
+<Value>Subscription</Value>
+</Value>
+<Value name="5">
+<Value>LessonType</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

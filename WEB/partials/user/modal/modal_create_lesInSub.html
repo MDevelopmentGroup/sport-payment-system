@@ -1,0 +1,48 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="row">
+                <br>
+                <div class="col-lg-12">
+                    <form class="form-horizontal" ng-model="Price" ng-submit='submit(lis)' ng-init="lis">
+                        <div class="form-group">
+                            <label for="lis" class="col-lg-2 control-label ">{{Page.Common.TypeLesson}}</label>
+                            <div class="col-lg-4">
+                                <input type="text" for="lis"  id="lisTypeLesson" class="form-control" ng-model="lis.TypeLesson" placeholder="{{Page.Common.TypeLesson}}" required="" ng-change="ChangeType(lis)">
+                            </div>
+                            <div class="col-lg-2">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                                <ul class="dropdown-menu pull-right">
+                                    <li ng-repeat="TypeLesson in ListLessonTypes">
+                                        <a data-ng-click="lis.TypeLessonId=TypeLesson.TypeID; lis.TypeLesson=TypeLesson.TypeName; SetType(TypeLesson)">
+                                            {{TypeLesson.TypeName}}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="ShortDescription" class="col-lg-2 control-label">{{Page.Common.AddInfo}}:</label>
+                            <div class="col-lg-9">
+                                <textarea class="form-control" rows="14"  id="AddInfo" redactor ng-model='lis.ShortDescription' placeholder="{{Page.Common.AddInfo}}"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="ShortDescription" class="col-lg-2 control-label">{{Page.Subscription.LessonNumb}}:</label>
+                                <div class="col-lg-4">
+                                    <input for="lis" testsum='"^-?[0-9]\\d{0,9}$"' id="lisTypeLesson" class="form-control" ng-model="lis.numb" placeholder="{{Page.Subscription.LessonNumb}}" required="">
+                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-lg-3 control-label"></label>
+                            <div class="col-lg-5">
+                                <button type="submit" class="btn btn-success {{ButtonDisabled}}">{{Page.Button.Update}}</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

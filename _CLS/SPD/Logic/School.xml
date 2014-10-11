@@ -311,6 +311,7 @@
 <Implementation><![CDATA[
 	try{
 		&sql(select id into :id from SPD.TempInvite where md=:hash)
+		w id,!
 		set st=##class(SPD.TempInvite).%DeleteId(id)
 	}
 	catch ex{
@@ -456,6 +457,29 @@
 	}
 	catch er
 	{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="checkInvite">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>hash</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		&sql(select count(id) into:count from SPD.TempInvite where md=:hash)
+		if (count){
+			w "{""children"":1}"
+		}
+		else
+		{
+			w "{""children"":0}"
+		}
+	}
+	catch er{
 		set st=er.AsStatus()
 	}
 	ret st

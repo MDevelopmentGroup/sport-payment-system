@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Logic.LessonInSubscription">
+<TimeCreated>63439,44038.607326</TimeCreated>
+
+<Method name="Create">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id=""</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		set lis=##class(SPD.LessonsInSubscription).%New()
+		w obj.TypeLessonId,!
+		set TypeLesson=##class(SPD.TypeLesson).%OpenId(obj.TypeLessonId)
+		
+		if (id){
+			set lis.Subscription=##class(SPD.SubscriptionList).%OpenId(id)
+			&sql(select id into :idlis from SPD.LessonsInSubscription where LessonType=:obj.TypeLessonId and Subscription=:id)
+		}
+		else
+		{
+			&sql(select id into :idlis from SPD.LessonsInSubscription where LessonType=:obj.TypeLessonId and Subscription is null)
+		}
+		if (idlis) {
+			set lis=##class(SPD.LessonsInSubscription).%OpenId(idlis)
+			Set lis.numb=lis.numb+$zconvert(obj.numb,"I","UTF8")
+		}
+		else{
+			set lis.LessonType=TypeLesson
+			Set lis.numb=$zconvert(obj.numb,"I","UTF8")
+		}
+		set lis.School=##class(Auth.Session).GetCurrentSchool()
+		set st=lis.%Save()
+		zw st
+	}
+	catch err{
+		set st=err.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="Update">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id=""</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		
+		set lis=##class(SPD.LessonsInSubscription).%OpenId(obj.idlis)
+		
+		if (id){
+			set lis.Subscription=##class(SPD.SubscriptionList).%OpenId(id)
+		}		
+		set TypeLesson=##class(SPD.TypeLesson).%OpenId(obj.TypeLessonId)
+		set lis.LessonType=##class(SPD.TypeLesson).%OpenId(obj.TypeLessonId)
+		Set lis.numb=$zconvert(obj.numb,"I","UTF8")
+		set lis.School=##class(Auth.Session).GetCurrentSchool()
+		set st=lis.%Save()
+	}
+	catch err{
+		set st=err.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="Delete">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set st=##class(SPD.LessonsInSubscription).%DeleteId(id)
+	}
+	catch err{
+		set st=err.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetLessonWithoutSub">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set sqlquery="select id as idlis, LessonType->id as TypeLessonId, LessonType->name as TypeLesson, "_
+		"numb as numb "_
+		"FROM SPD.LessonsInSubscription where Subscription is null and School->id="_##class(Auth.Session).GetCurrentSchool().%Id()
+		set st=##class(SPD.School).GetJSONData(sqlquery)
+	}
+	catch err {
+		set st=err.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+</Class>
+</Export>

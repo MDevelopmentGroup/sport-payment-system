@@ -1,0 +1,59 @@
+<div class="WELL">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-1"><a ng-href="#/CreateSubscription/{{IdSchool}}"><label class="label label-success"><span class="glyphicon glyphicon-plus"><h4>Добавить абонемент</h4></span></label></a></div>
+            </div>
+            <div class="row" ng-repeat="Subscr in SubscrList" ng-init="Subscr.Show=0">
+                <div class="col-lg-7">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            {{Page.Price.Cost}}
+                            {{Subscr.cost}}
+                        </div>
+                        <div class="col-lg-9">
+                            {{Page.Subscription.in}}
+                                <label class="label label-info" ng-click='Subscr.Show=!Subscr.Show'>
+                                    <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+                                </label>
+                            <div class="row" ng-show="Subscr.Show">
+
+                                <div ng-repeat="LessInSub in Subscr.lis" class="col-lg-5">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-4">{{LessInSub.TypeLesson}}</div>
+                                    <div class="col-lg-5"></div>
+                                </div>
+                                <div class="col-lg-7" ng-bind-html="Subscr.ShorDescription">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2" ng-if="(User.Role==1)||(User.Role==0)">
+                    <a class="btn btn-default ng-binding" ng-binding ng-click='Delete(Subscr.idSL)'>{{Page.Create.DeleteRoom}}
+                        <label class="label label-danger">
+                            <span class="glyphicon glyphicon-minus">
+                            </span>
+                        </label>
+                    </a>
+                    <a class="btn btn-default ng-binding" ng-binding ng-href="#/UpdateSubscription/{{Subscr.idSL}}">
+                        {{Page.Create.Update}}
+                        <label class="label label-info">
+                            <span class="glyphicon glyphicon-refresh">
+                            </span>
+                        </label>
+                    </a>
+                </div>
+                <div class="col-lg-2" ng-if="(User.Role==3)||(User.Role==2)">
+                    <a class="btn btn-default ng-binding" ng-binding ng-click='BuySubscription(Subscr.ID)'>{{Page.Create.DeleteRoom}}
+                        <label class="label label-primary">
+                            <span class="glyphicon glyphicon-minus">
+                            </span>
+                        </label>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

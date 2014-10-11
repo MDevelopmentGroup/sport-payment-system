@@ -1,0 +1,147 @@
+<div class="WELL">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="well well-lg width75" ng-if='Subscr.JLID===undefined'>
+                <div class="row">
+                    <div class="col-lg-5 whitebackgr">
+                        <h4>Абонемент действителен до: {{Subscr.DateEndSub}}</h4>
+                    </div>
+                    <div class="col-lg-7"></div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-lg-3 subscription">
+                        <h4>Осталось занятий:</h4><hr>
+                    </div>
+                    <div class="col-lg-2 bordersubbottom"><h4>&nbsp</h4><hr style="visibility: hidden"></div>
+                    <div class="col-lg-7">
+                        <div ng-if="IdInstructor">
+                            <a class="btn btn-primary" ng-click="CheckSub(Subscr.subId)">Отметить присутствие</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row " ng-repeat="tlis in Listtlis">
+                    <div class="col-lg-5">
+                        <div class="row headshedule">
+                            <div class="col-lg-7">
+                                <br>
+                                {{tlis.TypeLesson}}
+                            </div>
+                            <div class="col-lg-2">
+                                <br>
+                                {{tlis.numb}}
+                            </div>
+                            <div class="col-lg-1"></div>
+                            <div class="col-lg-2">
+                                <h4>&nbsp</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                    </div>
+
+                </div>
+                <hr>
+                <h3>Сохраните QR-код !!!</h3>
+                QR-Код:
+                <div class="row">
+                    <div class="col-lg-2">
+
+                    </div>
+                    <div clas="col-lg-8" id="QTest">
+
+
+
+                    </div>
+                    <!--<qr text="Subscr.QRString" type-number="0"
+    correction-level="" size="300" input-mode="" image="true"></qr>-->
+                    <div class="col-lg-2">
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-1">
+                        <br>
+                        <a ng-click="ImportInGCal()" class="btn btn-primary">Добавить занятия в Google Calendar
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="well well-lg width75" ng-if='Subscr.SubLIST===undefined'>
+
+                <div class="row">
+                    <div class="col-lg-5 whitebackgr">
+                        <h4>Абонемент на 1 занятие.
+                            </h4>
+                    </div>
+                    <div class="col-lg-7">
+
+                    </div>
+                </div>
+                <br>
+                <div class="row subscriptionJLTOP">
+                    <div class="col-lg-2 leftborder">Тип занятия:</div>
+                    <div class="col-lg-2 leftborder">
+                        Начало занятия:
+                    </div>
+                    <div class="col-lg-2 leftborder">
+                        Конец занятия:
+                    </div>
+                    <div class="col-lg-3 leftborder">
+                        Тренер:
+                    </div>
+                    <div class="col-lg-3 leftborder">
+                        Школа:</div>
+                </div>
+                <div class="row subscriptionJLBOTTOM">
+                    <div class="col-lg-2 leftborder">{{Subscr.TypeLesson}}</div>
+                    <div class="col-lg-2 leftborder">
+                        {{Subscr.DateGEnSub}}
+                    </div>
+                    <div class="col-lg-2 leftborder">
+                        {{Subscr.DateEndSub}}
+                    </div>
+                    <div class="col-lg-3 leftborder">
+                        <a ng-href="#/Trainer/{{Subscr.IdInstructor}}">{{Subscr.LastName}} {{Subscr.FirstName}} {{Subscr.Patronymic}}</a>
+                    </div>
+                    <div class="col-lg-3 leftborder">
+                        <a href="#/school/{{Subscr.SchoolId}}">{{Subscr.SchoolName}}</a>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-lg-3 subscriptionJLBOTTOM subscriptionJLTOP"><h5>Занятие будет проходить по адресу:</h5></div>
+                    <div class="col-lg-9"></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-5 subscriptionJLBOTTOM"><h5>{{Subscr.City}}, {{Subscr.Street}}, д. {{Subscr.Building}}, {{Subscr.RoomNumber}}</h5></div>
+                    <div class="col-lg-6"></div>
+                </div>
+                <hr>
+                <h3>Сохраните QR-код !!!</h3>
+                <h4>QR-Код:</h4>
+                <div class="row">
+                    <div class="col-lg-2">
+
+                    </div>
+                    <div class="col-lg-8" id="QTest1">
+                    </div>
+                    <div class="col-lg-2">
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-1">
+                        <br>
+                        <a ng-click="ImportInGCal()" class="btn btn-primary">Добавить занятия в Google Calendar
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

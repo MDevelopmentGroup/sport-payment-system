@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.SocialLinks">
+<Super>%Persistent</Super>
+<TimeCreated>63459,48717.146351</TimeCreated>
+
+<Property name="Instructor">
+<Type>SPD.Instructor</Type>
+</Property>
+
+<Property name="SocialLink">
+<Type>%String</Type>
+</Property>
+
+<Property name="hash">
+<Type>%String</Type>
+</Property>
+
+<Property name="Type">
+<Type>%Integer</Type>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.SocialLinksD</DataLocation>
+<DefaultData>SocialLinksDefaultData</DefaultData>
+<IdLocation>^SPD.SocialLinksD</IdLocation>
+<IndexLocation>^SPD.SocialLinksI</IndexLocation>
+<StreamLocation>^SPD.SocialLinksS</StreamLocation>
+<Data name="SocialLinksDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Instructor</Value>
+</Value>
+<Value name="3">
+<Value>String</Value>
+</Value>
+<Value name="4">
+<Value>hash</Value>
+</Value>
+<Value name="5">
+<Value>SocialLink</Value>
+</Value>
+<Value name="6">
+<Value>Type</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

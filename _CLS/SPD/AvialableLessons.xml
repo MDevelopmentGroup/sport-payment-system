@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.AvialableLessons">
+<Super>%Persistent</Super>
+<TimeCreated>63447,58068.321832</TimeCreated>
+
+<Property name="LessonInSub">
+<Type>SPD.LessonsInSubscription</Type>
+<Cardinality>one</Cardinality>
+<Inverse>NumbAvialebleLessons</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="SubscriptionUser">
+<Type>SPD.Subscription</Type>
+<Cardinality>one</Cardinality>
+<Inverse>NumbAvialableLesson</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="numb">
+<Description>
+todo как передать id пдописки и lis в вычисляемое поле</Description>
+<Type>%Integer</Type>
+<Calculated>1</Calculated>
+<SqlComputeCode>set {numb}=##class(SPD.AvialableLessons).numb({ID})</SqlComputeCode>
+<SqlComputed>1</SqlComputed>
+</Property>
+
+<Method name="numb">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Integer</ReturnType>
+<Implementation><![CDATA[
+	
+	set count=0
+	set countm=0
+	set AvLns=##class(SPD.AvialableLessons).%OpenId(id)
+	set sub=AvLns.SubscriptionUser.%Id()
+	set lis=##class(SPD.LessonsInSubscription).%OpenId(AvLns.SubscriptionUser.%Id())
+	set type=lis.LessonType.%Id()
+	set sb=##class(SPD.Subscription).%OpenId(sub)
+	// по идее считает количество посещений
+	&sql(select count(UserSubscription) into :countm
+	from SPD.TempGroup
+	where UserSubscription=:sub and Visited=1 and JournallLesson->LessonInTable->TypeLesson->id=:type)
+	ret (lis.numb-countm)
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.AvialableLessonsD</DataLocation>
+<DefaultData>AvialableLessonsDefaultData</DefaultData>
+<IdLocation>^SPD.AvialableLessonsD</IdLocation>
+<IndexLocation>^SPD.AvialableLessonsI</IndexLocation>
+<StreamLocation>^SPD.AvialableLessonsS</StreamLocation>
+<Data name="AvialableLessonsDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>LessonInSub</Value>
+</Value>
+<Value name="3">
+<Value>SubscriptionUser</Value>
+</Value>
+<Value name="4">
+<Value>numb</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

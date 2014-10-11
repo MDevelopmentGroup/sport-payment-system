@@ -1,0 +1,45 @@
+
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation"  style="padding-right:20px;">
+    <div class="panel-body">
+        <div class="col-lg-12">
+            <div class="navbar-header">
+                <a class="navbar-brand">Бальные танцы</a>
+            </div>
+            <ui class="nav navbar-nav">
+                <li class="dropdown user-dropdown" ng-if='!User.success'>
+                    <a  class="dropdown-toggle" data-ng-click="Login()" ng-show="{{!Items.Menu}}" ><span class="glyphicon glyphicon-log-in"></span> {{Page.Menu.LogIn}} </a>
+                </li>
+                <li class="dropdown user-dropdown" ng-if='User.success'>
+                    <a style="color: green" class="dropdown-toggle" data-toggle="dropdown"><img class="img-rounded" width="23" height="23" ng-src="img/{{User.UserImage}}"> <strong>{{User.Login}}</strong> <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#/UpddateTrainer/"><span class="glyphicon glyphicon-user"></span> {{Page.Menu.Profile}} </a></li>
+                        <li><a href=""><span class="glyphicon glyphicon-envelope"></span> {{Page.Menu.Message}}  </a></li>
+                        <li><a href=""><span class="glyphicon glyphicon-cog"></span> {{Page.Menu.Settings}} </a></li>
+                        <li class="divider"></li>
+                        <li ><a class="btn btn-danger" ng-click="Logout()" ><i class="glyphicon glyphicon-off"></i> {{Page.Menu.LogOut}}</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#/Balance" ng-if="!IdSchool">{{Page.navbar.balance}}</a>
+                </li>
+                <li>
+                    <a href="#/schools">{{Page.navbar.schools}}</a>
+                </li>
+                <li>
+                    <a href="#/Trainers">{{Page.navbar.Trainers}}</a>
+                </li>
+            </ui>
+            <div class="collapse navbar-collapse navbar-ex1-collapse" ng-if="false">
+                <ul class="nav navbar-nav navbar-right navbar-user" >
+                    <li class="dropdown">
+                        <a  class="dropdown-toggle" data-toggle="dropdown">{{Page.Menu.Language}} <img height="25" ng-src="img/{{lang}}.jpg"><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li ><a class="btn btn-default" data-ng-click='SetLanguage("ru")'>RU <img height="50" src="img/ru.jpg" ></a></li>
+                            <li ><a class="btn btn-default" data-ng-click='SetLanguage("en")'>EN <img height="50" src="img/en.jpg"></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>

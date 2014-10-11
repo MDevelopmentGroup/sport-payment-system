@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Logic.SocialLinks">
+<TimeCreated>63459,49476.248682</TimeCreated>
+
+<Method name="Create">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ID=""</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set sl=##class(SPD.SocialLinks).%New()
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		set sl.hash=obj.hash
+		set sl.SocialLink=obj.SocialLink
+		w "id="_ID,!
+		if (ID)
+		{
+			set sl.Instructor=##class(SPD.Instructor).%OpenId(ID)
+		}
+		set sl.Type=obj.Type
+		set st=sl.%Save()
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="SetInstructor">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>hash,idinstructor</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set instructor=##class(SPD.Instructor).%OpenId(idinstructor)
+		&sql(declare sl cursor for
+			select id into :idsl
+			from SPD.SocialLinks
+			where hash=:hash
+		)
+		&sql(open sl)
+		for
+		{
+			&sql(fetch sl)
+			quit:SQLCODE'=""
+			set sl=##class(SPD.SocialLinks).%OpenId(idsl)
+			set sl.Instructor=instructor
+			set sl.hash=""
+		}
+		&sql(close sl)
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetSocialLinks">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set sql="select id as slid, Instructor->id as instructorId, SocialLink, Type "_
+		"from SPD.SocialLinks where Instructor->id="_id
+		set st=##class(SPD.School).GetJSONData(sql)
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="Delete">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ID</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set st=##class(SPD.SocialLinks).%DeleteId(ID)
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+</Class>
+</Export>

@@ -1,0 +1,109 @@
+<div class="WELL">
+    <div class="row">
+        <div class="col-lg-12">
+            <form class="form-horizontal" ng-model="user" ng-submit='Update(Instructor)'>
+                <span style="text-align: center"><h2>Изменить данные </h2></span>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-6">
+                        <img id="Img" width="200" height="200" ng-src="img/upload/{{Instructor.fotoImg}}">
+                    </div>
+                    <div class="col-lg-3"></div>
+                </div>
+                <hr>
+                <br>
+                <div class="form-group">
+                    <label for="FirstName" class="col-lg-3 control-label">Имя{{Page.SystemUser.TitleFirstName}}:</label>
+                    <div class="col-lg-7">
+                        <input type="text"  id="FirstName" class="form-control" ng-model="Instructor.FirstName" placeholder="{{Page.SystemUser.TitleFirstName}}" required="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="LastName" class="col-lg-3 control-label">Фамилия{{Page.SystemUser.TitleLastName}}:</label>
+                    <div class="col-lg-7">
+                        <input type="text" id="LastName" class="form-control" ng-model="Instructor.LastName" placeholder="{{Page.SystemUser.TitleLastName}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="Patronymic" class="col-lg-3 control-label">Отчество{{Page.SystemUser.TitlePatronymic}}:</label>
+                    <div class="col-lg-7">
+                        <input type="text" id="Patronymic" class="form-control" ng-model="Instructor.Patronymic" placeholder="{{Page.SystemUser.TitlePatronymic}}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Gender" class="col-lg-3 control-label">Пол{{Page.SystemUser.TitlePatronymic}}:</label>
+                    <div class="col-lg-7">
+                        <input type="radio"  ng-model="Instructor.Gender" value="0" checked="Instructor.gender==0">Мужский
+                        <input type="radio"  ng-model="Instructor.Gender" value="1" checked="Instructor.gender==1">Женский
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Patronymic" class="col-lg-3 control-label">Фото:</label>
+                    <div class="col-lg-7">
+                        <input type="file" id="InputName" style="padding: 1px" id="myFile" class=" btn btn-default form-control" multiple ng-change="FileUpload()" ng-model="user.foto">
+                        <!--<progress style="height: 10px; padding: 0px" id="progressBar" class="form-control" max="100"  value="0">
+                        </progress>-->
+                        <input style="visibility:hidden;position:absolute" type="text" class="form-control" id="adjrgsaderg" ng-model="user.resp">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Phone" class="col-lg-3 control-label">Телефон:</label>
+                    <div class="col-lg-7">
+                        <input type="text" id="Phone" ng-change="PhoneNumberFilter(Instructor.Phone)" class="form-control" ng-model="Instructor.Phone" placeholder="{{Page.SystemUser.TitlePatronymic}}">
+                    </div>
+                </div>
+
+                <div class="form-group {{PasswordStatus}}">
+                    <label for="Password" class="col-lg-3 control-label">Пароль{{Page.SystemUser.TitlePassword}}:</label>
+                    <div class="col-lg-7">
+                        <input type="password" min="6"  maxlength="12" id="Password" class="form-control"  ng-model="Instructor.Password" ng-change="CheckPassword()" placeholder="{{Page.SystemUser.TitlePassword}}">
+                    </div>
+                </div>
+
+                <div class="form-group {{PasswordStatus}}">
+                    <label for="Password2" class="col-lg-3 control-label">повторите пароль{{Page.SystemUser.TitlePassword2}}:</label>
+                    <div class="col-lg-7">
+                        <input type="password" id="Password2" class="form-control" ng-model="Instructor.Password2" ng-change="CheckPassword()" placeholder="{{Page.SystemUser.TitlePassword2}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <label for="Password2" class="col-lg-3 control-label">Ссылки в соц. сети:</label>
+                    </div>
+                    <label for="Patronymic" class="col-lg-3 control-label"><a ng-click="AddSocialIcon()" class="btn btn-primary">Добавить</a></label>
+
+
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-2">
+                        </div>
+                        <div class="col-lg-8"></div>
+                    </div>
+                    <hr>
+                    <div class="row margintop20" ng-repeat="link in ListLinks" ng-model="Instructor.ListSocialIcons">
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-1"><img ng-src="img/social_icons/{{ListSocialLink[link.Type].Img}}"></div>
+                        <div class="col-lg-6"><input class="width100" type="url" value="{{link.SocialLink}}" readonly></div>
+                        <div class="col-lg-1">
+                            <a class="btn btn-danger" ng-click="DeleteSL(link.slid)">Удалить<span class="glyphicon glyphicon-minus"></span></a>
+                        </div>
+                        <hr>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-lg-3 control-label"></label>
+                    <div class="col-lg-5">
+                        <button type="submit"  class="btn btn-success {{ButtonDisabled}}">Обновить данные{{Page.SystemUser.TitleFirstName}}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

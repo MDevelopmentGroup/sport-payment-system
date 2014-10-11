@@ -36,6 +36,9 @@ angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute'
         when('/school/:ID',                     {templateUrl: 'partials/user/view/view_School.html', controller: ViewSchoolCtrl}).
         when('/CreateSchool/',                {templateUrl: 'partials/user/Create/Create_School.html', controller: CreateSchoolCtrl}).
         when('/UpdateMySchool/',              {templateUrl: 'partials/user/Update/Update_School.html', controller: UpdateSchoolCtrl}).
+        when('/LessonTypes/',              {templateUrl: 'partials/user/View/View_LessonTypes.html', controller: LessonTypesCtrl}).
+        when('/Semester/',              {templateUrl: 'partials/user/View/View_Semester.html', controller: SemesterCtrl}).
+        when('/IIS/',              {templateUrl: 'partials/user/View/View_IIS.html', controller: InstructorInSchoolsCtrl}).
 
         when('/MySchool/',                    {templateUrl: 'partials/user/view/My_School.html', controller: MySchoolCtrl}).
         when('/LessonInTimeTable/:ID',           {templateUrl: 'partials/user/view/view_LessonInTimeTable.html', controller: LessonInTimeTableCtrl}).
@@ -125,15 +128,15 @@ angular.module('VACANCY',['ngCookies','gantt','ngResource','ngLocale', 'ngRoute'
         });
     })
     */
+    /*
     .value('GoogleApp', {
         apiKey: 'AIzaSyBBcA_ertE9wwJeLhgYXSsYFGfioRFBb-A',
-        clientId: '86505345915-tona9tmk5psjo12mofogm730dnu2jeaa.apps.googleusercontent.com',
+        'client_id': '86505345915-8tii7mbgjc3ohns72lf8nng7hm81b4uu.apps.googleusercontent.com',
         scopes: [
             // whatever scopes you need for your app, for example:
-            //'https://www.googleapis.com/auth/drive',
-            //'https://www.googleapis.com/auth/youtube',
-            'https://www.googleapis.com/auth/calendar'
+            //'https://www.googleapis.com/auth/calendar',
+            //'https://www.googleapis.com/auth/calendar.readonly'
             // ...
         ]
-    })
+    })*/
 ;

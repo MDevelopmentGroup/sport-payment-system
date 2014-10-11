@@ -114,11 +114,6 @@ app.factory('LanguageFactory',['$http','$rootScope',function($http,$rootScope){
                 "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
         return matches ? decodeURIComponent(matches[1]) : null;
     };
-
-
-
-
-
     return LanguageFactory;
 }]);
 
@@ -350,15 +345,6 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     SchoolFactory.AddSemester=function(date){
         return $http.post(schoolBroker + "/AddSemester/",date);
     };
-    SchoolFactory.InviteAccept=function(hash){
-        return $http.post(BaseUrl + "/InviteAccept/"+hash);
-    };
-    SchoolFactory.InviteReject=function(hash) {
-        return $http.post(BaseUrl + "/InviteReject/"+hash);
-    };
-    SchoolFactory.CreateNewInstructor=function(user){
-        return $http.post(BaseUrl + "/CreateNewInstructor/",user);
-    };
     SchoolFactory.GetInstructorList=function(idschool){
         return $http.get(BaseUrl+"/GetInstructorList/"+idschool)
     };
@@ -425,7 +411,7 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     };
     SchoolFactory.UpdateLessInSubscriptionLIST=function(data,id){
         return $http.post(schoolBroker+"/UpdateLessInSubscriptionLIST/"+id,data);
-    }
+    };
     SchoolFactory.DeleteLessInSubscription=function(id){
         return $http.delete(schoolBroker+"/DeleteLessFromSubscription/"+id);
     };
@@ -434,6 +420,12 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     };
     SchoolFactory.UpdateSubscription=function(data){
         return $http.post(schoolBroker+"/UpdateSubscription/",data);
+    };
+    SchoolFactory.UpdateTypeLeesson=function(data){
+        return $http.post(schoolBroker+"/UpdateTypeLeesson/",data);
+    };
+    SchoolFactory.DeleteSubList=function(id){
+        return $http.delete(schoolBroker+"/DeleteSubList/"+id);
     };
     return SchoolFactory;
 }]);
@@ -450,6 +442,15 @@ app.factory('DancerFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     };
     DancerFactory.GetSubscriptionFromJL=function(id){
         return $http.get(BaseUrl+"/GetSubscriptionFromJL/"+id);
+    };
+    DancerFactory.InviteAccept=function(hash){
+        return $http.post(BaseUrl + "/InviteAccept/"+hash);
+    };
+    DancerFactory.InviteReject=function(hash) {
+        return $http.post(BaseUrl + "/InviteReject/"+hash);
+    };
+    DancerFactory.CreateNewInstructor=function(user){
+        return $http.post(BaseUrl + "/CreateNewInstructor/",user);
     };
     DancerFactory.Subscribe=function(idLesson){
         return $http.post(BaseUrl+"/Subscribe/"+idLesson);
@@ -475,6 +476,9 @@ app.factory('DancerFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     DancerFactory.GetPrice=function(ID){
         return $http.get(BaseUrl + "/GetPrice/"+ID);
     };
+    DancerFactory.checkInvite=function(hash){
+        return $http.get(BaseUrl + "/checkInvite/"+hash);
+    };
     DancerFactory.getUrlForCreateGoogleCalendarEvent=function(text, dates, location, details){
 
         return 'https://www.google.com/calendar/render?action=TEMPLATE&hl=ru' +
@@ -488,13 +492,13 @@ app.factory('DancerFactory',['$http','$rootScope','ErrorLogFactory',function($ht
         return $http.get(BaseUrl + "/GetNextJournalLessons/"+id+"/"+lt);
     };
     DancerFactory.GetInstructorLinks=function(id){
-        return $http.get(BaseUrl + "/GetInstructorLinks/" + id)
+        return $http.get(BaseUrl + "/GetInstructorLinks/" + id);
     };
     DancerFactory.GetJLDays=function(id){
-        return $http.get(BaseUrl + "/GetJLDays/" + id)
+        return $http.get(BaseUrl + "/GetJLDays/" + id);
     };
     DancerFactory.GetUserSub=function(sol){
-        return $http.get(BaseUrl + "/GetUserSub/" +sol)
+        return $http.get(BaseUrl + "/GetUserSub/" +sol);
     };
     return DancerFactory;
 }]);
@@ -523,6 +527,64 @@ app.factory('InstructorFactory',['$http','$rootScope','ErrorLogFactory',function
         return $http.post(brokURL+"/InstructorCheck/"+idsub);
     };
     return InstructorFactory;
+}]);
+
+app.factory('GoogleCalendarFactory',['$http','$rootScope','ErrorLogFactory',function($http,$rootScope,ErrorLogFactory){
+    var GoogleCalendarFactory={};
+    GoogleCalendarFactory.NewCalendar=function(){
+        return $http.get("https://www.googleapis.com/calendar/v3/users/me/calendarList");
+        console.log(resp);
+    };
+
+    GoogleCalendarFactory.AddEventsInGC1=function(access_token){
+        return $http.get(
+            'https://www.googleapis.com/calendar/v3/users/me/calendarList?key='+access_token,
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + access_token
+                }
+            }
+        );
+    };
+    GoogleCalendarFactory.AddEventsInGC=function(event,CalendarId,callback,access_token){
+        return $http.post('https://www.googleapis.com/calendar/v3/calendars/'+CalendarId+'/events?key='+access_token,
+            event,
+            {
+                headers:
+                {
+                    'Authorization': 'Bearer ' + access_token,
+                    'Content-Type':'application/json',
+                    'X-JavaScript-User-Agent':  'Google APIs Explorer'
+                }
+            }
+            );
+
+    };
+    GoogleCalendarFactory.CreateCalendar=function(access_token,sCalendar){
+        return $http.post('https://www.googleapis.com/calendar/v3/calendars?key='+access_token,sCalendar,
+            {
+                headers:
+                {
+                    'Authorization': 'Bearer ' + access_token,
+                    'Content-Type':'application/json',
+                    'X-JavaScript-User-Agent':  'Google APIs Explorer'
+                }
+            });
+    };
+    GoogleCalendarFactory.ISODateString=function(d){
+        var datetimeE="";
+        datetimeE=d.getUTCFullYear()+'-'
+        + GoogleCalendarFactory.pad(d.getUTCMonth()+1)+'-'
+        + GoogleCalendarFactory.pad(d.getUTCDate())+'T'
+        + GoogleCalendarFactory.pad(d.getUTCHours())+':'
+        + GoogleCalendarFactory.pad(d.getUTCMinutes())+':'
+        + GoogleCalendarFactory.pad(d.getUTCSeconds())+'Z';
+        return datetimeE;
+    };
+    GoogleCalendarFactory.pad=function(n){
+        return n<10 ? '0'+n : n
+    };
+    return GoogleCalendarFactory;
 }]);
 
 //***************************************** Setting ********************************************************************//

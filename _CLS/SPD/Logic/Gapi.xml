@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Logic.Gapi">
+<TimeCreated>63467,39001.280832</TimeCreated>
+
+<Method name="GetToken">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	
+	ret st
+]]></Implementation>
+</Method>
+</Class>
+</Export>

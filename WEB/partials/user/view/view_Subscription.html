@@ -1,0 +1,113 @@
+<div class="container">
+    <form ng-submit="Payment(Subscr)">
+    <div class="well" style="margin-top:200px;">
+        <div class="row">
+                <div class="row">
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-9">
+                        <div class="row panel" ng-if="Subscr.idSL!=0">
+                            <div class="col-lg-9 panel-primary">
+                                <div class="panel-heading">
+                                {{Page.Subscription.in}}
+                                </div>
+                                <div class="row">
+                                    <div class="panel-title">
+                                        <div class="col-lg-1"></div>
+                                        <div class="col-lg-4">Тип занятия</div>
+                                        <div class="col-lg-1"></div>
+                                        <div class="col-lg-4">Количество занятий</div>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row" ng-repeat="LessInSub in Subscr.lis">
+                                        <div>
+                                            <div class="col-lg-1"></div>
+                                            <div class="col-lg-4">{{LessInSub.TypeLesson}}</div>
+                                            <div class="col-lg-1"></div>
+                                            <div class="col-lg-4">{{LessInSub.numb}}</div>
+                                        </div>
+                                        <hr>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-2"></div>
+                                        <div class="col-lg-3">
+                                            {{Page.Price.Cost}}
+                                            {{Subscr.cost}}
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <button type="submit" ng-click='Pay.PayInit=0'><img src="img/robokassa.png"></button>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-lg-5">
+                                            <input type="email" class="form-control" ng-model="Subscr.email" required="">
+                                        </div>
+                                        <div class="col-lg-7">
+                                            Введите email на который придёт QR-код
+                                        </div>
+                                        <a ng-href="{{url}}">Оплатить</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="Subscr.idSL==0">
+                            <div class="col-lg-2"></div>
+                            <div class="col-lg-9 panel panel-primary">
+                                <div class="row panel-heading">
+                                    Абонемент на 1 занятие
+                                </div>
+                                <div class="row panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                        Начало занятия в:</div>
+                                        <div class="col-lg-3">
+                                            Цена:
+                                        </div>
+                                        <div class="col-lg-4">Тренер</div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            {{Subscr.DateBegin}}
+                                        </div>
+                                        <div class="col-lg-3">
+                                            {{Subscr.cost}}
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <a ng-href="#/Trainer/{{Subscr.Instructor.id}}">{{Subscr.Instructor.FirstName}} {{Subscr.Instructor.LastName}} {{Subscr.Instructor.Patronymic}}
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-lg-5">
+                                            <input type="email" class="form-control" ng-model="Subscr.email" required="">
+                                        </div>
+                                        <div class="col-lg-7">
+                                            Введите email на который придёт QR-код
+                                        </div>
+                                        <a ng-href="{{url}}">Оплатить</a>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-lg-2"></div>
+                                        <div class="col-lg-3">
+                                            <button type="submit" ng-click='Pay.PayInit=0'><img src="img/robokassa.png"></button>
+                                        </div>
+                                        <div class="col-lg-4">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            <hr>
+        </div>
+    </div>
+    </form>
+</div>

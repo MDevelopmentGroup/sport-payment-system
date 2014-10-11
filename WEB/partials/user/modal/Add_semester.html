@@ -1,0 +1,66 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="row">
+                <br>
+                <div class="col-lg-12">
+                    <form class="form-horizontal" ng-model="Price" ng-submit='submit(Semester)' ng-init="Semester">
+                        <div class="form-group">
+                            <label for="Price" class="col-lg-2 control-label ">{{Page.Semester.Name}}</label>
+
+                            <div class="col-lg-4">
+                                <input type="text" for="Price"  id="PriceTypeLesson" class="form-control" ng-model="Semester.name" placeholder="{{Page.Semester.name}}" required="">
+                            </div>
+                        </div>
+                        <div class="form-group" ng-if="Semester.TimeBegin">
+                            <label for="Price" class="col-lg-2 control-label ">{{Page.Semester.Begin}}</label>
+                            <div class="col-lg-6">
+                                <input type="text" size="10" class="form-control" ng-model="Semester.DateBegin" data-min-date="{{startDate1}}" data-autoclose="1" data-date-type="string" placeholder="Date" bs-datepicker>
+                            </div>
+                            <div class="col-lg-2">
+                                <input type="text" size="8" class="form-control" ng-model="Semester.TimeBegin" data-autoclose="1" data-time-type="string" placeholder="Time" bs-timepicker>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Price" class="col-lg-2 control-label ">{{Page.Semester.End}}</label>
+                            <div class="col-lg-6">
+                                <input type="text" size="10" class="form-control" ng-model="Semester.sharedDate" data-autoclose="1" data-min-date="{{fromDate}}" data-date-type="string" placeholder="Date" bs-datepicker>
+                            </div>
+                            <div class="col-lg-2">
+                                <input type="text" size="8" class="form-control" ng-model="Semester.sharedTime" data-autoclose="1" data-time-type="string" placeholder="Time" bs-timepicker>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-2">
+                            </div>
+                            <div class="col-lg-4">
+                                <h5>Тип занятия</h5>
+                            </div>
+                            <div class="col-lg-2">
+                                <h5>Стоимость:</h5>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-repeat="tl in ListLessonTypes">
+                            <div class="col-lg-2">
+                            </div>
+                            <div class="col-lg-4">
+                                {{tl.TypeName}}
+                            </div>
+                            <div class="col-lg-3">
+                                <input type="text" size="10" testsum='"^-?[0-9]\\d{0,4}(\\.\\d{0,2})?$"' class="form-control" ng-model="tl.cost" required="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-lg-3 control-label"></label>
+                            <div class="col-lg-5">
+                                <button type="submit"  class="btn btn-success {{ButtonDisabled}}" >CreatePrice{{Page.SystemUser.TitleFirstName}}</button>
+                            </div>
+                        </div>
+
+                    </form>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.TableLessinSubscr">
+<Super>%Persistent</Super>
+<TimeCreated>63438,44068.129486</TimeCreated>
+
+<Property name="TypeLesson">
+<Type>SPD.TypeLesson</Type>
+</Property>
+
+<Property name="numb">
+<Type>%Integer</Type>
+<Calculated>1</Calculated>
+<SqlComputeCode>set {numb}=##class(SPD.TableLessinSubscr).Calc({TypeLesson},{Subscription},{Type})</SqlComputeCode>
+<SqlComputed>1</SqlComputed>
+</Property>
+
+<Property name="Subscription">
+<Type>SPD.Subscription</Type>
+<Cardinality>one</Cardinality>
+<Inverse>TLIS</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="Type">
+<Type>%Integer</Type>
+</Property>
+
+<Method name="CreateTLIS">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idlis,idsub</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		s lis=##class(SPD.LessonsInSubscription).%OpenId(idlis)
+		s sub=##class(SPD.SubscriptionList).%OpenId(idsub)
+		s tlis=##class(SPD.TableLessinSubscr).%New()
+		s tlis.Subscription=sub
+		s tlis.TypeLesson=lis.LessonType
+		s tlis.Type=1
+		s st=tlis.%Save()
+		
+	}
+	catch er
+	{
+		s st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="CreateTLISFORJL">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>tl,sub</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		s tlis=##class(SPD.TableLessinSubscr).%New()
+		s tlis.Subscription=sub
+		s tlis.TypeLesson=##class(SPD.TypeLesson).%OpenId(tl)
+		s tlis.Type=0
+		s st=tlis.%Save()
+	}
+	catch er
+	{
+		s st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="CreateTLISFromSL">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idsub</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set sub=##class(SPD.Subscription).%OpenId(idsub)
+		set idsublist=sub.SubList.%Id()
+		w idsublist,!
+		&sql(declare tt  cursor for
+		select id into :idlis
+		from SPD.LessonsInSubscription
+		where Subscription=:idsublist
+		)
+		&sql(open tt)
+		for
+		{
+			
+			&sql(fetch tt)
+			w idlis,!
+			quit:SQLCODE'=0
+			set lis=##class(SPD.LessonsInSubscription).%OpenId(idlis)
+			set tlis=##class(SPD.TableLessinSubscr).%New()
+			set tlis.Subscription=sub
+			s tlis.Type=1
+			set tlis.TypeLesson=lis.LessonType
+			set st=tlis.%Save()
+		}
+		&sql(close tt)
+	}
+	catch er
+	{
+		s st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="Calc">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>TypeLesson,sub,Type</FormalSpec>
+<ReturnType>%Integer</ReturnType>
+<Implementation><![CDATA[
+	
+	if ((TypeLesson'="") && (sub'="")){
+		if (Type=1){
+		set sub1=##class(SPD.Subscription).%OpenId(sub)
+		set sbl=sub1.SubList.%Id()
+		&sql(select id into :idlis from SPD.LessonsInSubscription where Subscription->id=:sbl and LessonType->id=:TypeLesson)
+		set lis=##class(SPD.LessonsInSubscription).%OpenId(idlis)
+		set count=lis.numb
+		s type=lis.LessonType		
+		&sql(select count(id) into :scount 
+		from SPD.TempGroup 
+		where UserSubscription=:sub and JournallLesson->LessonInTable->TypeLesson=:type)
+			set count=lis.numb-scount
+		}
+		elseif (Type=0)
+		{
+			set bcount=1
+			&sql(select count(id) into :scount 
+			from SPD.TempGroup 
+			where UserSubscription=:sub and JournallLesson->LessonInTable->TypeLesson=:type)
+			if (scount>0)
+			set count=0
+		}
+	}
+	else
+		{
+			set count=""
+		}
+	ret count
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.TableLessinSubscrD</DataLocation>
+<DefaultData>TableLessinSubscrDefaultData</DefaultData>
+<IdLocation>^SPD.TableLessinSubscrD</IdLocation>
+<IndexLocation>^SPD.TableLessinSubscrI</IndexLocation>
+<StreamLocation>^SPD.TableLessinSubscrS</StreamLocation>
+<Data name="TableLessinSubscrDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>TypeLeson</Value>
+</Value>
+<Value name="3">
+<Value>numb</Value>
+</Value>
+<Value name="4">
+<Value>Subscription</Value>
+</Value>
+<Value name="5">
+<Value>lis</Value>
+</Value>
+<Value name="6">
+<Value>TypeLesson</Value>
+</Value>
+<Value name="7">
+<Value>Type</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Logic.Instructor">
+<TimeCreated>63417,52320.419583</TimeCreated>
+
+<Method name="CreateInstructon">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		//стандартная проверка на дублирование
+		//&sql(select count(id) into :count from SPD.Instructor where IdDancer->id=:obj.IdDancer)
+		//Вызвать исключение
+		set instructor=##class(SPD.Instructor).%New()
+		set dancer=##class(SPD.Dancer).%OpenId(obj.IdDancer)
+		set school=##class(SPD.School).%OpenId(obj.IdSchool)
+		set instructor.IdDancer=dancer
+		set instructor.InstructorPower=20
+		set instructor.OwnerSchool=school
+		set st=instructor.%Save()
+		set type.ShortDescription=obj.ShortDescription
+	}
+	Catch exception
+	{
+		set st=exception
+	}
+	q st
+]]></Implementation>
+</Method>
+
+<Method name="GetInstructorList">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>IdSchool</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		if (IdSchool'="undefined"){
+			set sqlQuery="select Instructor->IdDancer->FirstName, Instructor->IdDancer->LastName, Instructor->IdDancer-> Patronymic, Instructor->id "_
+			"FROM SPD.TempListOfInstructorsInSchools where School="_IdSchool			
+		}
+		else{
+			set sqlQuery="select IdDancer->FirstName, IdDancer->LastName, IdDancer->Patronymic, id from "_
+			"SPD.Instructor"
+		}
+		do ##class(SPD.School).GetJSONData(sqlQuery)
+	}
+	Catch exception
+	{
+		set st=exception
+	}
+	q st
+]]></Implementation>
+</Method>
+
+<Method name="GetTrainerInfo">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set sqlQuery="select idDancer->FirstName as FirstName, idDancer->LastName as LastName, "_
+		"idDancer->Patronymic as Patronymic, idDancer->Gender from SPD.Instructor where id="_id
+		do ##class(SPD.School).GetJSONData(sqlQuery)
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetSchoolByTrainerId">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set sqlQuery="select School->id as IdSchool, School->Name as SchoolName "_
+		" from SPD.TempListOfInstructorsInSchools where Instructor="_id
+		do ##class(SPD.School).GetJSONData(sqlQuery)
+		
+	}
+	catch ex{
+	}
+	ret st
+]]></Implementation>
+</Method>
+</Class>
+</Export>

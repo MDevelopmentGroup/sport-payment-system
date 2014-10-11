@@ -9,8 +9,18 @@
 <ClassMethod>1</ClassMethod>
 <ReturnType>LIB.Person</ReturnType>
 <Implementation><![CDATA[
-	set prs=##class(LIB.Person).%OpenId(%request.GetCookie("userId"))
-	ret prs
+	set uh=##class(LIB.Person).%OpenId(%request.GetCookie("uh"))
+	set userId=##class(LIB.Person).%OpenId(%request.GetCookie("userId"))
+	&sql(select ID into :id from Auth.SessionData where id=:userId)
+	set session=##class(Auth.SessionData).%OpenId(id)
+	set user=##class(LIB.Person).%OpenId(session.UserID)
+	set hash=$SYSTEM.Encryption.AESCBCEncrypt(user.%Id()_":"_session.RoleUser.Description,user.Key)
+	set hash=##class(Auth.Session).Encode(hash)
+	if (uh'=hash)
+	{
+		set user=""
+	}
+	ret user
 ]]></Implementation>
 </Method>
 
@@ -19,6 +29,7 @@
 <ReturnType>SPD.School</ReturnType>
 <Implementation><![CDATA[
 	set school=##class(SPD.School).%OpenId(%request.GetCookie("IdSchool"))
+	
 	ret school
 ]]></Implementation>
 </Method>
@@ -46,14 +57,12 @@
 
 <Method name="CheckSession">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>UserId,HASH</FormalSpec>
+<FormalSpec>UserId,HASH,hIP,hUserAgent</FormalSpec>
 <ReturnType>%Boolean</ReturnType>
 <Implementation><![CDATA[
 	#dim bl As %Boolean=0
 	&sql(select key into:key from LIB.Person where id=:UserId)
 	set str=$SYSTEM.Encryption.AESCBCDecrypt(HASH,key)
-	set hIP=%request.GetCgiEnv("REMOTE_ADDR")
-	set hUserAgent=%request.GetCgiEnv("HTTP_USER_AGENT")
 	set hUserId=$P(str,":",1)
 	set hRoleUser=$P(str,":",2)
 	&sql(select Id,UserID,IP,Agent,RoleUser,DateTime 
@@ -149,6 +158,7 @@
 			set session1.UserID=UserID
 			do session1.%Save()
 			set hash=$SYSTEM.Encryption.AESCBCEncrypt(UserID_":"_session1.RoleUser.Description,Key)
+			
 			set hash=##class(Auth.Session).Encode(hash)
 			&sql(select id into :idschool from SPD.School where Person->Id=:UserID)
 			&sql(select id into :idInstructor from SPD.Instructor where idDancer->Id=:UserID)
@@ -219,6 +229,32 @@
 		else{ set str=str_$LIST(list2,$r($LL(list2))+1)_$r(99)}	
 	}
 	ret str
+]]></Implementation>
+</Method>
+
+<Method name="Clear">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set idsesssion=##class(Auth.Session).GetCurrentUser().%Id()
+		set st=##class(Auth.SessionData).%DeleteId(idsesssion)
+		do %response.SetCookie("success","",t,"/")
+		do %response.SetCookie("uh","",t,"/")
+		do %response.SetCookie("userId","",t,"/")
+		do %response.SetCookie("Email","",t,"/")
+		do %response.SetCookie("Role","",t,"/")
+		do %response.SetCookie("IdSchool","",t,"/")
+		do %response.SetCookie("IdInstructor","",t,"/")
+		
+	}
+	catch er
+	{
+		set st=er.AsStatus()
+	}
+	ret st
 ]]></Implementation>
 </Method>
 

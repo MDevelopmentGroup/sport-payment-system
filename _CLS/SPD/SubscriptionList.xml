@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.SubscriptionList">
+<Super>%Persistent</Super>
+<TimeCreated>63439,45453.181914</TimeCreated>
+
+<Property name="cost">
+<Description>
+цена </Description>
+<Type>SPD.Balance</Type>
+</Property>
+
+<Property name="School">
+<Type>SPD.School</Type>
+</Property>
+
+<Property name="Actual">
+<Type>%Boolean</Type>
+<Calculated>1</Calculated>
+<SqlComputeCode>set {Actual}=##class(SPD.Price).SetActual({DateActualEnd})</SqlComputeCode>
+<SqlComputed>1</SqlComputed>
+</Property>
+
+<Property name="DateActualStart">
+<Type>%DateTime</Type>
+</Property>
+
+<Property name="LessInSub">
+<Type>SPD.LessonsInSubscription</Type>
+<Cardinality>many</Cardinality>
+<Inverse>Subscription</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="DateActualEnd">
+<Type>%DateTime</Type>
+</Property>
+
+<Property name="ShortDescription">
+<Type>%String</Type>
+</Property>
+
+<Property name="Duration">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="Show">
+<Type>%Boolean</Type>
+<InitialExpression>1</InitialExpression>
+</Property>
+
+<Method name="SetActual">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>DateActualEnd</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	set bl=1
+	//w "now="_$zdt($h,3),!
+	//w "DateActualEnd="_DateActualEnd,!
+	set nowdate=$list($listfromstring($h,","),1)
+	set nowtime=$list($listfromstring($h,","),2)
+
+	set actdate=$list($listfromstring($zdatetimeh(DateActualEnd,3),","),1)
+	set acttime=$list($listfromstring($zdatetimeh(DateActualEnd,3),","),2)
+	//w "nowdate="_nowdate_"     nowtime="_nowtime,!
+	//w "actdate="_actdate_"     acttime="_acttime,!
+	if (nowdate>actdate)
+	{
+		set bl=0
+	}
+	elseif ((nowtime>acttime)&(nowdate>actdate) )
+	{
+		set bl=0
+	}
+	ret bl
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SPD.SubscriptionListD</DataLocation>
+<DefaultData>SubscriptionListDefaultData</DefaultData>
+<IdLocation>^SPD.SubscriptionListD</IdLocation>
+<IndexLocation>^SPD.SubscriptionListI</IndexLocation>
+<StreamLocation>^SPD.SubscriptionListS</StreamLocation>
+<Data name="SubscriptionListDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>cost</Value>
+</Value>
+<Value name="3">
+<Value>School</Value>
+</Value>
+<Value name="4">
+<Value>Active</Value>
+</Value>
+<Value name="5">
+<Value>DateActualStart</Value>
+</Value>
+<Value name="6">
+<Value>DateActualEnd</Value>
+</Value>
+<Value name="7">
+<Value>LessInSub</Value>
+</Value>
+<Value name="8">
+<Value>ShorDescription</Value>
+</Value>
+<Value name="9">
+<Value>ShortDescription</Value>
+</Value>
+<Value name="10">
+<Value>Show</Value>
+</Value>
+<Value name="11">
+<Value>Duration</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

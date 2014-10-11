@@ -24,5 +24,25 @@
 	ret type
 ]]></Implementation>
 </Method>
+
+<Method name="Update">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try{
+		set st=##class(%ZEN.Auxiliary.jsonArrayProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
+		set tl=##class(SPD.TypeLesson).%OpenId(obj.TypeID)
+		set tl.name=$zconvert(obj.TypeName,"I","UTF8")
+		set tl.ShortDescription=$zconvert(obj.Shortdescription,"I","UTF8")
+		set st=tl.%Save()
+	}
+	catch er
+	{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
 </Class>
 </Export>

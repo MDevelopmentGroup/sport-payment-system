@@ -56,9 +56,170 @@ function ViewLKCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFacto
 //******************************************** ViewLKCtrl ***************************************************************//
 
 
+function LessonTypesCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFactory,SchoolFactory,MyFunctions) {
+    $rootScope.lm=2;
+    $scope.initit=function() {
+        $rootScope.MenuActive = {};
+        $scope.startDate1=new Date();
+        $rootScope.Page.Menu.BrandTitle = $rootScope.Page.About.Title;
+        $scope.school={};$scope.school.Rooms={};
+        $scope.User = AuthenticationFactory.GetCurrentUser();
+        $scope.Name = $scope.User.UserName;
+        $scope.HASH = $scope.User.HASH;
+        $scope.IdSchool = $scope.User.IdSchool;
+        if ($scope.IdSchool) {
+            $rootScope.User = $scope.User;
+        }
+
+        $scope.lang=LanguageFactory.GetCurrentLanguage();
+        $scope.GetLessontypes=function(id){SchoolFactory.GetLessonTypes(id).success(function(data){
+            $scope.ListLessonTypes=data.children;
+
+        })};
+        $scope.GetLessontypes($scope.IdSchool);
+        var datetime=new Date();
+        $scope.startDate=MyFunctions.CheckTime(datetime.getDate())+"/"+(MyFunctions.CheckTime(datetime.getMonth()+1))+"/"+MyFunctions.CheckTime(datetime.getFullYear());
+    };
+    $scope.initit();
+    $scope.AddTypeLesson=function(){
+        $scope.submit=function(TypeLesson){
+            SchoolFactory.AddTypeLesson(TypeLesson).success(function(data){
+                $scope.GetLessontypes($scope.IdSchool);
+                modal.hide();
+            });
+        };
+        var modal=$modal({scope:$scope,placement:"center",backdrop:false, template:'partials/user/modal/Add_TypeLesson.html',show:true})
+    };
+    $scope.UpdateTypeLeesson=function(TypeLesson){
+        $scope.TypeLesson=TypeLesson;
+        $scope.submit=function(TypeLesson){
+            SchoolFactory.UpdateTypeLeesson(TypeLesson).success(function(data){
+                $scope.GetLessontypes($scope.IdSchool);
+                modal.hide();
+            });
+        };
+        var modal=$modal({scope:$scope,placement:"center",backdrop:false, template:'partials/user/modal/Modal_Update_TypeLesson.html',show:true})
+    }
+}
+function SemesterCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFactory,SchoolFactory,MyFunctions) {
+    $rootScope.lm=3;
+    $scope.initit=function() {
+        $rootScope.MenuActive = {};
+        $scope.startDate1=new Date();
+        $rootScope.MenuActive.Page = 'partials/user/view/view_about.html';
+        $rootScope.MenuActive.Controller = 'ViewAboutCtrl';
+        $rootScope.MenuActive.AboutView = 'active';
+        $rootScope.Page.Menu.BrandTitle = $rootScope.Page.About.Title;
+        $scope.school={};$scope.school.Rooms={};
+        $scope.User = AuthenticationFactory.GetCurrentUser();
+        $scope.Name = $scope.User.UserName;
+        $scope.HASH = $scope.User.HASH;
+        $scope.IdSchool = $scope.User.IdSchool;
+        if ($scope.IdSchool) {
+            $rootScope.User = $scope.User;
+        }
+        $scope.lang=LanguageFactory.GetCurrentLanguage();
+
+        var datetime=new Date();
+        $scope.startDate=MyFunctions.CheckTime(datetime.getDate())+"/"+(MyFunctions.CheckTime(datetime.getMonth()+1))+"/"+MyFunctions.CheckTime(datetime.getFullYear());
+    };
+    $scope.AddSemester=function(){
+        SchoolFactory.GetBeginSemester().success(function(data) {
+            if(data.children){
+                $scope.Semester={};
+                $scope.Semester.DateBegin=MyFunctions.GetDateFromCacheTimeSptamp(data.children);
+                $scope.Semester.TimeBegin=MyFunctions.GetTimeFromCacheTimeSptamp(data.children);
+            };
+            $scope.submit = function (Semester) {
+                Semester.ListLessonTypes=$scope.ListLessonTypes;
+                SchoolFactory.AddSemester(Semester).success(function (data) {
+                    $scope.GetSemesterList();
+                    modal.hide();
+                });
+            };
+            var modal = $modal({
+                scope: $scope,
+                placement: "center",
+                backdrop: false,
+                template: 'partials/user/modal/Add_semester.html',
+                show: true
+            });
+        });
+    };
+    $scope.GetSemesterList=function()
+    {
+        SchoolFactory.GetSemesterList().success(function(data){
+            $scope.SemesterList=data.children;
+        });
+    };
+    $scope.GetSemesterList();
+}
+function InstructorInSchoolsCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFactory,SchoolFactory,MyFunctions){
+    $rootScope.lm=6;
+    $scope.initit=function() {
+        $rootScope.MenuActive = {};
+        $scope.startDate1=new Date();
+        $rootScope.MenuActive.Page = 'partials/user/view/view_about.html';
+        $rootScope.MenuActive.Controller = 'ViewAboutCtrl';
+        $rootScope.MenuActive.AboutView = 'active';
+        $rootScope.Page.Menu.BrandTitle = $rootScope.Page.About.Title;
+        $scope.school={};$scope.school.Rooms={};
+        $scope.User = AuthenticationFactory.GetCurrentUser();
+        $scope.Name = $scope.User.UserName;
+        $scope.HASH = $scope.User.HASH;
+        $scope.IdSchool = $scope.User.IdSchool;
+        if ($scope.IdSchool) {
+            $rootScope.User = $scope.User;
+        }
+
+        $scope.lang=LanguageFactory.GetCurrentLanguage();
+        var datetime=new Date();
+        $scope.startDate=MyFunctions.CheckTime(datetime.getDate())+"/"+(MyFunctions.CheckTime(datetime.getMonth()+1))+"/"+MyFunctions.CheckTime(datetime.getFullYear());
+    };
+
+    $scope.InviteInstructor=function(){
+        $scope.submit=function(Instructor){
+            //Instructor.Email="azzilla@mail.ru";
+            console.log(Instructor);
+            SchoolFactory.InviteInstructor(Instructor.Email).success(function(data){
+
+                modal.hide();
+            })
+        };
+
+        var modal=$modal({scope: $scope, placement:"center", backdrop:false, template: 'partials/user/modal/InviteInstructor.html', show: true});
+    };
+    $scope.GetInstructorList=function(){
+        SchoolFactory.GetInstructorList($scope.IdSchool).success(function(data){
+                $scope.InstructorList=data.children;
+            }
+        );
+    };
+    $scope.EditRateForInstructor=function(id){
+        SchoolFactory.GetInstructor(id).success(function(data){
+            $scope.Instructor=data.children[0];
+            $scope.submut=function(Instructor){
+                SchoolFactory.UpdateInstructorRate(Instructor).success(function(){
+                    modal.hide();
+                    $scope.GetInstructorList();
+                })};
+            var modal=$modal({scope:$scope,placement:"center",backdrop:false,template:'partials/user/modal/Edit_InstructorRate.html',show:true});
+        })
+    };
+    $scope.RemoveFromSchool=function(ID){
+        SchoolFactory.RemoveFromSchool(ID).success(function(){
+            $scope.GetInstructorList();
+        });
+
+    };
+    $scope.initit();
+    $scope.GetInstructorList();
+}
+
 
 //******************************************** MySchoolCtrl ***************************************************************//
 function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFactory,SchoolFactory,MyFunctions){
+    $rootScope.lm=0;
     $scope.initit=function() {
         $rootScope.MenuActive = {};
         $scope.startDate1=new Date();
@@ -154,6 +315,7 @@ function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFac
         });
     };
     $scope.RemoveFromSchool=function(ID){
+        console.log("hjkhgkhgjkghk");
         SchoolFactory.RemoveFromSchool(ID).success(function(){
             $scope.GetInstructorList();
         });
@@ -200,6 +362,7 @@ function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFac
 
 //******************************************** LessonInTimeTableCtrl ***************************************************************//
 function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFactory,AuthenticationFactory,SchoolFactory){
+    $rootScope.lm=4;
     $scope.taskMode=false;
     $scope.mode = "custom";
     $scope.maxHeight = 0;
@@ -483,6 +646,7 @@ function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFac
 
 function JournallLessonsCtrl($scope,$rootScope,$modal,$routeParams,$location,LanguageFactory,AuthenticationFactory,SchoolFactory,DancerFactory){
     //for gantt
+    $rootScope.lm=5;
     $scope.mode = "custom";
     $scope.maxHeight = 0;
     $scope.showWeekends = true;
@@ -532,26 +696,24 @@ function JournallLessonsCtrl($scope,$rootScope,$modal,$routeParams,$location,Lan
         for(var i=0;i<LessonList.length;i++){
             var row={};
             row.tasks=[];
-            //console.log("$scope.LessonList[i]=");console.log(LessonList[i]);
             row.id=LessonList[i].RoomId;
             row.description=LessonList[i].RoomName;
             row.order=1;
             row.data="asdasdad";
             var task={};
             task.color="#93C47D";
+            if(LessonList[i].Show==0){
+                task.color="#c0e8a5";
+            }
             task.id=LessonList[i].ID; //$scope.LessonList[i].RoomDescr;
             task.subject=LessonList[i].LessonDescr;
             task.from=new Date(LessonList[i].DateBegin);
             task.to=new Date(LessonList[i].DateEnd);
-
-            /*if((task.from-task.to)>0){
-                task.to.setDate(task.to.getDate()+1);
-            }*/
-
             task.data={};
             task.data.InstructorID=LessonList[i].InstructorId;
             task.data.TypeLessonId=LessonList[i].TypeLessonId;
             task.data.Cost=LessonList[i].Cost;
+            task.data.Show=LessonList[i].Show;
             row.tasks.push(task);
             $scope.rows[i]=row;
         }
@@ -587,7 +749,6 @@ function JournallLessonsCtrl($scope,$rootScope,$modal,$routeParams,$location,Lan
         return time
     };
     $scope.DBClickTaskGantt=function(event){
-
         switch ($scope.User.Role)
         {
             case "3":
@@ -655,27 +816,25 @@ function JournallLessonsCtrl($scope,$rootScope,$modal,$routeParams,$location,Lan
             case "1":
                 $scope.Lesson={};
                 $scope.Lesson.ID=event.task.id;
-
                 $scope.Lesson.InstructorID=event.task.data.InstructorID;
                 $scope.Lesson.TypeLessonId=event.task.data.TypeLessonId;
                 var datetime=event.task.from;
                 $scope.Lesson.TimeBegin=$scope.CheckTime(datetime.getHours())+":"+$scope.CheckTime(datetime.getMinutes())+":00";
-
                 //console.log($scope.CheckTime(event.task.to.getHours()).toString());
                 $scope.Lesson.TimeEnd=$scope.CheckTime(event.task.to.getHours())+":"+$scope.CheckTime(event.task.to.getMinutes())+":00";
                 $scope.Lesson.ShortDescription=event.task.subject;
                 $scope.Lesson.DateBegin=$scope.CheckTime(datetime.getDate())+"/"+($scope.CheckTime(datetime.getMonth()+1))+"/"+$scope.CheckTime(datetime.getFullYear());
                 $scope.Lesson.RoomId=event.task.row.id;
+                $scope.Lesson.Show=event.task.data.Show;
                     $scope.submit=function(Lesson){
                          SchoolFactory.UpdateJournallLesson(Lesson).success(function(){
-                             $scope.GetJournalLessons($routeParams.ID).success(function(data){
-                                 $scope.LessonList=data.children;
-                                 $scope.loadInGantt($scope.LessonList);});
+                             $scope.GetJournalLessons($routeParams.ID);
+                             $scope.loadInGantt($scope.LessonList);
                              modal.hide();
                              $scope.Lesson=null;
                          });
                     };
-
+                console.log($scope.Lesson);
                 var modal=$modal({scope:$scope,placement:"center",backdrop:false, template:'partials/user/modal/Update_JournallLesson.html',show:true})
                 break;
             case "0":
@@ -744,7 +903,7 @@ function JournallLessonsCtrl($scope,$rootScope,$modal,$routeParams,$location,Lan
 
 
 //******************************************** InviteCtrl ***************************************************************//
-function InviteCtrl($scope,$rootScope,$modal,$routeParams,LanguageFactory,AuthenticationFactory,SchoolFactory){
+function InviteCtrl($scope,$rootScope,$modal,$routeParams,LanguageFactory,AuthenticationFactory,DancerFactory){
     $rootScope.MenuActive = {};
     $rootScope.MenuActive.Page = 'partials/user/view/view_about.html';
     $rootScope.MenuActive.Controller = 'ViewAboutCtrl';
@@ -754,12 +913,12 @@ function InviteCtrl($scope,$rootScope,$modal,$routeParams,LanguageFactory,Authen
     //console.log($rootScope.User);
     $scope.submit=function(bl){
         if(bl){
-            SchoolFactory.InviteAccept($routeParams.hash).success(function(){
+            DancerFactory.InviteAccept($routeParams.hash).success(function(){
                 location="#/main/";
             });
         }
         else{
-            SchoolFactory.InviteReject($routeParams.hash).success(function(){
+            DancerFactory.InviteReject($routeParams.hash).success(function(){
                 location="#/main/";
             });
         }
@@ -774,30 +933,59 @@ function InviteCtrl($scope,$rootScope,$modal,$routeParams,LanguageFactory,Authen
 function registryNewInstructorCtrl($scope,$rootScope,$modal,$routeParams,LanguageFactory,AuthenticationFactory,SchoolFactory,DancerFactory,FileFactory)
 {
     $rootScope.MenuActive = {};
+    $scope.Instructor={};
+    $scope.user={};
+    $scope.hash=$routeParams.hash;
     $rootScope.MenuActive.Page = 'partials/user/view/view_about.html';
     $rootScope.MenuActive.Controller = 'ViewAboutCtrl';
     $rootScope.MenuActive.AboutView = 'active';
-    $rootScope.Page.Menu.BrandTitle = $rootScope.Page.About.Title;
+
+    $scope.checkInvite=function(){
+        DancerFactory.checkInvite($scope.hash).success(function(data){
+            $scope.check=data.children;
+        })}();
     $scope.registryNewInstructorCtrl=function(user)
     {
-        if(user.accept){
+        if($scope.user.accept){
+            console.log(1);
             user.hash=$routeParams.hash;
-            SchoolFactory.CreateNewInstructor(user).success(function(data){
+            DancerFactory.CreateNewInstructor(user).success(function(data){
+                location = "#/";
             });
         }
         else{
-            SchoolFactory.InviteReject($routeParams.hash).success(function() {
-                location = "#/main/";
+            console.log();
+            DancerFactory.InviteReject($routeParams.hash).success(function() {
+                location = "#/";
             });
         }
     };
     $scope.FileUpload = function () {
         var call=function(text)
         {
-            $scope.user.foto=text;
+            $scope.Instructor.foto=text;
             console.log(text);
         };
         FileFactory.FileUpload2("InputName", call,$routeParams.hash);
+    };
+    $scope.PhoneNumberFilter=function(text){
+        console.log(text);
+        text = text.replace(/[^0-9]/g, '');
+        if(text.length>11){text=text.substring(0,11)}
+        switch (text.length){
+            case 1: text = text.replace(/^8/, "7");    break;
+            case 2: text = text.replace(/(\d{1})(\d{1})/, "$1 ($2").replace(/^8/, "7");    break;
+            case 3: text = text.replace(/(\d{1})(\d{2})/, "$1 ($2").replace(/^8/, "7");    break;
+            case 4: text = text.replace(/(\d{1})(\d{3})/, "$1 ($2").replace(/^8/, "7");    break;
+            case 5: text = text.replace(/(\d{1})(\d{3})(\d{1})/, "$1 ($2) $3").replace(/^8/, "7");    break;
+            case 6: text = text.replace(/(\d{1})(\d{3})(\d{2})/, "$1 ($2) $3").replace(/^8/, "7");    break;
+            case 7: text = text.replace(/(\d{1})(\d{3})(\d{3})/, "$1 ($2) $3").replace(/^8/, "7");    break;
+            case 8: text = text.replace(/(\d{1})(\d{3})(\d{3})(\d{1})/, "$1 ($2) $3-$4").replace(/^8/, "7");    break;
+            case 9: text = text.replace(/(\d{1})(\d{3})(\d{3})(\d{2})/, "$1 ($2) $3-$4").replace(/^8/, "7");    break;
+            case 10: text = text.replace(/(\d{1})(\d{3})(\d{3})(\d{3})/, "$1 ($2) $3-$4").replace(/^8/, "7");    break;
+            case 11: text = text.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, "$1 ($2) $3-$4").replace(/^8/, "7");    break;
+        };
+        $scope.Instructor.Phone=text;
     };
 
 }
@@ -1243,8 +1431,6 @@ function LeftInfoPanelCtrl($rootScope,$scope,$modal,LanguageFactory,Authenticati
         }
     };
     $scope.intit();
-
-
 }
 
 function ViewTrainersCtrl($rootScope,$scope,SettingFactory,LanguageFactory,SchoolFactory)
@@ -1299,9 +1485,10 @@ function UpdateDancerCtrl($rootScope,$scope,SettingFactory,LanguageFactory,Schoo
 {
 
 }
-function ViewSubscriptionsCtrl($rootScope,$routeParams,$modal,$scope,SettingFactory,LanguageFactory,DancerFactory,AuthenticationFactory){
+function ViewSubscriptionsCtrl($rootScope,$routeParams,SchoolFactory,$modal,$scope,SettingFactory,LanguageFactory,DancerFactory,AuthenticationFactory){
 
     //$rootScope.Page.Menu.BrandTitle = $rootScope.Page.About.Title;
+    $rootScope.lm=7;
     $rootScope.User= AuthenticationFactory.GetCurrentUser();
     $scope.school={};
     $scope.User = AuthenticationFactory.GetCurrentUser();
@@ -1321,9 +1508,13 @@ function ViewSubscriptionsCtrl($rootScope,$routeParams,$modal,$scope,SettingFact
     };
     $scope.BuySubscription=function(idSub){
         DancerFactory.BuySubscription(idSub).success(function(data){
-
         });
     };
+    $scope.Delete=function(idsub){
+        SchoolFactory.DeleteSubList(idsub).success(function(data){
+            $scope.SubscrList=data.children;
+        });
+    }
     $scope.GetSubscriptions($routeParams.ID);
 }
 function CreateSubscriptionsCtrl($rootScope,$routeParams,$modal,$scope,SettingFactory,LanguageFactory,SchoolFactory,AuthenticationFactory,MyFunctions){
@@ -1370,6 +1561,7 @@ function CreateSubscriptionsCtrl($rootScope,$routeParams,$modal,$scope,SettingFa
             };
             var modal=$modal({scope: $scope, placement:"center", backdrop:false, template: 'partials/user/modal/modal_create_lesInSub.html', show: true});
     };
+
     $scope.ChangeType=function(lis){
         var bl=true;
         console.log($scope.startDate1);
@@ -1385,6 +1577,7 @@ function CreateSubscriptionsCtrl($rootScope,$routeParams,$modal,$scope,SettingFa
             $scope.Sub.TypeLessonId = "";
         }
     };
+
     $scope.Update=function(lis){
         console.log(lis);
         $scope.submit=function(lis) {
@@ -1531,29 +1724,38 @@ function ScheduleCtrl($rootScope,$routeParams,$scope,SchoolFactory,LanguageFacto
 
     $scope.GetSubscriptionLIST($routeParams.ID);
 }
-function ViewUserSubscriptionCtrl($rootScope,$routeParams,$scope,LanguageFactory,DancerFactory,InstructorFactory,AuthenticationFactory)
+function ViewUserSubscriptionCtrl($rootScope,$routeParams,$compile,
+                                  $scope,$http,LanguageFactory,DancerFactory,
+                                  InstructorFactory,AuthenticationFactory,
+                                  GoogleCalendarFactory,ErrorLogFactory)
 {
     $scope.gapi=gapi;
     $scope.lang=LanguageFactory.GetCurrentLanguage();
     $scope.User = AuthenticationFactory.GetCurrentUser();
     $scope.IdInstructor=$scope.User.IdInstructor;
-    console.log($scope.IdInstructor);
     $scope.Sole=$routeParams.Sole;
     $scope.GetUserSubscription=function(sole){
-
         DancerFactory.GetUserSub(sole).success(function(data)
         {
             $scope.Subscr=data.children;
-            console.log($scope.Subscr.QRString);
             $scope.Listtlis=$scope.Subscr.Listtlis;
-            console.log($scope.Subscr.JLID===undefined);
-            console.log($scope.Subscr.SubLIST===undefined);
-            console.log($scope.Subscr.subId);
+            var el=angular.element("<qr text='Subscr.QRString' type-number='0'"+
+            "correction-level='' size='300' input-mode='' image='true'></qr>")
+
+            $scope.QTest=$compile(el)($scope);
+            if($scope.Subscr.JLID===undefined) {
+
+                $("#QTest").html($scope.QTest);
+            }
+            else {
+
+                $("#QTest1").html($scope.QTest);
+            }
             DancerFactory.GetJLDays($scope.Subscr.subId).success(function(data){
-              $scope.EventsArray=data.children;
+                $scope.EventsArray=data.children;
+                console.log($scope.EventsArray);
             })
         });
-
     };
     $scope.CheckSub=function(idsub){
         InstructorFactory.CheсkUser(idsub).success(function(data){
@@ -1562,18 +1764,123 @@ function ViewUserSubscriptionCtrl($rootScope,$routeParams,$scope,LanguageFactory
     };
     $scope.ImportInGCal=function()
     {
+        //$rootScope.$emit("test", "fghfghdf");
+       //$scope.api_key="AIzaSyBBcA_ertE9wwJeLhgYXSsYFGfioRFBb-A";
         var config = {
-            'client_id': '86505345915-8tii7mbgjc3ohns72lf8nng7hm81b4uu.apps.googleusercontent.com',
-            'scope': 'https://www.googleapis.com/auth/urlshortener'
+            'client_id': '86505345915-u3lp7110a2kul7i4p675790gsvn8ik4u.apps.googleusercontent.com',
+            'scope':[
+                'https://www.googleapis.com/auth/calendar'
+            ]
         };
-        //$scope.auth=
-        console.log($scope.gapi["auth"]);
+        $scope.nameCalendar="Dances";
+        console.log($scope.gapi);
         var a=$scope.gapi.auth.authorize(config, function() {
+
             console.log('login complete');
-            console.log($scope.gapi.auth.getToken());
-        });
+            $scope.token=$scope.gapi.auth.getToken();
+            $scope.acct=$scope.token.access_token;
+            console.log($scope.token);
+            //$scope.GoogleCalendarFactoryAddEvents($scope.acct,$scope.apikey);
+            GoogleCalendarFactory.AddEventsInGC1($scope.acct).success(function(data){
+                $scope.GetResp(data);
+            });
+        })
     };
-    $scope.ImportInGCal();
+    $scope.GetResp=function(data){
+        $scope.list=data.items;
+        console.log($scope.list);
+        $scope.f=0;
+        for(var i=0;i<$scope.list.length;i++) {
+            console.log("for");
+            if($scope.list[i].summary==$scope.nameCalendar) {
+                console.log("if");
+                $scope.f=1;
+                $scope.CalendarId=$scope.list[i].id;
+                console.log($scope.CalendarId);
+                $scope.SCSAddCal($scope.CalendarId);
+                break;
+            }
+        }
+        if($scope.f==0) {
+            console.log("0");
+            var sCalendar = {};
+            sCalendar.summary = $scope.nameCalendar;
+            GoogleCalendarFactory.CreateCalendar($scope.acct, sCalendar).success(function (data) {
+                console.log(data);
+                $scope.SCSAddCal(data.id);
+                //kind: "calendar#calendar", etag: ""W5gNHRkGKKmLTCqa9naExtRtPaA/d0YgZNoh1qKFRDLxy84LQhtngWw"", id: "lriovllevqcitdtv0n9s60ggeo@group.calendar.google.com", summary: "Dances"
+            })
+                .error(function (data, status, headers, config) {
+                    console.log(data);
+                    console.log(status);
+                    console.log(headers);
+                    console.log(config);
+                });
+        }
+
+    };
+    $scope.SCSAddCal=function(calendarId){
+        if($scope.Subscr.JLID===undefined)
+        {
+            $scope.AddEvents(calendarId);
+        }
+        else{
+            $scope.AddEvent(calendarId);
+        }
+    };
+    $scope.AddEvent=function(calendarId){
+        $scope.event = {};
+        $scope.event.end = {};
+        $scope.event.start = {};
+        $scope.event.end.dateTime = GoogleCalendarFactory.ISODateString(new Date($scope.Subscr.DateEndSub));
+        $scope.event.start.dateTime = GoogleCalendarFactory.ISODateString(new Date($scope.Subscr.DateGEnSub));
+        $scope.event.location=$scope.Subscr.Country+", "+$scope.Subscr.City+", "+$scope.Subscr.Street+", "
+        +$scope.Subscr.Building+", "+$scope.Subscr.RoomNumber;
+        $scope.event.summary= "Занятие танцами.";
+        $scope.event.description="Занятие танцами. \n Школа: "+$scope.Subscr.SchoolName+
+        ". \n Тренер: "+$scope.Subscr.LastName+ " "+$scope.Subscr.FirstName+
+        " "+ $scope.Subscr.Patronymic;
+        console.log($scope.event);
+        GoogleCalendarFactory.AddEventsInGC($scope.event,calendarId,
+            $scope.SuceesImportEvent,$scope.acct).success(function(data){
+                console.log(data);
+            })
+            .error(function(data, status, headers, config){
+                console.log(data);
+                console.log(status);
+                console.log(headers);
+                console.log(config);
+            });
+    };
+    $scope.AddEvents=function(calendarId){
+        $scope.events = {};
+        for (var j = 0; j<$scope.EventsArray.length; j++) {
+            var event = {};
+            event.end = {};
+            event.start = {};
+            var elem=$scope.EventsArray[j];
+            console.log(elem);
+            event.end.dateTime = GoogleCalendarFactory.ISODateString(new Date(elem.DateEnd));
+            event.start.dateTime = GoogleCalendarFactory.ISODateString(new Date(elem.DateBegin));
+            event.location=elem.Country+", "+elem.City+", "
+            +elem.Street+", "
+            +elem.Building+", "+elem.RoomNumber;
+            event.summary= "Занятие танцами.";
+            event.description="Занятие танцами.<br> Школа: "+elem.School.Name+
+            ". <br> Тренер: "+elem.Instructor.LastName+ " "+elem.Instructor.FirstName+
+            " "+ elem.Instructor.Patronymic;
+            $scope.events[j] = event;
+            GoogleCalendarFactory.AddEventsInGC(event,calendarId,
+                $scope.SuceesImportEvent,$scope.acct);
+        }
+        //console.log($scope.events);
+        //GoogleCalendarFactory.AddEventsInGC($scope.events,calendarId,
+            //$scope.api_key,$scope.SuceesImportEvent,$scope.acct);
+    };
+    $scope.SuceesImportEvent=function(data){
+        console.log(data);
+        $scope.event={};
+    };
     $scope.GetUserSubscription($scope.Sole);
 }
 
@@ -1602,7 +1909,9 @@ function NavBarCtrl($scope,$routeParams,$rootScope,$modal,LanguageFactory,Authen
     $scope.Auth=function(){
 
     };
-
+    $rootScope.$on("test", function(a,b){
+        //console.log(a);
+    });
     $scope.SetLanguage=function(lang){
         $scope.lang=lang;
         $rootScope.siteLang=lang;

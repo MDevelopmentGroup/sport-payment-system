@@ -15,7 +15,6 @@
 	<Route Url="/UpdateRoom/"	 			Method="POST" 		Call="SPD.Logic.Room:UpdateRoom"/>
 	
 	<!--Instructor-->
-	<Route Url="/CreateInstructor/" 		Method="POST" 		Call="SPD.Logic.Instructor:CreateInstructor"/>	
 	<Route Url="/GetInstructor/:ID" 		Method="GET" 		Call="SPD.Logic.Instructor:GetInstructor"/>
 	<Route Url="/SetInstructorRate/" 		Method="POST" 		Call="SPD.Logic.Instructor:SetInstructorRate"/>
 	<!--Instructor-->
@@ -24,17 +23,18 @@
 	<Route Url="/CreateJurnall/" 				Method="POST" 		Call="SPD.Logic.School:CreateJurnall"/>
 	<Route Url="/CreateTimeTable/" 				Method="POST" 		Call="SPD.Logic.School:CreateTimeTable"/>
 	<Route Url="/AddTypeLesson/"				Method="POST"		Call="SPD.Logic.School:AddTypeLesson"/>
-	<Route Url="/InviteInstructor/:Email"		Method="GET"		Call="SPD.Logic.School:InviteInstructor"/>
-	<Route Url="/RemoveFromSchool/:ID"			Method="GET"		Call="SPD.Logic.School:RemoveFromSchool"/>
+	<Route Url="/InviteInstructor/:Email"			Method="GET"		Call="SPD.Logic.School:InviteInstructor"/>
+	<Route Url="/RemoveFromSchool/:ID"				Method="GET"		Call="SPD.Logic.School:RemoveFromSchool"/>
+	<Route Url="/UpdateTypeLeesson/"				Method="POST"		Call="SPD.Logic.TypeLesson:Update"/>
 	
 	<!--School-->
 	
 	<!--
 		<<<semester
 	-->
-	<Route Url="/GetBeginSemester/"			Method="GET"		Call="SPD.Semester:GetBeginSemesterJSON"/>
-	<Route Url="/GetSemesterList/"			Method="GET"		Call="SPD.Logic.Semester:GetSemesterList"/>
-	<Route Url="/AddSemester/"				Method="POST"		Call="SPD.Semester:AddSemester"/>
+	<Route Url="/GetBeginSemester/"					Method="GET"		Call="SPD.Semester:GetBeginSemesterJSON"/>
+	<Route Url="/GetSemesterList/"					Method="GET"		Call="SPD.Logic.Semester:GetSemesterList"/>
+	<Route Url="/AddSemester/"						Method="POST"		Call="SPD.Semester:AddSemester"/>
 	
 	<!--
 		semester>>>
@@ -42,27 +42,27 @@
 	
 	
 	
-	<Route Url="/AddLessonInTable/"				Method="POST"		Call="SPD.Logic.TimeTableLessons:Create"/>
-	<Route Url="/UpdateLessonInTable/:ID"		Method="POST"		Call="SPD.Logic.TimeTableLessons:Update"/>
-	<Route Url="/RemoveLessonFromTable/:ID"		Method="DELETE"		Call="SPD.Logic.TimeTableLessons:Delete"/>
-	<Route Url="/UpdateLessonTable/"			Method="POST"		Call="SPD.Logic.TimeTableLessons:UpdateLessonTable"/>	
+	<Route Url="/AddLessonInTable/"					Method="POST"		Call="SPD.Logic.TimeTableLessons:Create"/>
+	<Route Url="/UpdateLessonInTable/:ID"			Method="POST"		Call="SPD.Logic.TimeTableLessons:Update"/>
+	<Route Url="/RemoveLessonFromTable/:ID"			Method="DELETE"		Call="SPD.Logic.TimeTableLessons:Delete"/>
+	<Route Url="/UpdateLessonTable/"				Method="POST"		Call="SPD.Logic.TimeTableLessons:UpdateLessonTable"/>	
 	
 	
-	<Route Url="/GetLastActualPrice/:ID"		Method="GET"		Call="SPD.Logic.JournalLesson:JSONGetLastActualPrice"/>
-	<Route Url="/UpdateJournallLesson/"			Method="POST"		Call="SPD.Logic.JournalLesson:Update"/>
-	<Route Url="/UpdateJournallLessons/"		Method="POST"		Call="SPD.Logic.JournalLesson:UpdateJournallLessons"/>
+	<Route Url="/GetLastActualPrice/:ID"			Method="GET"		Call="SPD.Logic.JournalLesson:JSONGetLastActualPrice"/>
+	<Route Url="/UpdateJournallLesson/"				Method="POST"		Call="SPD.Logic.JournalLesson:Update"/>
+	<Route Url="/UpdateJournallLessons/"			Method="POST"		Call="SPD.Logic.JournalLesson:UpdateJournallLessons"/>
 	
 	<!--Subscription-->
-	<Route Url="/AddLessInSubscription/:ID"		Method="POST"		Call="SPD.Logic.LessonInSubscription:Create"/>
-	<Route Url="/AddLessInSubscription/"		Method="POST"		Call="SPD.Logic.LessonInSubscription:Create"/>
+	<Route Url="/AddLessInSubscription/:id"			Method="POST"		Call="SPD.Logic.LessonInSubscription:Create"/>
+	<Route Url="/AddLessInSubscription/"			Method="POST"		Call="SPD.Logic.LessonInSubscription:Create"/>
 	<Route Url="/DeleteLessFromSubscription/:ID"	Method="DELETE"		Call="SPD.Logic.LessonInSubscription:Delete"/>
-	<Route Url="/GetLessonWithoutSub/"			Method="GET"		Call="SPD.Logic.LessonInSubscription:GetLessonWithoutSub"/>
-	<Route Url="/UpdateLessInSubscription/"		Method="POST"		Call="SPD.Logic.LessonInSubscription:Update"/>
+	<Route Url="/GetLessonWithoutSub/"				Method="GET"		Call="SPD.Logic.LessonInSubscription:GetLessonWithoutSub"/>
+	<Route Url="/UpdateLessInSubscription/"			Method="POST"		Call="SPD.Logic.LessonInSubscription:Update"/>
 	<Route Url="/UpdateLessInSubscriptionLIST/:ID"	Method="POST"	Call="SPD.Logic.LessonInSubscription:Update"/>
 	
-	<Route Url="/CreateSubscription/"			Method="POST"		Call="SPD.Logic.SubscriptionList:Create"/>
-	<Route Url="/UpdateSubscription/"			Method="POST"		Call="SPD.Logic.SubscriptionList:Update"/>
-	
+	<Route Url="/CreateSubscription/"				Method="POST"		Call="SPD.Logic.SubscriptionList:Create"/>
+	<Route Url="/UpdateSubscription/"				Method="POST"		Call="SPD.Logic.SubscriptionList:Update"/>
+	<Route Url="/DeleteSubList/:ID"					Method="DELETE"		Call="SPD.Logic.SubscriptionList:Delete"/>
 	<!--Subscription-->
 	
 	<!---->
@@ -71,11 +71,152 @@
 ]]></Data>
 </XData>
 
-<UDLText name="T">
-<Content><![CDATA[
-/// todo реализовать dispatch request так чтобы только школы могли получать данные (причём только к своим)
-
-]]></Content>
-</UDLText>
+<Method name="DispatchRequest">
+<Description>
+todo реализовать dispatch request так чтобы только школы могли получать данные (причём только к своим)
+Dispatch a REST request according to URL and Method</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>pUrl:%String,pMethod:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	/*
+	try{
+	$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
+		set hash=obj.hash
+		set userID=obj.UserID
+		///проверка всех сессий на время жизни
+		&sql(declare s1 cursor for select id,DateTime into:id,:DateTime from Auth.SessionData)
+		&sql(open s1)
+		for {
+			&sql(fetch s1)
+			quit:(SQLCODE '= 0)
+			if (##class(Auth.Session).DateDiff("second",$zdt($h,3),DateTime)<0)
+			{
+				do ##class(Auth.SessionData).%DeleteId(id)
+				
+			}
+		}
+		&sql(close s1)
+		set hIP=%request.GetCgiEnv("REMOTE_ADDR")
+		set hUserAgent=%request.GetCgiEnv("HTTP_USER_AGENT")
+		if ('##class(Auth.Session).CheckSession(userID,hash, hIP, hUserAgent))
+		{
+			///подмена кук. Либо сменился браузер, ip
+			w "{""children"":{"_
+			"""success"":"""_1_
+			""",""hash"":"""_""_
+			""",""userId"":"""_""_
+			""",""SurName"":"""_""_
+			""",""LastName"":"""_""_
+			""",""FirstName"":"""_""_
+			"""}}"
+		}
+		
+		
+	}
+	catch ex{
+		set st=ex.AsStatus()
+	}
+	
+	*/
+	
+    #dim tSC As %Status = $$$OK
+    #dim e As %Exception.AbstractException
+    
+    #dim tMatcher As %Regex.Matcher
+    
+    #dim tArgs,tClass,tMatchUrl,tMapEntry,tRegEx,tTarget,tAccess As %String
+    #dim tI,tIndex As %Integer
+    #dim tResourceMatched As %Boolean
+    #dim tMethodMatched As %Boolean
+    
+    Try {
+        #; Check that the effective user ( could be unknown user ) can access this resource
+        Set tAccess=$SYSTEM.Security.Check($Piece($zu(90,21,$namespace),"^",4))
+        If tAccess'["READ,WRITE"
+        {
+            #; Don't want the session token
+            Set %response.OutputSessionToken=0
+            
+            #; Set the Http Status
+            Set %response.Status="401 Unauthorized"
+        
+            #; Write out the header
+            Do %response.WriteHTTPHeader()
+            
+            #; Done
+            Quit
+        }
+        
+        Set (tResourceMatched,tMethodMatched)=0
+        
+        #; Walk the dispatch map in collation order of defintion
+        For tIndex=1:1 {
+            
+            #; Get the next map entry
+            Set tMapEntry=..DispatchMap(tIndex) If tMapEntry="" Quit
+             
+            #; Pick out the RegEx
+            Set tRegEx=$List(tMapEntry,1)
+            
+            #; Create a matcher
+            Set tMatcher=##class(%Regex.Matcher).%New(tRegEx)
+        
+            #; Extract the match url from the application name
+            Set tMatchUrl="/"_$Extract(pUrl,$Length(%request.Application)+1,*)
+            
+            #; Test each regular expression in turn, extracting the arguments,
+            #; dispatching to the named method  
+            If tMatcher.Match(tMatchUrl) {
+                
+                #; We have matched the resource
+                Set tResourceMatched=1
+                
+                #; Now check method name
+                If pMethod'=$List(tMapEntry,2) Continue
+                
+                Set tTarget=$List(tMapEntry,3)
+                
+                #; We have matched a method
+                Set tMethodMatched=1
+                
+                #; Got a match, marshall the arguments
+                If tMatcher.GroupCount {
+                    For tI=1:1:tMatcher.GroupCount Set tArgs(tI)=tMatcher.Group(tI)
+                    Set tArgs=tI
+                } else {
+                    Set tArgs=0
+                }
+                
+                #; Check for optional ClassName prefix
+                Set tClass=$classname()
+                If tTarget[":" Set tClass=$Piece(tTarget,":"),tTarget=$Piece(tTarget,":",2)
+                
+                #; Dispatch
+                Set tSC=$zobjclassmethod(tClass,tTarget,tArgs...)
+                If $$$ISERR(tSC) Do ..Http500(##class(%Exception.StatusException).CreateFromStatus(tSC))
+                
+                #; Don't want multiple matches
+                Quit
+            }
+        }
+        
+        #; Didn't have a match for the resource, report not found
+        If tResourceMatched=0 Set tSC=..Http404() Quit
+        
+        #; Had a match for resource but method not matched
+        If tMethodMatched=0 Set tSC=..Http405() Quit
+            
+    } Catch (e) {
+        
+        #; Issue a '500'
+        Do ..Http500(e)
+    }
+    
+    If ..#UseSession=0 Set %session.EndSession=1
+    
+    Quit tSC
+]]></Implementation>
+</Method>
 </Class>
 </Export>

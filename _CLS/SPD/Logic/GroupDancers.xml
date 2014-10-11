@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SPD.Logic.GroupDancers">
+<TimeCreated>63435,41318.117915</TimeCreated>
+
+<Method name="CheckComplite">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	set bl=0
+	&sql(select count(id)
+			into :Count
+			FROM SPD.TempGroup 
+			where JournallLesson->id=:id)
+	//w "CountM="_CountM_"      CountW="_CountW,!
+	set limit=##class(SPD.JournalLesson).%OpenId(id).RoomDance.MaxCountDancers
+	if ((limit+1)<Count)
+	{set bl=1}
+	
+	ret bl
+]]></Implementation>
+</Method>
+</Class>
+</Export>

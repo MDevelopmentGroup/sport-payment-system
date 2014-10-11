@@ -1,45 +1,48 @@
-    <div class="WELL">
-        <div class="col-lg-12">
-            <div class="row">
-                    <ul class="nav nav-pills nav-stacked">
-                        <li class="active" ng-if="User.success">
-                            <a href="#/Balance" ng-if="!IdSchool">
-                                <span class="badge pull-right">
-                                    {{Balance}}
-                                </span>
-                                Текущий баланс
-                            </a>
-                        </li>
-                        <li ng-if="IdSchool">
-                            <a href="#/MySchool">{{Page.LeftMenu.MySchool}}</a>
-                        </li>
-                        <li ng-if="User" >
-                            <a ng-if="!IdSchool" href="#/PrivateLessons">{{Page.navbar.PrivateLessons}}</a>
-                        </li>
-                        <li>
-                            <a href="#/LessonTypes">Типы занятий</a>
-                        </li>
-                        <li>
-                            <a href="#/T">Период</a>
-                        </li>
-                        <li>
-                            <a href="#/LessonInTimeTable/{{IdSchool}}">Расписание</a>
-                        </li>
-                        <li>
-                            <a href="#/JournallLessons/{{IdSchool}}">Журнал занятий</a>
-                        </li>
-                        <li>
-                            <a href="#/IIS">Инструкторы</a>
-                        </li>
-                        <li ng-if="User">
-                            <a href="#/LK">{{Page.navbar.LK}}</a>
-                        </li>
-                        <li ng-if="!User.success">
-                            <a ng-click="reg_Dancer()">
-                                Зарегистрироваться
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+<div class="WELL">
+    <div class="col-lg-12">
+        <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active" ng-if="User.success">
+                    <a href="#/Balance" ng-if="!IdSchool">
+                        <span class="badge pull-right">
+                            {{Balance}}
+                        </span>
+                        Текущий баланс:
+                    </a>
+                </li>
+                <li ng-if="IdSchool" class="{{lm==0|NavDancer}}">
+                    <a href="#/MySchool">{{Page.LeftMenu.MySchool}}</a>
+                </li>
+                <li ng-if="User"  class="{{lm==1|NavDancer}}">
+                    <a ng-if="!IdSchool" href="#/PrivateLessons">{{Page.navbar.PrivateLessons}}</a>
+                </li>
+                <li class="{{lm==2|NavDancer}}">
+                    <a href="#/LessonTypes">Типы занятий</a>
+                </li>
+                <li  class="{{lm==3|NavDancer}}">
+                    <a href="#/Semester">Период</a>
+                </li>
+                <li class="{{lm==4|NavDancer}}">
+                    <a href="#/LessonInTimeTable/{{IdSchool}}">Расписание</a>
+                </li>
+                <li class="{{lm==5|NavDancer}}">
+                    <a href="#/JournallLessons/{{IdSchool}}">Журнал занятий</a>
+                </li>
+                <li class="{{lm==6|NavDancer}}">
+                    <a href="#/IIS">Инструкторы</a>
+                </li>
+                <li class="{{lm==7|NavDancer}}">
+                    <a href="#/SubscriptionList/55">Абонементы</a>
+                </li>
+                <li ng-if="0"  class="{{lm==8|NavDancer}}">
+                    <a href="#/LK">{{Page.navbar.LK}}</a>
+                </li>
+                <li ng-if="0"  class="{{lm=9|NavDancer}}">
+                    <a ng-click="reg_Dancer()">
+                        Зарегистрироваться
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
+</div>
