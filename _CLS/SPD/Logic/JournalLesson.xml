@@ -488,6 +488,10 @@ ClassMethod GetLastActualPrice(IDTypeLesson) As %String
 <FormalSpec>id,lt</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	d %response.SetHeader("Access-Control-Allow-Origin","*") 
+	d %response.SetHeader("Access-Control-Allow-Methods","GET, PUT, POST, DELETE, OPTIONS") 
+	d %response.SetHeader("Access-Control-Max-Age","1000") 
+	d %response.SetHeader("Access-Control-Allow-Headers","Content-Type, Authorization, X-Requested-With")
 	set st=$$$OK
 	try
 	{
@@ -591,6 +595,90 @@ ClassMethod GetLastActualPrice(IDTypeLesson) As %String
 		set st=er.AsStatus()
 	}
 	
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GenerateJLByTS">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>Idlessonintable,starttime,endtime</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set ^Days("Sut")=0 set ^Days("Mon")=1 set ^Days("Tue")=2 set ^Days("Wed")=3 set ^Days("Thu")=4 set ^Days("Fri")=5 set ^Days("Sat")=6
+		set bdate=$zdth(starttime,3)
+		set day=^Days($list($listfromstring($zdt(bdate,11)," "),1))
+		//w "day="_$list($listfromstring($zdt(bdate,11)," "),1),!
+		set edate=$zdth(endtime,3)
+		set enddate=edate+0
+		//w "sub "_(edate-bdate),!
+		set count=(edate-bdate)/7
+		
+		set lft=##class(SPD.TimeTableLessons).%OpenId(Idlessonintable)
+		if ((lft.Day-day)>-1)
+		{
+			set addorefday=lft.Day-day
+		}
+		else{
+			set addorefday=7+(lft.Day-day)
+		}
+		//w "count="_count,!
+			//w "bdate="_$zdt(bdate,3),!
+			//w "edate="_$zdt(edate,3),!
+			//w count,!
+			set TimeActualEnd=$list($listfromstring(edate,","),2)
+			set TimeBegin=$list($listfromstring(bdate,","),2)
+			//w "($zdatetimeh(DateActualEnd,3,1)-datebeg)/7="_count,!
+			set timebeg=lft.TimeBegin
+			set timeend=lft.TimeEnd
+			set datebeg=bdate+addorefday
+			//w "datebeg="_datebeg,!
+			set dateend=datebeg
+			if (count>=1){
+				set i=0
+				while ((i<count)&&(i<20)){
+					set st=##class(SPD.Logic.JournalLesson).CreateJL(idlessontable, school.%Id(),
+					lft.Instructor.%Id(), ((datebeg)_","_timebeg), ((dateend)_","_timeend), idSem)
+					//w $zdt((datebeg)_","_timebeg,3)_" for",!
+					//w $zdt((dateend)_","_timeend,3)_" for",!
+					set datebeg=datebeg+7
+					set dateend=dateend+7
+					//w "datebeg+7="_datebeg,!
+					//w "enddate="_enddate,!
+					set i=i+1
+					//
+				}
+			}
+			//elseif (TimeActualEnd<$list($listfromstring($h,","),2)){
+			
+			if ((datebeg+0)<(enddate+0)){
+					//w $zdt((datebeg)_","_timebeg,3)_" <",!
+					//w $zdt((dateend)_","_timeend,3)_" <",!
+					//set journalllesson.DateBegin=$zdt((datebeg)_","_timebeg,3)
+					//set journalllesson.DateEnd=$zdt((dateend)_","_timeend,3)
+					set st=##class(SPD.Logic.JournalLesson).CreateJL(idlessontable, school.%Id(), 
+					lft.Instructor.%Id(), ((datebeg)_","_timebeg), ((dateend)_","_timeend), idSem)
+					set datebeg=datebeg+7
+					set dateend=dateend+7
+			}
+			elseif ((datebeg+0)=(enddate+0)){
+				//w "==",!
+				//w "TimeActualEnd="_TimeActualEnd,!
+				//w "Timebeg="_timebeg,!
+				if (TimeActualEnd>timebeg)
+				{
+					//w $zdt((datebeg)_","_timebeg,3)_" =",!
+					//w $zdt((dateend)_","_timeend,3)_" =",!
+					set st=##class(SPD.Logic.JournalLesson).CreateJL(idlessontable, school.%Id(), 
+					lft.Instructor.%Id(), ((datebeg)_","_timebeg), ((dateend)_","_timeend), idSem)
+				}
+			}
+	}
+	catch er{
+		set st=er.AsStatus()
+	}
 	ret st
 ]]></Implementation>
 </Method>

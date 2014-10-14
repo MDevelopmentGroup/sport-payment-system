@@ -41,12 +41,12 @@
 	-->
 	
 	
-	
+	<!--LessonsInTable-->
 	<Route Url="/AddLessonInTable/"					Method="POST"		Call="SPD.Logic.TimeTableLessons:Create"/>
 	<Route Url="/UpdateLessonInTable/:ID"			Method="POST"		Call="SPD.Logic.TimeTableLessons:Update"/>
 	<Route Url="/RemoveLessonFromTable/:ID"			Method="DELETE"		Call="SPD.Logic.TimeTableLessons:Delete"/>
 	<Route Url="/UpdateLessonTable/"				Method="POST"		Call="SPD.Logic.TimeTableLessons:UpdateLessonTable"/>	
-	
+	<!--LessonsInTable-->
 	
 	<Route Url="/GetLastActualPrice/:ID"			Method="GET"		Call="SPD.Logic.JournalLesson:JSONGetLastActualPrice"/>
 	<Route Url="/UpdateJournallLesson/"				Method="POST"		Call="SPD.Logic.JournalLesson:Update"/>

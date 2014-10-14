@@ -42,12 +42,12 @@
 <Relationship>1</Relationship>
 </Property>
 
-<Property name="NumbAvialableLesson">
-<Type>SPD.AvialableLessons</Type>
-<Cardinality>many</Cardinality>
-<Inverse>SubscriptionUser</Inverse>
-<Relationship>1</Relationship>
-</Property>
+<UDLText name="T">
+<Content><![CDATA[
+// Relationship NumbAvialableLesson As SPD.AvialableLessons [ Cardinality = many, Inverse = SubscriptionUser ];
+
+]]></Content>
+</UDLText>
 
 <Property name="TLIS">
 <Type>SPD.TableLessinSubscr</Type>

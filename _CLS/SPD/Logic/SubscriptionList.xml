@@ -177,6 +177,10 @@
 <FormalSpec>id</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	d %response.SetHeader("Access-Control-Allow-Origin","*") 
+	d %response.SetHeader("Access-Control-Allow-Methods","GET, PUT, POST, DELETE, OPTIONS") 
+	d %response.SetHeader("Access-Control-Max-Age","1000") 
+	d %response.SetHeader("Access-Control-Allow-Headers","Content-Type, Authorization, X-Requested-With")
 	set st=$$$OK
 	try{
 		

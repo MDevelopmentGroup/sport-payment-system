@@ -23,13 +23,6 @@ Id абонемента</Description>
 <Relationship>1</Relationship>
 </Property>
 
-<Property name="NumbAvialebleLessons">
-<Type>SPD.AvialableLessons</Type>
-<Cardinality>many</Cardinality>
-<Inverse>LessonInSub</Inverse>
-<Relationship>1</Relationship>
-</Property>
-
 <Property name="LessonType">
 <Type>SPD.TypeLesson</Type>
 <Cardinality>one</Cardinality>
@@ -45,8 +38,6 @@ Id абонемента</Description>
 <IndexLocation>^SPD.LessonsInSubscriptionI</IndexLocation>
 <StreamLocation>^SPD.LessonsInSubscriptionS</StreamLocation>
 <Data name="LessonsInSubscriptionDefaultData">
-<Structure>listnode</Structure>
-<Subscript/>
 <Value name="1">
 <Value>%%CLASSNAME</Value>
 </Value>
@@ -61,6 +52,9 @@ Id абонемента</Description>
 </Value>
 <Value name="5">
 <Value>LessonType</Value>
+</Value>
+<Value name="6">
+<Value>NumbAvialebleLessons</Value>
 </Value>
 </Data>
 </Storage>

@@ -55,9 +55,11 @@
 		set lesson.TypeLesson=##class(SPD.TypeLesson).%OpenId(obj.TypeLessonId)
 		set lesson.TimeBegin=$ztimeh(obj.TimeBegin)
 		set lesson.TimeEnd=$ztimeh(obj.TimeEnd)
+		set lesson.Show=obj.Show
 		set st=lesson.%Save()
 	}
-	catch ex{	set st=ex.AsStatus()}
+	catch ex{	
+		set st=ex.AsStatus()}
 	ret st
 ]]></Implementation>
 </Method>
@@ -68,10 +70,7 @@
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set st=$$$OK
-	try{		
-		
-		
-		
+	try{
 		
 	}
 	catch ex{	set st=ex}	

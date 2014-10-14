@@ -47,6 +47,11 @@ todo проверку на дни</Description>
 <InitialExpression>0</InitialExpression>
 </Property>
 
+<Property name="Show">
+<Type>%Boolean</Type>
+<InitialExpression>0</InitialExpression>
+</Property>
+
 <UDLText name="T">
 <Content><![CDATA[
 // Relationship Semester As SPD.Semester [ Cardinality = many, Inverse = TimeTable ];
@@ -127,6 +132,9 @@ todo проверку на дни</Description>
 </Value>
 <Value name="22">
 <Value>Limit</Value>
+</Value>
+<Value name="23">
+<Value>Show</Value>
 </Value>
 </Data>
 </Storage>

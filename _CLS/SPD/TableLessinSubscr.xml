@@ -80,7 +80,6 @@
 	try{
 		set sub=##class(SPD.Subscription).%OpenId(idsub)
 		set idsublist=sub.SubList.%Id()
-		w idsublist,!
 		&sql(declare tt  cursor for
 		select id into :idlis
 		from SPD.LessonsInSubscription
@@ -89,7 +88,6 @@
 		&sql(open tt)
 		for
 		{
-			
 			&sql(fetch tt)
 			w idlis,!
 			quit:SQLCODE'=0
@@ -99,6 +97,7 @@
 			s tlis.Type=1
 			set tlis.TypeLesson=lis.LessonType
 			set st=tlis.%Save()
+
 		}
 		&sql(close tt)
 	}
@@ -126,7 +125,7 @@
 		s type=lis.LessonType		
 		&sql(select count(id) into :scount 
 		from SPD.TempGroup 
-		where UserSubscription=:sub and JournallLesson->LessonInTable->TypeLesson=:type)
+		where UserSubscription=:sub and JournallLesson->LessonInTable->TypeLesson=:TypeLesson)
 			set count=lis.numb-scount
 		}
 		elseif (Type=0)
@@ -134,7 +133,7 @@
 			set bcount=1
 			&sql(select count(id) into :scount 
 			from SPD.TempGroup 
-			where UserSubscription=:sub and JournallLesson->LessonInTable->TypeLesson=:type)
+			where UserSubscription=:sub and JournallLesson->LessonInTable->TypeLesson=:TypeLesson)
 			if (scount>0)
 			set count=0
 		}

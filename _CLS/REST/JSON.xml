@@ -380,7 +380,6 @@
 			set subd.SubList=sub
 			s cost=sub.cost s sd=sub.ShortDescription			
 			set subd.Transaction=transaction
-				
 			set subd.Sole=##class(Auth.Session).Encode(##class(SPD.Logic.Subscription).GenerateSole(cost_""_idschool_""_InvId))
 			set subd.QRString="http://"_url_"/dances/index.html#/Subscription/"_subd.Sole
 			set st=subd.%Save()
@@ -398,7 +397,6 @@
 			
 			set subd.Transaction=transaction
 			s cost=jlcost s sd=jlso.LessonInTable.ShortDescription
-					
 			set subd.Sole=##class(Auth.Session).Encode(##class(SPD.Logic.Subscription).GenerateSole(cost_""_idschool_""_InvId))
 			set subd.QRString="http://"_url_"/dances/index.html#/Subscription/"_subd.Sole
 			set subd.JournallLesson=jlso

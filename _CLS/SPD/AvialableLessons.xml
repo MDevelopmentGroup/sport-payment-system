@@ -6,14 +6,14 @@
 
 <Property name="LessonInSub">
 <Type>SPD.LessonsInSubscription</Type>
-<Cardinality>one</Cardinality>
+<Cardinality>many</Cardinality>
 <Inverse>NumbAvialebleLessons</Inverse>
 <Relationship>1</Relationship>
 </Property>
 
 <Property name="SubscriptionUser">
 <Type>SPD.Subscription</Type>
-<Cardinality>one</Cardinality>
+<Cardinality>many</Cardinality>
 <Inverse>NumbAvialableLesson</Inverse>
 <Relationship>1</Relationship>
 </Property>
@@ -40,7 +40,6 @@ todo как передать id пдописки и lis в вычисляемо�
 	set lis=##class(SPD.LessonsInSubscription).%OpenId(AvLns.SubscriptionUser.%Id())
 	set type=lis.LessonType.%Id()
 	set sb=##class(SPD.Subscription).%OpenId(sub)
-	// по идее считает количество посещений
 	&sql(select count(UserSubscription) into :countm
 	from SPD.TempGroup
 	where UserSubscription=:sub and Visited=1 and JournallLesson->LessonInTable->TypeLesson->id=:type)

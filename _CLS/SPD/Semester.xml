@@ -82,6 +82,7 @@
 		set sm.name=$zconvert(obj.name,"I","UTF8")
 		set sm.DateEnd=$zdt($zdth(obj.sharedDate_" "_obj.sharedTime,4),3)
 		set sm.School=##class(Auth.Session).GetCurrentSchool()
+		set idschool=##class(Auth.Session).GetCurrentSchool().%Id()
 		set st=sm.%Save()
 		
 		for i=1:1:obj.ListLessonTypes.Size
@@ -92,8 +93,19 @@
 			set price.Semester=sm
 			set price.LessonType=##class(SPD.TypeLesson).%OpenId(proxy.TypeID)
 			set st=price.%Save()
+		}
+		&sql(declare addsemsql cursor for 
+				select id into :idtable from SPD.TimeTableLessons
+				where School=:idschool and Show=1
+		)
+		&sql(open addsemsql)
+		for {
+			&sql(fetch addsemsql)
+			quit:(SQLCOSE'=0)
+			set st=##class(SPD.Logic.JournalLesson).GenerateJLByTS(idtable,sm.DateBegin,sm.DateEnd)
 			
 		}
+		&sql(close addsemsql)
 		
 	}
 	catch er{

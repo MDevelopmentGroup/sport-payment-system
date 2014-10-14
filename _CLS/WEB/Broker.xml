@@ -82,10 +82,12 @@
 		<Route Url="/GetSubscriptionFromJL/:ID"		Method="GET"		Call="SPD.Logic.SubscriptionList:GetSubscriptionFromJL"/>
 		<Route Url="/GetUserSub/:sol"				Method="GET"		Call="SPD.Logic.Subscription:Get"/>
 		<Route Url="/GetJLDays/:isub"				Method="GET"		Call="SPD.Logic.Subscription:GetJLDays"/>
-		
 		<Route Url="/BuyJL/"						Method="GET"		Call="SPD.Logic.SubscriptionList:BuyJL"/>
 		<!--Subscription-->
 		<Route Url="/GetTokenGAPI/" 				Method="GET"		Call="SPD.Logic.Gapi:GetToken"/>
+		
+		<Route Url="/Test/"							Method="POST" 		Call="SPD.Test:Test"/>
+		
 	   
 </Routes>
 ]]></Data>

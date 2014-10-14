@@ -165,10 +165,8 @@
 			//закончились занятия в html5 уведомления	
 		}
 		else{
-			set tg=##class(SPD.TempGroup).%New()
-			set tg.JournallLesson=cjl
-			set tg.UserSubscription=sub
-			set tg.Visited=1
+			//SPD.Logic.TempGroup.Create(jlid, subid)
+			set st=##class(SPD.TempGroup).Create(cjl.%Id(), sub.%Id())
 		}
 	}
 	}
