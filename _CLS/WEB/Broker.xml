@@ -13,7 +13,14 @@
 		<Route Url="/result/"						Method="POST"		Call="REST.JSON:RobokassaResult"/>
 		<Route Url="/success/"						Method="POST"		Call="REST.JSON:RobokassaSuccess"/>
 		<Route Url="/fail/url/"						Method="POST"		Call="REST.JSON:RobokassaFailUrl"/>
-		<!-- перенести в другой брокер-->
+
+		<!--
+		 перенести в другой брокер-->
+		
+		<!--for phongaph-->
+		<Route Url="/GetUrl/"						Method="POST"		Call="SPD.Logic.Instructor:GetUrl"/>
+		<Route Url="/LoginA/"						Method="POST"		Call="SPD.Logic.Instructor:LoginA"/>
+		<!--for phongaph-->
 		
 		<Route Url="/GetPrice/:ID"					Method="GET"		Call="SPD.Logic.School:GetPrice"/>
 		
@@ -60,9 +67,7 @@
 	   <Route Url="/GetTrainerInfo/:ID"				Method="GET"		Call="SPD.Logic.Instructor:GetTrainerInfo"/>
 	   <Route Url="/GetSchoolByTrainerId/:ID"		Method="GET"		Call="SPD.Logic.Instructor:GetSchoolByTrainerId"/>
 	   
-	   
 	   <Route Url="/GetLesson/:ID"					Method="GET"		Call="SPD.Logic.TimeTableLessons:GetLesson"/>
-	   
 	   
 	   <Route Url="/GetNextJournalLessons/:ID/:lt"	Method="GET"		Call="SPD.Logic.JournalLesson:GetNextJournalLessons1"/>
 	   <Route Url="/GetJournalLessons/:ID"			Method="GET"		Call="SPD.Logic.JournalLesson:GetJournalLessons"/>
@@ -70,9 +75,9 @@
 	   
 	   <Route Url="/Subscribe/:ID"					Method="POST"		Call="SPD.Logic.Dancer:SubscribeJL"/>
 	   <Route Url="/GetCurrentBalance/"				Method="GET"		Call="SPD.Logic.Dancer:GetCurrentBalance"/>
-		<Route Url="/GetMyLessons/"					Method="POST"		Call="SPD.Logic.Dancer:GetMyLessons"/>
+	   <Route Url="/GetMyLessons/"					Method="POST"		Call="SPD.Logic.Dancer:GetMyLessons"/>
 	   
-		<Route Url="/InitPayment/"					Method="POST"		Call="REST.JSON:InitPayment"/>
+	   <Route Url="/InitPayment/"					Method="POST"		Call="REST.JSON:InitPayment"/>
 	   
 		<!--Subscription-->
 		<Route Url="/GetSubscription/:ID"			Method="GET"		Call="SPD.Logic.SubscriptionList:Get"/>

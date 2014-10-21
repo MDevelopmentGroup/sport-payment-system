@@ -3,6 +3,225 @@
 <Class name="SPD.Logic.Instructor">
 <TimeCreated>63417,52320.419583</TimeCreated>
 
+<Method name="CalcBalance">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>Sub,TypeLesson</FormalSpec>
+<ReturnType>SPD.LessonsInSubscription</ReturnType>
+<Implementation><![CDATA[
+	set lis=""
+	
+	if (Sub){
+		set sublist=##class(SPD.Subscription).%OpenId(Sub).SubList.%Id()
+		
+		&sql(select id into :idlis from SPD.LessonsInSubscription where Subscription=:sublist and LessonType=:TypeLesson)
+	
+		if (idlis)
+		{
+			set lis=##class(SPD.LessonsInSubscription).%OpenId(idlis).%Id()
+		}
+	}
+	ret lis
+]]></Implementation>
+</Method>
+
+<Method name="Rate">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Integer</ReturnType>
+<Implementation><![CDATA[
+	
+	ret rate
+]]></Implementation>
+</Method>
+
+<Method name="GetBalance">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set instructorId=##class(Auth.Session).GetCurrentInstructor().%Id()
+		&sql(select SchoolRate into :rate FROM SPD.TempListOfInstructorsInSchools where 
+		Instructor->id=:instructorId)
+		&sql(select Sum(lis->Summ)*(100-:rate)/100 into :balance
+		from SPD.TableLessinSubscr where lis->Instructor->id=:instructorId)
+		&sql(SELECT Sum("Transaction"->OutSum)*((100-:rate)/100) into :summ
+			FROM SPD.Subscription where JournallLesson is not null and JournallLesson->LessonInTable->Instructor->id=:instructorId)
+		set tb=balance+summ
+		w "{""children"":"""_tb_
+		"""}"
+	}
+	catch er
+	{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetShooclBalanceByInstructor">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>instructorId</FormalSpec>
+<ReturnType>%Double</ReturnType>
+<Implementation><![CDATA[
+	set bl=""
+	set tb=""
+		&sql(select SchoolRate into :rate FROM SPD.TempListOfInstructorsInSchools where 
+		Instructor->id=:instructorId)
+		&sql(select Sum(lis->Summ)*(:rate)/100 into :balance
+		from SPD.TableLessinSubscr where lis->Instructor->id=:instructorId)
+		&sql(SELECT Sum("Transaction"->OutSum)*:rate/100 into :summ
+			FROM SPD.Subscription where JournallLesson is not null and JournallLesson->LessonInTable->Instructor->id=:instructorId)
+		set tb=balance+summ
+		//w "tb="_tb,!
+		if (tb){
+			set bl=$fnumber(tb,"+",2)+0
+		}
+		//w "bl="_bl,!
+	ret bl
+]]></Implementation>
+</Method>
+
+<Method name="GetTransactions">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set instructor=##class(Auth.Session).GetCurrentInstructor()
+		
+		set sqlquery="SELECT "_
+			"ID, DateEndSub, DateGEnSub, JournallLesson, QRString, School, Sole, SubList, "_
+			"""Transaction""->ID, ""Transaction""->CompleteDate, ""Transaction""->DateTransactionInit, ""Transaction""->OutSum, "_
+			"""Transaction""->Phone, ""Transaction""->School, ""Transaction""->Subscription, "_
+			"""Transaction""->Valuta, ""Transaction""->email, ""Transaction""->sSignatureValue, ""Transaction""->success "_
+			"FROM SPD.Subscription "_
+			"where id in (SELECT Subscription "_
+			"FROM SPD.TableLessinSubscr "_
+			"where lis->Instructor=6 "_
+			") or JournallLesson->LessonInTable->Instructor->id=11 "_
+			"order by DateGEnSub ASC"
+		do ##class(SPD.School).GetJSONData(sqlquery)
+	}
+	catch er
+	{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetUrl">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		d %response.SetHeader("Access-Control-Allow-Origin","*") 
+		d %response.SetHeader("Access-Control-Allow-Methods","GET, PUT, POST, DELETE, OPTIONS") 
+		d %response.SetHeader("Access-Control-Max-Age","1000") 
+		d %response.SetHeader("Access-Control-Allow-Headers","Content-Type, Authorization, X-Requested-With")
+		
+		/*set prs=%request.GetCookie("userId")
+		set uh=%request.GetCookie("uh")
+		&sql(select IP,Agent,RoleUser->Description into :ip,:agent,:RlUsDescr from Auth.SessionData where UserID=:prs)
+		set user=##class(Auth.SessionData).%OpenId(prs)
+		set hash=$SYSTEM.Encryption.AESCBCEncrypt(prs_":"_RlUsDescr,user.Key)
+		set hash=##class(Auth.Session).Encode(hash)
+		if ((sdAgent'=%request.GetCgiEnv("HTTP_USER_AGENT"))||(sdIP'=%request.GetCgiEnv("REMOTE_ADDR"))||
+			(hash'=uh)){
+			SET mygenex = ##class(%Exception.General).%New("Ошибка авторизации","999",,
+                             "My own special exception")
+			throw mygenex
+		}*/
+		//проверка авторизации
+		set url=$get(%request.Data("URL",1))
+		set ar=$LISTFROMSTRING(url,"/")
+		set sol=$list(ar,$LISTLENGTH(ar))
+		//set st=##class(SPD.Logic.Instructor).InstructorCheck(sol)
+	}
+	catch er
+	{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="LoginA">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		
+		d %response.SetHeader("Access-Control-Allow-Origin","*")
+		d %response.SetHeader("Access-Control-Allow-Methods","GET, PUT, POST, DELETE, OPTIONS") 
+		d %response.SetHeader("Access-Control-Max-Age","1000") 
+		d %response.SetHeader("Access-Control-Allow-Headers","Content-Type, Authorization, X-Requested-With")
+		set pass=$get(%request.Data("password",1))	set Email=$get(%request.Data("login",1))
+		&sql(declare ses1 cursor for select ID, Access, Active, Email, FirstName,
+		 Key, LastName, Password, Patronymic into:UserID , :Access, :Active, :Email, :FirstName, :Key, :LastName, :Password, :Patronymic
+		 from LIB.Person where (Password=:pass & Email=:Email))
+		 
+		&sql(open ses1)
+		&sql(fetch ses1)
+		&sql(close ses1)
+		if (%ROWCOUNT'=0)
+		{
+			&sql(select id, count(id) into:id,:count from Auth.SessionData where UserID=:UserID)
+			if (count>0)
+			{
+				do ##class(Auth.SessionData).%DeleteId(id)
+			}
+			set session1=##class(Auth.SessionData).%New()
+			set session1.IP=%request.GetCgiEnv("REMOTE_ADDR")
+			set session1.Agent=%request.GetCgiEnv("HTTP_USER_AGENT")
+			set session1.RoleUser=##class(LIB.Role).%OpenId(Access)
+			set session1.UserID=UserID
+			do session1.%Save()
+			set hash=$SYSTEM.Encryption.AESCBCEncrypt(UserID_":"_session1.RoleUser.Description,Key)
+			set hash=##class(Auth.Session).Encode(hash)
+			&sql(select id into :idschool from SPD.School where Person->Id=:UserID)
+			&sql(select id into :idInstructor from SPD.Instructor where idDancer->Id=:UserID)
+			set t=+$H+1
+			set t=$ZD(t,11) _", " _$ZD(t,2) _ " 00:00:00 GMT"
+			set jsonCook="{"_
+			"""User"":{"_
+			"""success"":"""_1_
+			""",""hash"":"""_hash_
+			""",""userId"":"""_UserID_
+			""",""idschool"":"""_idschool_
+			""",""Email"":"""_Email_
+			"""}}"
+			do %response.SetCookie("success",1,t,"/")
+			do %response.SetCookie("uh",hash,t,"/")
+			do %response.SetCookie("userId",UserID,t,"/")
+			do %response.SetCookie("Email",Email,t,"/")
+			do %response.SetCookie("Role",session1.RoleUser.Access,t,"/")
+			do %response.SetCookie("IdSchool",idschool,t,"/")
+			do %response.SetCookie("IdInstructor",idInstructor,t,"/")
+			w jsonCook
+		}
+		else{
+			//SET mygenex = ##class(%Exception.General).%New("Ошибка авторизации","200",,
+            	//"My own special exception")
+			//throw mygenex
+			w "Ошибка авторизации."
+		}
+	}
+	catch er
+	{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
 <Method name="CreateInstructon">
 <ClassMethod>1</ClassMethod>
 <Implementation><![CDATA[

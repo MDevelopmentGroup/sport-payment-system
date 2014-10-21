@@ -12,7 +12,6 @@
 	try{
 		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
 		set lis=##class(SPD.LessonsInSubscription).%New()
-		w obj.TypeLessonId,!
 		set TypeLesson=##class(SPD.TypeLesson).%OpenId(obj.TypeLessonId)
 		
 		if (id){
@@ -32,8 +31,8 @@
 			Set lis.numb=$zconvert(obj.numb,"I","UTF8")
 		}
 		set lis.School=##class(Auth.Session).GetCurrentSchool()
-		set st=lis.%Save()
-		zw st
+		set lis.Instructor=##class(SPD.Instructor).%OpenId(obj.instrustorId)
+		set st=lis.%Save()		
 	}
 	catch err{
 		set st=err.AsStatus()
@@ -51,9 +50,7 @@
 	try{
 		
 		set st=##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1)
-		
 		set lis=##class(SPD.LessonsInSubscription).%OpenId(obj.idlis)
-		
 		if (id){
 			set lis.Subscription=##class(SPD.SubscriptionList).%OpenId(id)
 		}		
@@ -61,6 +58,7 @@
 		set lis.LessonType=##class(SPD.TypeLesson).%OpenId(obj.TypeLessonId)
 		Set lis.numb=$zconvert(obj.numb,"I","UTF8")
 		set lis.School=##class(Auth.Session).GetCurrentSchool()
+		set lis.Instructor=##class(SPD.Instructor).%OpenId(obj.instrustorId)
 		set st=lis.%Save()
 	}
 	catch err{
@@ -101,6 +99,30 @@
 		set st=err.AsStatus()
 	}
 	ret st
+]]></Implementation>
+</Method>
+
+<Method name="Summ">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id,subid,lessontypeid</FormalSpec>
+<ReturnType>SPD.Balance</ReturnType>
+<Implementation><![CDATA[
+	///todo возможна пропажа копеек
+	if (subid)
+	{
+		set sub=##class(SPD.SubscriptionList).%OpenId(subid)
+		set lessontype=##class(SPD.TypeLesson).%OpenId(lessontypeid)
+		set lis=##class(SPD.LessonsInSubscription).%OpenId(id)
+		set tl=sub.TotalLessons
+		set sum=sub.cost*(lis.numb/sub.TotalLessons)
+		set sum=$fnumber(sum,"+",2)+0
+		
+	}
+	else
+	{
+		set sum="00.00"
+	}
+	ret sum
 ]]></Implementation>
 </Method>
 </Class>

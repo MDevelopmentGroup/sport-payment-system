@@ -6,7 +6,7 @@
                 <a class="navbar-brand">Бальные танцы</a>
             </div>
             <ui class="nav navbar-nav">
-                <li class="dropdown user-dropdown" ng-if='!User.success'>
+                <li class="dropdown user-dropdown" ng-if='(User.success===null)'>
                     <a  class="dropdown-toggle" data-ng-click="Login()" ng-show="{{!Items.Menu}}" ><span class="glyphicon glyphicon-log-in"></span> {{Page.Menu.LogIn}} </a>
                 </li>
                 <li class="dropdown user-dropdown" ng-if='User.success'>
@@ -34,7 +34,7 @@
                     <li class="dropdown">
                         <a  class="dropdown-toggle" data-toggle="dropdown">{{Page.Menu.Language}} <img height="25" ng-src="img/{{lang}}.jpg"><b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li ><a class="btn btn-default" data-ng-click='SetLanguage("ru")'>RU <img height="50" src="img/ru.jpg" ></a></li>
+                            <li ><a class="btn btn-default" data-ng-click='SetLanguage("ru")'>RU <img height="50" src="img/ru.jpg"></a></li>
                             <li ><a class="btn btn-default" data-ng-click='SetLanguage("en")'>EN <img height="50" src="img/en.jpg"></a></li>
                         </ul>
                     </li>

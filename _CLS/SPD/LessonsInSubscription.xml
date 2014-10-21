@@ -30,6 +30,17 @@ Id абонемента</Description>
 <Relationship>1</Relationship>
 </Property>
 
+<Property name="Instructor">
+<Type>SPD.Instructor</Type>
+</Property>
+
+<Property name="Summ">
+<Type>SPD.Balance</Type>
+<Calculated>1</Calculated>
+<SqlComputeCode>set {Summ}=##class(SPD.Logic.LessonInSubscription).Summ({%%ID},{Subscription},{LessonType})</SqlComputeCode>
+<SqlComputed>1</SqlComputed>
+</Property>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^SPD.LessonsInSubscriptionD</DataLocation>
@@ -55,6 +66,12 @@ Id абонемента</Description>
 </Value>
 <Value name="6">
 <Value>NumbAvialebleLessons</Value>
+</Value>
+<Value name="7">
+<Value>Summ</Value>
+</Value>
+<Value name="8">
+<Value>Instructor</Value>
 </Value>
 </Data>
 </Storage>

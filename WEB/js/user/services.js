@@ -427,6 +427,12 @@ app.factory('SchoolFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     SchoolFactory.DeleteSubList=function(id){
         return $http.delete(schoolBroker+"/DeleteSubList/"+id);
     };
+    SchoolFactory.GetTransactions=function(){
+        return $http.get(schoolBroker+"/GetTransactions/");
+    };
+    SchoolFactory.GetBalance=function(){
+        return $http.get(schoolBroker+"/GetBalance/");
+    };
     return SchoolFactory;
 }]);
 app.factory('DancerFactory',['$http','$rootScope','ErrorLogFactory',function($http,$rootScope,ErrorLogFactory) {
@@ -461,9 +467,9 @@ app.factory('DancerFactory',['$http','$rootScope','ErrorLogFactory',function($ht
     DancerFactory.GetAddressByRoom=function(idRoom){
         return $http.get(BaseUrl+"/GetAddressByRoom/"+idRoom);
     };
-    DancerFactory.GetCurrentBalance=function(){
+    /*DancerFactory.GetCurrentBalance=function(){
         return $http.get(BaseUrl+"/GetCurrentBalance/");
-    };
+    };*/
     DancerFactory.GetMyLessons=function(data) {
         return $http.post(BaseUrl + "/GetMyLessons/", data);
     };
@@ -525,6 +531,12 @@ app.factory('InstructorFactory',['$http','$rootScope','ErrorLogFactory',function
     };
     InstructorFactory.CheсkUser=function(idsub){
         return $http.post(brokURL+"/InstructorCheck/"+idsub);
+    };
+    InstructorFactory.GetTransactions=function(){
+        return $http.get(brokURL+"/GetTransactions/");
+    };
+    InstructorFactory.GetBalance=function(){
+        return $http.get(brokURL+"/GetBalance/");
     };
     return InstructorFactory;
 }]);

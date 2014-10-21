@@ -8,7 +8,9 @@
                             <div class="row"><div class="col-lg-1"></div>
                                 <div class="col-lg-11"><h5>Период на который будет генерироваться журнал занятий:</h5></div>
                             </div>
-                            <a ng-click="AddSemester()"><label class="label label-success"><span class="glyphicon glyphicon-plus"></span></label></a>
+                            <a ng-click="AddSemester()"><label class="label label-success"><span class="glyphicon glyphicon-plus">
+
+                            </span>Добавить семестр</label></a>
                             <div class="row"  ng-repeat="Semester in SemesterList">
                                 <div class="col-lg-1">
 
@@ -17,14 +19,18 @@
 
                                 </div>
                                 <div class="col-lg-10">
+                                    <hr>
                                     <div class="row">
                                         <div class="col-lg-2">
                                             {{Semester.Semester}}
+
                                         </div>
                                         <div class="col-lg-6">
                                             {{Semester.DateBegin}} &#x2012 {{Semester.DateEnd}}
                                         </div>
+
                                     </div>
+                                    <hr class="margintopbottom">
                                     <div class="row">
                                         <div class="col-lg-2">
                                             Тип занятия:
@@ -33,17 +39,22 @@
                                             Стоимость занятия:
                                         </div>
                                     </div>
+                                    <hr class="margintopbottom">
                                     <div class="row" ng-repeat="tl in Semester.tl">
                                         <div class="col-lg-1"></div>
                                         <div class="col-lg-2">
                                             {{tl.TypeLesson}}
+                                            <hr class="margintopbottom">
                                         </div>
                                         <div class="col-lg-1"></div>
                                         <div class="col-lg-5">
                                             {{tl.Cost}}
+                                            <hr class="margintopbottom">
                                         </div>
                                     </div>
+                                    <hr>
                                 </div>
+
                             </div>
                         </div>
                     </div>

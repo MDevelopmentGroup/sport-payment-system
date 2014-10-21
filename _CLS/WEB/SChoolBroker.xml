@@ -65,6 +65,8 @@
 	<Route Url="/DeleteSubList/:ID"					Method="DELETE"		Call="SPD.Logic.SubscriptionList:Delete"/>
 	<!--Subscription-->
 	
+	<Route Url="/GetTransactions/"					Method="GET"		Call="SPD.Logic.School:GetTransactions"/>
+	<Route Url="/GetBalance/"					Method="GET"		Call="SPD.Logic.School:GetBalance"/>
 	<!---->
 	
 </Routes>
@@ -79,6 +81,7 @@ Dispatch a REST request according to URL and Method</Description>
 <FormalSpec>pUrl:%String,pMethod:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	
 	/*
 	try{
 	$$$THROWONERROR(st,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.obj,1))
@@ -132,9 +135,31 @@ Dispatch a REST request according to URL and Method</Description>
     
     Try {
         #; Check that the effective user ( could be unknown user ) can access this resource
+        
+        
         Set tAccess=$SYSTEM.Security.Check($Piece($zu(90,21,$namespace),"^",4))
         If tAccess'["READ,WRITE"
         {
+	        set userid=%request.GetCookie("userId")
+		set uh=%request.GetCookie("uh")
+		set user=##class(LIB.Person).%OpenId(userid)
+		&sql(select id,RoleUser->Description,Agent,IP 
+		into :sessionid,:sdRoleUserDescription,:sdAgent,:sdIP
+		 from Auth.SessionData where UserID=:userid)
+		set sd=##class(Auth.SessionData).%OpenId(sessionid)
+		set hash=$SYSTEM.Encryption.AESCBCEncrypt(userid_":"_sdRoleUserDescription,user.Key)
+		set hash=##class(Auth.Session).Encode(hash)
+		
+		if ((sdAgent'=%request.GetCgiEnv("HTTP_USER_AGENT"))||(sdIP'=%request.GetCgiEnv("REMOTE_ADDR"))||
+			(hash'=uh)){
+			do %response.SetCookie("success",0,1,"/")
+			do %response.SetCookie("uh","",1,"/")
+			do %response.SetCookie("userId","",1,"/")
+			do %response.SetCookie("Email","",1,"/")
+			do %response.SetCookie("Role","",1,"/")
+			do %response.SetCookie("IdSchool","",1,"/")
+			do %response.SetCookie("IdInstructor","",1,"/")
+		}
             #; Don't want the session token
             Set %response.OutputSessionToken=0
             

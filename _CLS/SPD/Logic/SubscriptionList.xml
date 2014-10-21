@@ -3,6 +3,23 @@
 <Class name="SPD.Logic.SubscriptionList">
 <TimeCreated>63439,48364.750359</TimeCreated>
 
+<Method name="GetTotalLessons">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Integer</ReturnType>
+<Implementation><![CDATA[
+	set tl=1
+	&sql(SELECT SUM(numb) into :toltalLessons
+	FROM SPD.LessonsInSubscription
+	where Subscription=:id)
+	if (toltalLessons)
+	{
+		set tl=toltalLessons
+	}
+	ret tl
+]]></Implementation>
+</Method>
+
 <Method name="Delete">
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id</FormalSpec>
@@ -274,8 +291,13 @@
 			
 			&sql(declare cursorlis cursor for 
 				SELECT 
-				ID, LessonType->id as TypeLessonId,LessonType->Name As TypeLesson , Subscription, numb
-				into :idlis, :TypeLessonId, :TypeLesson, :Subscription, :numb
+				ID, LessonType->id as TypeLessonId,LessonType->Name As TypeLesson ,
+				 Subscription, numb, Instructor->IdDancer->FirstName,
+				 Instructor->IdDancer->LastName,Instructor->IdDancer->Patronymic,
+				 Instructor->id
+				into :idlis, :TypeLessonId, :TypeLesson, :Subscription, :numb,
+				:FirstName, :LastName, :Patronymic, 
+				:instructorId
 				FROM SPD.LessonsInSubscription
 				where Subscription=:idSL
 			)
@@ -287,7 +309,8 @@
 				"""TypeLessonId"":"""_TypeLessonId_""","_
 				"""TypeLesson"":"""_TypeLesson_""","_
 				"""numb"":"""_numb_""","_
-				
+				"""Abbrvtn"":"""_LastName_" "_FirstName_" "_Patronymic_""","_
+				"""instructorId"":"""_instructorId_""","_
 				"""Subscription"":"""_Subscription_"""},"
 			}
 			

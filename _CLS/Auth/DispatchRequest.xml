@@ -13,17 +13,38 @@ Dispatch a REST request according to URL and Method</Description>
 <FormalSpec>pUrl:%String,pMethod:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	
     #dim tSC As %Status = $$$OK
     #dim e As %Exception.AbstractException
-
+    
     #dim tMatcher As %Regex.Matcher
 
     #dim tArgs,tClass,tMatchUrl,tMapEntry,tRegEx,tTarget,tAccess As %String
     #dim tI,tIndex As %Integer
     #dim tResourceMatched As %Boolean
     #dim tMethodMatched As %Boolean
-
     Try {
+	    set userid=%request.GetCookie("userId")
+		set uh=%request.GetCookie("uh")
+		set user=##class(LIB.Person).%OpenId(userid)
+		&sql(select id,RoleUser->Description,Agent,IP 
+		into :sessionid,:sdRoleUserDescription,:sdAgent,:sdIP
+		 from Auth.SessionData where UserID=:userid)
+		set sd=##class(Auth.SessionData).%OpenId(sessionid)
+		set hash=$SYSTEM.Encryption.AESCBCEncrypt(userid_":"_sdRoleUserDescription,user.Key)
+		set hash=##class(Auth.Session).Encode(hash)
+		
+		if ((sdAgent'=%request.GetCgiEnv("HTTP_USER_AGENT"))||(sdIP'=%request.GetCgiEnv("REMOTE_ADDR"))||
+			(hash'=uh)){
+			do %response.SetCookie("success",0,1,"/")
+			do %response.SetCookie("uh","",1,"/")
+			do %response.SetCookie("userId","",1,"/")
+			do %response.SetCookie("Email","",1,"/")
+			do %response.SetCookie("Role","",1,"/")
+			do %response.SetCookie("IdSchool","",1,"/")
+			do %response.SetCookie("IdInstructor","",1,"/")
+		}
+	    
         #; Check that the effective user ( could be unknown user ) can access this resource
         Set tAccess=$SYSTEM.Security.Check($Piece($zu(90,21,$namespace),"^",4))
         If tAccess'["READ,WRITE"

@@ -5,19 +5,34 @@
 <ClassType>serial</ClassType>
 <TimeCreated>63292,43957.241629</TimeCreated>
 
+<Method name="GetUserHash">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>idUser</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set hash=""
+	&sql(select RoleUser->Description
+		into :sdRoleUserDescription
+		 from Auth.SessionData where UserID=:idUser)
+	set user=##class(LIB.Person).%OpenId(idUser)
+	set hash=$SYSTEM.Encryption.AESCBCEncrypt(userid_":"_sdRoleUserDescription,user.Key)
+	set hash=##class(Auth.Session).Encode(hash)
+	ret hash
+]]></Implementation>
+</Method>
+
 <Method name="GetCurrentUser">
 <ClassMethod>1</ClassMethod>
 <ReturnType>LIB.Person</ReturnType>
 <Implementation><![CDATA[
 	set uh=##class(LIB.Person).%OpenId(%request.GetCookie("uh"))
 	set userId=##class(LIB.Person).%OpenId(%request.GetCookie("userId"))
-	&sql(select ID into :id from Auth.SessionData where id=:userId)
-	set session=##class(Auth.SessionData).%OpenId(id)
-	set user=##class(LIB.Person).%OpenId(session.UserID)
-	set hash=$SYSTEM.Encryption.AESCBCEncrypt(user.%Id()_":"_session.RoleUser.Description,user.Key)
-	set hash=##class(Auth.Session).Encode(hash)
-	if (uh'=hash)
-	{
+	set hash=##class(Auth.Session).GetUserHash(userId)
+	&sql(select id,Agent,IP 
+		into :sessionid,:sdAgent,:sdIP
+		 from Auth.SessionData where UserID=:userId)
+	if ((sdAgent'=%request.GetCgiEnv("HTTP_USER_AGENT"))||(sdIP'=%request.GetCgiEnv("REMOTE_ADDR"))||
+		(hash'=uh)){
 		set user=""
 	}
 	ret user
@@ -28,8 +43,12 @@
 <ClassMethod>1</ClassMethod>
 <ReturnType>SPD.School</ReturnType>
 <Implementation><![CDATA[
-	set school=##class(SPD.School).%OpenId(%request.GetCookie("IdSchool"))
 	
+	set uh=##class(LIB.Person).%OpenId(%request.GetCookie("uh"))
+	set user=##class(LIB.Person).%OpenId(%request.GetCookie("userId"))
+	set userid=user.%Id()
+	&sql(select ID into :id from SPD.SChool where Person=:userid)
+	set school=##class(SPD.School).%OpenId(id)
 	ret school
 ]]></Implementation>
 </Method>

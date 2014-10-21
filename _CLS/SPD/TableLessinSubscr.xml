@@ -22,6 +22,13 @@
 <Relationship>1</Relationship>
 </Property>
 
+<Property name="lis">
+<Type>SPD.LessonsInSubscription</Type>
+<Calculated>1</Calculated>
+<SqlComputeCode>set {lis}=##class(SPD.Logic.Instructor).CalcBalance({Subscription},{TypeLesson})</SqlComputeCode>
+<SqlComputed>1</SqlComputed>
+</Property>
+
 <Property name="Type">
 <Type>%Integer</Type>
 </Property>
@@ -38,6 +45,7 @@
 		s tlis=##class(SPD.TableLessinSubscr).%New()
 		s tlis.Subscription=sub
 		s tlis.TypeLesson=lis.LessonType
+		s tlis.lis=lis
 		s tlis.Type=1
 		s st=tlis.%Save()
 		
@@ -96,6 +104,7 @@
 			set tlis.Subscription=sub
 			s tlis.Type=1
 			set tlis.TypeLesson=lis.LessonType
+			set tlis.lis=lis
 			set st=tlis.%Save()
 
 		}

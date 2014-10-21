@@ -353,13 +353,6 @@ function MySchoolCtrl($scope,$rootScope,$modal,LanguageFactory,AuthenticationFac
 //******************************************** MySchoolCtrl ***************************************************************//
 
 
-
-
-
-
-
-
-
 //******************************************** LessonInTimeTableCtrl ***************************************************************//
 function LessonInTimeTableCtrl($scope,$rootScope,$modal,$routeParams,LanguageFactory,AuthenticationFactory,SchoolFactory){
     $rootScope.lm=4;
@@ -1158,22 +1151,37 @@ function ViewAboutCtrl($rootScope,$scope,SettingFactory)
 
 //******************************************** ViewAboutCtrl ***************************************************************//
 
-function ViewBalanceCtrl($rootScope,$scope,SettingFactory,LanguageFactory,DancerFactory)
+function ViewBalanceCtrl($rootScope,$scope,SettingFactory,LanguageFactory,AuthenticationFactory,
+                         SchoolFactory,InstructorFactory)
 {
     $scope.intit=function()
     {
+        $rootScope.lm=10;
         $rootScope.MenuActive={};
         $rootScope.MenuActive.Page='partials/user/view/view_about.html';
         $rootScope.MenuActive.Controller='ViewAboutCtrl';
         $rootScope.MenuActive.AboutView='active';
         $rootScope.Page.Menu.BrandTitle=$rootScope.Page.About.Title;
         $scope.lang=LanguageFactory.GetCurrentLanguage();
-        $scope.getTransactions=function(){
-            DancerFactory.getTransactions().success(function(data){$scope.Transactions=data.children;})
-        };
-        $scope.getTransactions();
+        $scope.User= AuthenticationFactory.GetCurrentUser();
+        $scope.Role=$scope.User.Role;
+    };
+    $scope.GetTransactions=function() {
+        switch ($scope.Role) {
+            case "1":
+                SchoolFactory.GetTransactions().success(function (data) {
+                    $scope.Transactions = data.children;
+                });
+                break;
+
+            case "2":
+                InstructorFactory.GetTransactions().success(function (data) {
+                    $scope.Transactions = data.children});
+                break;
+        }
     };
     $scope.intit();
+    $scope.GetTransactions();
 }
 
 function ViewTimeTableCtrl($rootScope,$scope,SettingFactory,LanguageFactory)
@@ -1392,10 +1400,8 @@ function CreateSchoolCtrl($rootScope,$scope,SettingFactory,LanguageFactory,FileF
         FileFactory.FileUpload("InputName", call);
     };
     $scope.intit();
-    
-
 }
-function LeftInfoPanelCtrl($rootScope,$scope,$modal,LanguageFactory,AuthenticationFactory,DancerFactory) {
+function LeftInfoPanelCtrl($rootScope,$scope,$modal,LanguageFactory,AuthenticationFactory,SchoolFactory,InstructorFactory) {
 
     $scope.intit=function()
     {
@@ -1405,6 +1411,8 @@ function LeftInfoPanelCtrl($rootScope,$scope,$modal,LanguageFactory,Authenticati
         $rootScope.MenuActive.AboutView='active';
         $scope.User=AuthenticationFactory.GetCurrentUser();
         $scope.IdSchool=$scope.User.IdSchool;
+        $scope.IdInstructor=$scope.User.IdInstructor;
+        $scope.Role=$scope.User.Role;_
         $scope.lang=LanguageFactory.GetCurrentLanguage();
 
     };
@@ -1420,17 +1428,25 @@ function LeftInfoPanelCtrl($rootScope,$scope,$modal,LanguageFactory,Authenticati
         var modal=$modal({scope: $scope, placement:"center", backdrop:false, template: 'partials/user/modal/register.html', show: true});
 
     };*/
-    $rootScope.GetCurrentBalance=function(){
+    $scope.GetCurrentBalance=function(){
 
-        if (($scope.User.Role!=1)&&($scope.User.Role!=0))
-        {
+            console.log($scope.Role);
+            switch ($scope.Role) {
+                case "1":
+                    console.log("SchoolFactory.GetBalance()");
+                    SchoolFactory.GetBalance().success(function (data) {
+                        $scope.Balance = data.children;
+                    });
+                    break;
+                case "2":
+                    InstructorFactory.GetBalance().success(function (data) {
+                        $scope.Balance = data.children});
+                    break;
+            }
 
-            DancerFactory.GetCurrentBalance().success(function(data){
-                $scope.Balance=data.children[0].Balance;
-            });
-        }
     };
     $scope.intit();
+    $scope.GetCurrentBalance()
 }
 
 function ViewTrainersCtrl($rootScope,$scope,SettingFactory,LanguageFactory,SchoolFactory)
@@ -1533,6 +1549,11 @@ function CreateSubscriptionsCtrl($rootScope,$routeParams,$modal,$scope,SettingFa
             $scope.LessonWithoutSub=data.children;
         });
     };
+    $scope.GetInstructorList=function(){
+        SchoolFactory.GetInstructorList($scope.IdSchool).success(function(data){
+            $scope.InstructorList=data.children;
+        });
+    };
     $scope.CreateSubscription=function(Subscr){
         console.log(Subscr);
         SchoolFactory.CreateSubscription(Subscr).success(function(){
@@ -1545,10 +1566,14 @@ function CreateSubscriptionsCtrl($rootScope,$routeParams,$modal,$scope,SettingFa
     })}();
     $scope.AddLessInSubscription=function(){
             $scope.lis={};
+            $scope.Abbrvtn="";
+            $scope.lis.Instructor={};
             $scope.SetType=function(TypeLesson){
-                console.log(TypeLesson);
                 $scope.lis.TypeLesson=TypeLesson.TypeName;
                 $scope.lis.TypeLessonId=TypeLesson.TypeID;
+            };
+            $scope.SetInstructor=function(instructor){
+                $scope.Abbrvtn=instructor.LastName+" "+instructor.FirstName+" "+instructor.Patronymic
             };
             $scope.submit=function(lis){
                 console.log(lis);
@@ -1611,7 +1636,9 @@ function CreateSubscriptionsCtrl($rootScope,$routeParams,$modal,$scope,SettingFa
             $scope[temp.toString()]=s[refvar.toString()];
         }
     };
+
     $scope.GetLessonWithoutSub();
+    $scope.GetInstructorList();
 };
 function ViewSubscriptionCtrl($rootScope,$routeParams,$scope,SchoolFactory,AuthenticationFactory,MyFunctions,DancerFactory)
 {
@@ -1677,6 +1704,10 @@ function UpdateSubscriptionsCtrl($rootScope,$routeParams,$scope,SchoolFactory,La
             $scope.lis.TypeLesson=TypeLesson.TypeName;
             $scope.lis.TypeLessonId=TypeLesson.TypeID;
         };
+        $scope.SetInstructor=function(instructor){
+            console.log(instructor);
+            $scope.lis.Abbrvtn=instructor.LastName+" "+instructor.FirstName+" "+instructor.Patronymic
+        };
         $scope.submit=function(lis){
             SchoolFactory.AddLessInSubscriptionId(lis,$scope.sub).success(function()
             {
@@ -1687,16 +1718,26 @@ function UpdateSubscriptionsCtrl($rootScope,$routeParams,$scope,SchoolFactory,La
         };
         var modal=$modal({scope: $scope, placement:"center", backdrop:false, template: 'partials/user/modal/modal_create_lesInSub.html', show: true});
     };
+    $scope.GetInstructorList=function(){
+        SchoolFactory.GetInstructorList($scope.IdSchool).success(function(data){
+            $scope.InstructorList=data.children;
+        });
+    };
     $scope.UpdateLIS=function(lis){
         $scope.lis=lis;
+        $scope.SetInstructor=function(instructor){
+            console.log(instructor);
+            $scope.lis.Abbrvtn=instructor.LastName+" "+instructor.FirstName+" "+instructor.Patronymic
+        };
         $scope.submit=function(lis,id){
             var id=lis.Subscription;
             SchoolFactory.UpdateLessInSubscriptionLIST(lis,id).success(function(data){
-                //modal.hide();
+                modal.hide();
             });
         };
         var modal=$modal({scope: $scope, placement:"center", backdrop:false, template: 'partials/user/modal/modal_updateLessInSubscription.html', show: true});
     };
+    $scope.GetInstructorList();
 }
 function ScheduleCtrl($rootScope,$routeParams,$scope,SchoolFactory,LanguageFactory,AuthenticationFactory,MyFunctions,DancerFactory,$modal)
 {
@@ -1725,9 +1766,9 @@ function ScheduleCtrl($rootScope,$routeParams,$scope,SchoolFactory,LanguageFacto
     $scope.GetSubscriptionLIST($routeParams.ID);
 }
 function ViewUserSubscriptionCtrl($rootScope,$routeParams,$compile,
-                                  $scope,$http,LanguageFactory,DancerFactory,
+                                  $scope,LanguageFactory,DancerFactory,
                                   InstructorFactory,AuthenticationFactory,
-                                  GoogleCalendarFactory,ErrorLogFactory)
+                                  GoogleCalendarFactory)
 {
     $scope.gapi=gapi;
     $scope.lang=LanguageFactory.GetCurrentLanguage();
@@ -1905,6 +1946,7 @@ function NavBarCtrl($scope,$routeParams,$rootScope,$modal,LanguageFactory,Authen
             $scope.Type=1;
         }
         $scope.Items.Menu=0;
+        //console.log($scope.User);
     };
     $scope.Auth=function(){
 
@@ -1966,3 +2008,30 @@ function NavBarCtrl($scope,$routeParams,$rootScope,$modal,LanguageFactory,Authen
     console.log($rootScope.nav);
 }
 //******************************************** NavBarCtrl ***************************************************************//
+
+function ViewInstructorLessons($scope,$routeParams,$rootScope,$modal,InstructorFactory,AuthenticationFactory){
+    $scope.User=AuthenticationFactory.GetCurrentUser();
+    $scope.GetInstructorLessons=function(){
+        InstructorFactory.GetInstructorLessons().success(function(data){
+            $scope.LessonList=data.children;
+        })
+    }
+}
+function ViewTransactions($scope,$routeParams,$rootScope,$modal,InstructorFactory,AuthenticationFactory,SchoolFactory){
+    $scope.User=AuthenticationFactory.GetCurrentUser();
+    $scope.Acceess=$scope.User.Role;
+    $scope.Gettransactions=function(){
+        switch ($scope.Acceess)
+        {
+            case 2:
+                InstructorFactory.GetTransactions().success(function(data){
+                    $scope.TransactionList=data.children;
+                });
+                break;
+            case 1:
+                SchoolFactory.GetTransactions().success(function(data){
+                    $scope.TransactionList=data.children;
+                });
+        }
+    }
+}

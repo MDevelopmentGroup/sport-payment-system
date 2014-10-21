@@ -21,6 +21,13 @@
 <SqlComputed>1</SqlComputed>
 </Property>
 
+<Property name="TotalLessons">
+<Type>%Integer</Type>
+<Calculated>1</Calculated>
+<SqlComputeCode>set {TotalLessons}=##class(SPD.Logic.SubscriptionList).GetTotalLessons({%%ID})</SqlComputeCode>
+<SqlComputed>1</SqlComputed>
+</Property>
+
 <Property name="DateActualStart">
 <Type>%DateTime</Type>
 </Property>

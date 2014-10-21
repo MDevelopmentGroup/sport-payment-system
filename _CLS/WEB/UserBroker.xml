@@ -18,7 +18,8 @@
 		<Route Url="/InstructorCheck/:sol" 				Method="POST" Call="SPD.Logic.Instructor:InstructorCheck"/>
 		<Route Url="/GetTrainerInfo/:ID"				Method="GET" Call="SPD.Logic.Instructor:GetTrainerInfo"/>
 		
-		
+		<Route Url="/GetTransactions/"					Method="GET"		Call="SPD.Logic.Instructor:GetTransactions"/>
+		<Route Url="/GetBalance/"						Method="GET"		Call="SPD.Logic.Instructor:GetBalance"/>
 </Routes>
 ]]></Data>
 </XData>
@@ -27,7 +28,6 @@
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	
 	//w $$$FormatTextJS()
 	
 	//	zw %request

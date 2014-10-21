@@ -3,6 +3,58 @@
 <Class name="SPD.Logic.School">
 <TimeCreated>63418,51393.737219</TimeCreated>
 
+<Method name="GetBalance">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set sum=0
+		set schoolId=##class(Auth.Session).GetCurrentSchool().%Id()
+		&sql(declare getbalance cursor for
+		select Instructor into :instructorId from SPD.TempListOfInstructorsInSchools where School=:schoolId)
+		&sql(open getbalance)
+		for{
+			&sql(fetch getbalance)
+			quit:(SQLCODE'=0)
+			set sum=sum+##class(SPD.Logic.Instructor).GetShooclBalanceByInstructor(instructorId)
+		}
+		&sql(close getbalance)
+		w "{""children"":"""_sum_
+		"""}"
+	}
+	catch er
+	{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
+<Method name="GetTransactions">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st=$$$OK
+	try
+	{
+		set school=##class(Auth.Session).GetCurrentSchool()
+		set schoolId=school.%Id()
+		set sqlquery="select ID, CompleteDate, DateTransactionInit, OutSum, Phone, School, Subscription as SubListId, "_
+		"Valuta, email, sSignatureValue, success "_
+		"FROM SPD.Transactions "_
+		"where School->id="_schoolId
+		do ##class(SPD.School).GetJSONData(sqlquery)
+	}
+	catch er
+	{
+		set st=er.AsStatus()
+	}
+	ret st
+]]></Implementation>
+</Method>
+
 <Method name="GetLessonTypes">
 <ClassMethod>1</ClassMethod>
 <FormalSpec>ID</FormalSpec>

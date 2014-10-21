@@ -77,6 +77,7 @@ div.action{
     border-left: 2px solid #edf;
     border-bottom:2px solid #edf;
     background-color: white;
+    padding: 3px 0px 3px 0px;
 }
 .borderlefttsub{
     border-left: 2px solid #edf;
@@ -147,4 +148,7 @@ div.action{
 .minyTrainerImg{
     max-width: 100px;
     min-width: 100px;
+}
+.margintopbottom{
+    margin:4px 0px 4px 0px;
 }

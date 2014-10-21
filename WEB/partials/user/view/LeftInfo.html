@@ -2,8 +2,8 @@
     <div class="col-lg-12">
         <div class="row">
             <ul class="nav nav-pills nav-stacked">
-                <li class="active" ng-if="User.success">
-                    <a href="#/Balance" ng-if="!IdSchool">
+                <li class="{{lm==10|NavDancer}}" ng-if="User">
+                    <a href="#/Balance">
                         <span class="badge pull-right">
                             {{Balance}}
                         </span>
@@ -13,27 +13,29 @@
                 <li ng-if="IdSchool" class="{{lm==0|NavDancer}}">
                     <a href="#/MySchool">{{Page.LeftMenu.MySchool}}</a>
                 </li>
-                <li ng-if="User"  class="{{lm==1|NavDancer}}">
+                <!--<li ng-if="User"  class="{{lm==1|NavDancer}}">
                     <a ng-if="!IdSchool" href="#/PrivateLessons">{{Page.navbar.PrivateLessons}}</a>
-                </li>
-                <li class="{{lm==2|NavDancer}}">
+                </li>-->
+
+                <li ng-if="IdSchool" class="{{lm==2|NavDancer}}">
                     <a href="#/LessonTypes">Типы занятий</a>
                 </li>
-                <li  class="{{lm==3|NavDancer}}">
+                <li ng-if="IdSchool" class="{{lm==3|NavDancer}}">
                     <a href="#/Semester">Период</a>
                 </li>
-                <li class="{{lm==4|NavDancer}}">
+                <li ng-if="IdSchool" class="{{lm==4|NavDancer}}">
                     <a href="#/LessonInTimeTable/{{IdSchool}}">Расписание</a>
                 </li>
-                <li class="{{lm==5|NavDancer}}">
+                <li ng-if="IdSchool" class="{{lm==5|NavDancer}}">
                     <a href="#/JournallLessons/{{IdSchool}}">Журнал занятий</a>
                 </li>
-                <li class="{{lm==6|NavDancer}}">
+                <li ng-if="IdSchool" class="{{lm==6|NavDancer}}">
                     <a href="#/IIS">Инструкторы</a>
                 </li>
-                <li class="{{lm==7|NavDancer}}">
+                <li ng-if="IdSchool" class="{{lm==7|NavDancer}}">
                     <a href="#/SubscriptionList/55">Абонементы</a>
                 </li>
+                <!--
                 <li ng-if="0"  class="{{lm==8|NavDancer}}">
                     <a href="#/LK">{{Page.navbar.LK}}</a>
                 </li>
@@ -41,6 +43,13 @@
                     <a ng-click="reg_Dancer()">
                         Зарегистрироваться
                     </a>
+                </li>
+                -->
+                <li ng-if="IdInstructor" class="{{lm==8|NavDancer}}">
+                    <a href="#/SubscriptionList/55">Расписание</a>
+                </li>
+                <li ng-if="IdInstructor" class="{{lm==9|NavDancer}}">
+                    <a href="#/SubscriptionList/55">Занятия</a>
                 </li>
             </ul>
         </div>
